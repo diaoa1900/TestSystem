@@ -10,9 +10,6 @@ import IDE
 
 class Functions(IDE.MenuTools):
 
-    def show_result(self):
-        pass
-
     def screenshot(self):
         self.setVisible(False)
         time.sleep(1)
