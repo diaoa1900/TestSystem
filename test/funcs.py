@@ -43,8 +43,7 @@ class Functions(IDE.MenuTools):
                                    stderr=subprocess.PIPE)
             self.console_text.insertPlainText(sbp.stdout.read().decode())
             sbp.stdout.close()
-            if sbp.stderr.read():
-                self.console_text.insertPlainText(sbp.stderr.read().decode())
+            self.console_text.insertPlainText(sbp.stderr.read().decode())
             sbp.stderr.close()
             '''logger = logging.getLogger("airtest")
             logger.setLevel(logging.DEBUG)
