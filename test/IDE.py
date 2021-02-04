@@ -1,10 +1,9 @@
-import os
 import sys
 from PyQt5 import QtCore
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from test.funcs import funcs
+from test import funcs
 
 
 class MenuTools(QMainWindow):
