@@ -4,7 +4,7 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-import funcs
+from funcs import funcs
 
 
 class MenuTools(QMainWindow):
@@ -229,15 +229,13 @@ class MenuTools(QMainWindow):
     def open_file(self):
         open_path_information = QFileDialog.getOpenFileName(self, '打开文件', '.', '*.py')
         if open_path_information[0]:
-            file_name = open_path_information[0].split('/')
+            last_index = open_path_information[0].rindex('/')
             script_edit = QWidget()
-            self.edit_tab.addTab(script_edit, file_name[-1])
+            self.edit_tab.addTab(script_edit, open_path_information[0][last_index+1:])
             # flag为True时保存文件无需弹出文件对话框
             script_edit.flag = True
-            script_edit.path = open_path_information[0]
-            #
-            script_edit.edit_name = file_name[-1]
-            #
+            script_edit.cwd = open_path_information[0][0:last_index]
+            script_edit.edit_name = open_path_information[0][last_index+1:]
             script_edit.edit = QTextEdit()
             script_edit.edit.setLineWrapMode(QTextEdit.NoWrap)
             script_edit.edit_layout = QHBoxLayout()
@@ -255,19 +253,15 @@ class MenuTools(QMainWindow):
     def save_file(self):
         if not self.edit_tab.currentWidget().flag:
             save_path_information = QFileDialog.getSaveFileName(self, '选择保存脚本的路径', '.', '*.py')
-            save_path = save_path_information[0]
             try:
-                f = open(save_path, 'w', encoding='utf-8')
+                f = open(save_path_information[0], 'w', encoding='utf-8')
                 f.write(self.edit_tab.currentWidget().edit.toPlainText())
                 f.close()
-                self.edit_tab.currentWidget().path = save_path
-                file_name = save_path.split('/')
-                self.edit_tab.setTabText(self.edit_tab.currentIndex(), file_name[-1])
+                last_index = save_path_information[0].rindex('/')
+                self.edit_tab.currentWidget().cwd = save_path_information[0][0:last_index]
+                self.edit_tab.setTabText(self.edit_tab.currentIndex(), save_path_information[0][0:last_index])
                 self.edit_tab.currentWidget().flag = True
-                #
-                self.edit_tab.currentWidget().edit_name = file_name[-1]
-                #
-
+                self.edit_tab.currentWidget().edit_name = save_path_information[0][0:last_index]
             except Exception as e:
                 print(e)
         else:

@@ -5,7 +5,7 @@ import keyboard
 import pyautogui
 from PIL import ImageGrab
 from PyQt5.QtWidgets import QFileDialog
-import IDE
+from test import IDE
 
 
 class Functions(IDE.MenuTools):
@@ -36,7 +36,7 @@ class Functions(IDE.MenuTools):
         try:
             self.console_text.clear()
             sbp = subprocess.Popen("python " + self.edit_tab.currentWidget().edit_name,
-                                   cwd="D:/work/workspaceTest/TestSystem/test", stdout=subprocess.PIPE,
+                                   cwd=self.edit_tab.currentWidget().cwd, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
             self.console_text.insertPlainText(sbp.stdout.read().decode())
             sbp.stdout.close()
