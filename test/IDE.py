@@ -258,9 +258,9 @@ class MenuTools(QMainWindow):
                 f.close()
                 last_index = save_path_information[0].rindex('/')
                 self.edit_tab.currentWidget().cwd = save_path_information[0][0:last_index]
-                self.edit_tab.setTabText(self.edit_tab.currentIndex(), save_path_information[0][0:last_index])
+                self.edit_tab.setTabText(self.edit_tab.currentIndex(), save_path_information[0][last_index+1:])
                 self.edit_tab.currentWidget().flag = True
-                self.edit_tab.currentWidget().edit_name = save_path_information[0][0:last_index]
+                self.edit_tab.currentWidget().edit_name = save_path_information[0][last_index+1:]
             except Exception as e:
                 print(e)
         else:
