@@ -5,7 +5,7 @@ import keyboard
 import pyautogui
 from PIL import ImageGrab
 from PyQt5.QtWidgets import QFileDialog
-from test import IDE
+import IDE
 
 
 class Functions(IDE.MenuTools):
