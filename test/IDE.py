@@ -75,7 +75,7 @@ class MenuTools(QMainWindow):
         layout.addWidget(self.assert_exist_button)
         self.groupbox_4.setLayout(layout)
 
-        # 中间栏
+        # 脚本编辑栏
 
         '''self.dockerable_edit = QDockWidget('脚本编辑区', self)
         self.dockerable_edit.setWidget(self.edit1)
@@ -83,7 +83,7 @@ class MenuTools(QMainWindow):
 
         self.edit_tab = QTabWidget()
 
-        # 最底栏
+        # 控制台栏
         self.console_text = QTextEdit()
         self.console_text.setLineWrapMode(QTextEdit.NoWrap)  # 怎么换行呢？是个问题
         self.console_text.setReadOnly(True)
@@ -233,6 +233,7 @@ class MenuTools(QMainWindow):
             self.edit_tab.addTab(script_edit, open_path_information[0][last_index+1:])
             # flag为True时保存文件无需弹出文件对话框
             script_edit.flag = True
+            script_edit.path = open_path_information[0]
             script_edit.cwd = open_path_information[0][0:last_index]
             script_edit.edit_name = open_path_information[0][last_index+1:]
             script_edit.edit = QTextEdit()
@@ -253,6 +254,7 @@ class MenuTools(QMainWindow):
         if not self.edit_tab.currentWidget().flag:
             save_path_information = QFileDialog.getSaveFileName(self, '选择保存脚本的路径', '.', '*.py')
             try:
+                self.edit_tab.currentWidget().path = save_path_information[0]
                 f = open(save_path_information[0], 'w', encoding='utf-8')
                 f.write(self.edit_tab.currentWidget().edit.toPlainText())
                 f.close()
@@ -264,9 +266,12 @@ class MenuTools(QMainWindow):
             except Exception as e:
                 print(e)
         else:
-            f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
-            f.write(self.edit_tab.currentWidget().edit.toPlainText())
-            f.close()
+            try:
+                f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
+                f.write(self.edit_tab.currentWidget().edit.toPlainText())
+                f.close()
+            except Exception as e:
+                print(e)
 
     '''def maybeSave(self):
         # 检查是否做了修改

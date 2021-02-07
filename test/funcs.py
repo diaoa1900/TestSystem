@@ -27,7 +27,7 @@ class Functions(IDE.MenuTools):
         picture_path_information = QFileDialog.getOpenFileName(self, '请选择图片', '.', '*.jpg *.png *.jpeg')
         picture_path = picture_path_information[0]
         if picture_path:
-            self.edit_tab.currentWidget().edit.insertPlainText("Template(r\""+picture_path+"\")")
+            self.edit_tab.currentWidget().edit.insertPlainText("Template(r\"" + picture_path + "\")")
 
     def part_run(self):
         pass
@@ -35,6 +35,7 @@ class Functions(IDE.MenuTools):
     def run(self):
         try:
             self.console_text.clear()
+            global sbp
             sbp = subprocess.Popen("python " + self.edit_tab.currentWidget().edit_name,
                                    cwd=self.edit_tab.currentWidget().cwd, stdout=subprocess.PIPE,
                                    stderr=subprocess.PIPE)
@@ -51,8 +52,9 @@ class Functions(IDE.MenuTools):
         '''with open(self.edit_tab.currentWidget().path, 'r', encoding='utf-8') as f:
             exec(f.read())'''
 
-    def stop(self):
-        subprocess.exit()
+    def stop_run(self):
+        global sbp
+        sbp.kill()
 
     def wait(self):
         self.setVisible(False)
