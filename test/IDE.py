@@ -1,4 +1,8 @@
 import sys
+
+import win32con
+import win32gui
+import win32print
 from PyQt5 import QtCore
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -9,8 +13,14 @@ import funcs
 class MenuTools(QMainWindow):
     def __init__(self, parent=None):
         super(MenuTools, self).__init__(parent)
+        hdc = win32gui.GetDC(0)
+        # 横向分辨率
+        w = win32print.GetDeviceCaps(hdc, win32con.DESKTOPHORZRES)
+        # 纵向分辨率
+        h = win32print.GetDeviceCaps(hdc, win32con.DESKTOPVERTRES)
         self.setWindowTitle('testSystem')
-        self.resize(1700, 900)
+        # self.resize(1700, 900)
+        self.resize(0.8*w, 0.8*h)
         self.create_menu()
         self.create_tool()
         self.create_statusbar()
