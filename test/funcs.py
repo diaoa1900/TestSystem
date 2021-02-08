@@ -5,7 +5,10 @@ import keyboard
 import pyautogui
 from PIL import ImageGrab
 from PyQt5.QtWidgets import QFileDialog
-import IDE
+from airtest.core.helper import G
+from test import IDE
+
+screenshot_dir = "D:/screenshotFolder/"
 
 
 class Functions(IDE.MenuTools):
@@ -18,9 +21,9 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
+        img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\")")
+            "Template(r\"" + screenshot_dir + i + ".jpg\")")
         self.setVisible(True)
 
     def insert_picture(self):
@@ -43,7 +46,7 @@ class Functions(IDE.MenuTools):
             sbp.stdout.close()
             self.console_text.insertPlainText(sbp.stderr.read().decode())
             sbp.stderr.close()
-            '''logger = logging.getLogger("airtest")
+            '''logger = logging.getLogger(" ")
             logger.setLevel(logging.DEBUG)
             sh = logging.FileHandler()
             logger.addHandler(sh)'''
@@ -64,9 +67,9 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
+        img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "wait(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
+            "wait(Template(r\"" + screenshot_dir + i + ".jpg\"))")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
@@ -79,14 +82,14 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
+        img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "waitVanish(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
+            "waitVanish(Template(r\"" + screenshot_dir + i + ".jpg\"))")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
 
-    def exist(self):
+    def exists(self):
         self.setVisible(False)
         time.sleep(1)
         pyautogui.press('f1')
@@ -94,9 +97,9 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
+        img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "exist(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
+            "exists(Template(r\"" + screenshot_dir + i + ".jpg\"))")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
@@ -109,12 +112,10 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
+        img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "click(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
+            "click(Template(r\"" + screenshot_dir + i + ".jpg\"))")
         self.setVisible(True)
-        '''pyautogui.hotkey('alt', 'tab')'''
-        # 不能insert后自动换行
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
 
@@ -126,9 +127,9 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
+        img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "double_click(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
+            "double_click(Template(r\"" + screenshot_dir + i + ".jpg\"))")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
@@ -141,9 +142,9 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
+        img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "rightClick(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
+            "rightClick(Template(r\"" + screenshot_dir + i + ".jpg\"))")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
@@ -156,14 +157,15 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
+        img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "swipe(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
+            "swipe(Template(r\"" + screenshot_dir + i + ".jpg\"))")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
 
     def cover(self):
+        # 鼠标悬浮在该图片位置上
         pass
 
     def keyevent(self):
@@ -183,14 +185,14 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
+        img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "text(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
+            "text(Template(r\"" + screenshot_dir + i + ".jpg\"))")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
 
-    '''def paste(self):
+    def assert_equal(self):
         self.setVisible(False)
         time.sleep(1)
         pyautogui.press('f1')
@@ -198,54 +200,9 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
+        img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "paste(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
-
-    def p_text(self):
-        self.setVisible(False)
-        time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "p_text(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
-
-    def p_paste(self):
-        self.setVisible(False)
-        time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "p_paste(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')'''
-
-    def assert_same(self):
-        self.setVisible(False)
-        time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "assert_same(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
+            "assert_equal(Template(r\"" + screenshot_dir + i + ".jpg\"))")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
@@ -258,9 +215,9 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save("D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg")
+        img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "assert_exist(Template(r\"D:/work/workspaceTest/TestSystem/脚本的截图/" + i + ".jpg\"))")
+            "assert_exists(Template(r\"" + screenshot_dir + i + ".jpg\"))")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')

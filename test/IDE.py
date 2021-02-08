@@ -41,10 +41,10 @@ class MenuTools(QMainWindow):
         layout = QVBoxLayout()
         self.wait_button = QPushButton("wait")
         self.waitVanish_button = QPushButton("waitVanish")
-        self.exist_button = QPushButton("exist")
+        self.exists_button = QPushButton("exists")
         layout.addWidget(self.wait_button)
         layout.addWidget(self.waitVanish_button)
-        layout.addWidget(self.exist_button)
+        layout.addWidget(self.exists_button)
         self.groupbox_1.setLayout(layout)
 
         self.groupbox_2 = QGroupBox("鼠标动作", self)
@@ -79,9 +79,9 @@ class MenuTools(QMainWindow):
 
         self.groupbox_4 = QGroupBox("断言", self)
         layout = QVBoxLayout()
-        self.assert_same_button = QPushButton("assert_same")
+        self.assert_equal_button = QPushButton("assert_equal")
         self.assert_exist_button = QPushButton("assert_exist")
-        layout.addWidget(self.assert_same_button)
+        layout.addWidget(self.assert_equal_button)
         layout.addWidget(self.assert_exist_button)
         self.groupbox_4.setLayout(layout)
 
@@ -114,7 +114,7 @@ class MenuTools(QMainWindow):
 
         self.wait_button.clicked.connect(lambda: funcs.Functions.wait(self))
         self.waitVanish_button.clicked.connect(lambda: funcs.Functions.waitVanish(self))
-        self.exist_button.clicked.connect(lambda: funcs.Functions.exist(self))
+        self.exists_button.clicked.connect(lambda: funcs.Functions.exists(self))
         self.click_button.clicked.connect(lambda: funcs.Functions.click(self))
         self.doubleClick_button.clicked.connect(lambda: funcs.Functions.double_click(self))
         self.rightClick_button.clicked.connect(lambda: funcs.Functions.rightClick(self))
@@ -126,7 +126,7 @@ class MenuTools(QMainWindow):
         '''self.paste_button.clicked.connect(lambda: funcs.Functions.paste(self))
         self.p_text_button.clicked.connect(lambda: funcs.Functions.p_text(self))
         self.p_paste_button.clicked.connect(lambda: funcs.Functions.p_paste(self))'''
-        self.assert_same_button.clicked.connect(lambda: funcs.Functions.assert_same(self))
+        self.assert_equal_button.clicked.connect(lambda: funcs.Functions.assert_equal(self))
         self.assert_exist_button.clicked.connect(lambda: funcs.Functions.assert_exist(self))
 
         # 将控件加入布局
@@ -328,21 +328,21 @@ class MenuTools(QMainWindow):
     def edit_right(self):
         try:
             pop_menu = QMenu(self)
-            qp = pop_menu.addAction(u'全屏')
+            # qp = pop_menu.addAction(u'全屏')
             gb = pop_menu.addAction(u'关闭')
-            qp.triggered.connect(self.edit_screen)
+            # qp.triggered.connect(self.edit_screen)
             gb.triggered.connect(self.edit_close)
             pop_menu.exec_(QCursor.pos())
         except Exception as e:
             print(e)
 
-    def edit_screen(self):
+    '''def edit_screen(self):
         self.edit_tab.currentWidget().showFullScreen()
         self.edit_tab.currentWidget().showMaximized()
         self.edit_tab.showFullScreen()
         self.edit_tab.showMaximized()
         self.edit_tab.currentWidget().edit.showFullScreen()
-        self.edit_tab.currentWidget().edit.showMaximized()
+        self.edit_tab.currentWidget().edit.showMaximized()'''
 
     def edit_close(self):
         try:
