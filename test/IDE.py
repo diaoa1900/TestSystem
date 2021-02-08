@@ -7,7 +7,7 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-import funcs
+from test import funcs
 
 
 class MenuTools(QMainWindow):
@@ -32,7 +32,7 @@ class MenuTools(QMainWindow):
         # 左侧垂直布局
         left_layout = QVBoxLayout()
         # 中间垂直布局
-        mid_layout = QVBoxLayout()
+        mid_widget = QSplitter(Qt.Vertical)
         # 右边垂直布局
         right_layout = QVBoxLayout()
 
@@ -135,19 +135,36 @@ class MenuTools(QMainWindow):
         left_layout.addWidget(self.groupbox_3, 3)
         left_layout.addWidget(self.groupbox_4, 2)
 
-        mid_layout.addWidget(self.edit_tab)
-        mid_layout.addWidget(self.console_text)
+        mid_widget.addWidget(self.edit_tab)
+        mid_widget.addWidget(self.console_text)
+        mid_widget.setStretchFactor(0, 40)
+        mid_widget.setStretchFactor(1, 1)
 
         right_layout.addWidget(self.groupbox_6)
 
+        left_widget = QWidget()
+        left_widget.setLayout(left_layout)
+
+        right_widget = QWidget()
+        right_widget.setLayout(right_layout)
+
+        widget = QSplitter(Qt.Horizontal)
+        widget.addWidget(left_widget)
+        widget.addWidget(mid_widget)
+        widget.addWidget(right_widget)
+        widget.setStretchFactor(0, 1)
+        widget.setStretchFactor(1, 7)
+        widget.setStretchFactor(2, 2)
+        self.setCentralWidget(widget)
+
         # 局部布局加到全局布局中
-        all_layout.addLayout(left_layout)
+        '''all_layout.addLayout(left_layout)
         all_layout.addLayout(mid_layout)
         all_layout.addLayout(right_layout)
 
         widget = QWidget()
         widget.setLayout(all_layout)
-        self.setCentralWidget(widget)
+        self.setCentralWidget(widget)'''
 
     # 创建菜单栏
     def create_menu(self):
