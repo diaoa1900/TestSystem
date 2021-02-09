@@ -244,6 +244,11 @@ class MenuTools(QMainWindow):
         script_edit.edit.setLineWrapMode(QTextEdit.NoWrap)
         f = open('模板.py', 'r', encoding='utf-8')
         script_edit.edit.setText(f.read())
+        try:
+            completer = QCompleter(['print', 'click', 'double_click'], script_edit.edit)
+            script_edit.edit.setCompleter(completer)
+        except Exception as e:
+            print(e)
         script_edit.label = QLabel(self)
         script_edit.label.setText("行:" + '0' + "列:" + '0')  # 怎么让它实时改变呢？
         script_edit.label.setAlignment(Qt.AlignRight)

@@ -4,7 +4,8 @@ import time
 import keyboard
 import pyautogui
 from PIL import ImageGrab
-from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtGui import QTextCursor
+from PyQt5.QtWidgets import QFileDialog, QInputDialog
 from airtest.core.helper import G
 from threading import Thread
 from test import IDE
@@ -46,6 +47,7 @@ class Functions(IDE.MenuTools):
                                        stderr=subprocess.PIPE)
                 self.console_text.insertPlainText(sbp.stdout.read().decode())
                 self.console_text.insertPlainText(sbp.stderr.read().decode())
+                self.console_text.moveCursor(QTextCursor.End)
                 sbp.stdout.close()
                 sbp.stderr.close()
 
@@ -63,7 +65,7 @@ class Functions(IDE.MenuTools):
 
     def stop_run(self):
         global t
-        t.kill()
+        t.stop()
 
     def wait(self):
         self.setVisible(False)
@@ -176,7 +178,15 @@ class Functions(IDE.MenuTools):
 
     def keyevent(self):
         # 模拟按下键盘上某个键
-        pass
+        """keyevent_dialog = QInputDialog(self)
+            keyevent_dialog.open()  # exec 模态,应用程序级,其他窗口不可见;open 窗口级,除了关联的之外都可交互;show 所有都可正常交互
+            keyevent_dialog.resize(400, 100)
+            keyevent_dialog.setWindowTitle('输入要按下的键的键码')"""
+        keyevent_value = QInputDialog.getText(self, '按键输入', '例如:(tab/enter/f1)')
+        if keyevent_value[1] is True:
+            self.edit_tab.currentWidget().edit.insertPlainText("keyevent(\"" + keyevent_value[0] + "\")")
+            self.edit_tab.currentWidget().edit.setFocus()
+            pyautogui.press('enter')
 
     def snapshot(self):
         # 截取当前屏幕全图
@@ -184,19 +194,11 @@ class Functions(IDE.MenuTools):
 
     def text(self):
         # 输入文本，文本框需要处于激活状态
-        self.setVisible(False)
-        time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save(screenshot_dir + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "text(Template(r\"" + screenshot_dir + i + ".jpg\"))")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
+        keyevent_value = QInputDialog.getText(self, '文字输入', '内容')
+        if keyevent_value[1] is True:
+            self.edit_tab.currentWidget().edit.insertPlainText("text(\"" + keyevent_value[0] + "\")")
+            self.edit_tab.currentWidget().edit.setFocus()
+            pyautogui.press('enter')
 
     def assert_equal(self):
         self.setVisible(False)
