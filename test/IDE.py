@@ -8,25 +8,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from test import funcs
-
-'''class EditCursor(QThread):
-class EditCursor(QObject):
-    try:
-        cursor_position = pyqtSignal(str)
-
-        def run(self):
-            while True:
-                row_position = self.edit_tab.currentWidget().edit.textCursor().blockNumber()
-                column_position = self.edit_tab.currentWidget().edit.textCursor().columnNumber()
-                self.cursor_position.emit(str(row_position), str(column_position))
-    except Exception as e:
-        print(e)
-
-'''
-
-
-class EditCursor(QObject):
-    cursor_position = pyqtSignal(str)
+from test import edit2
 
 
 class MenuTools(QMainWindow):
@@ -240,10 +222,10 @@ class MenuTools(QMainWindow):
         self.edit_tab.addTab(script_edit, '新脚本')
         # flag为False时保存文件需要弹出文件对话框
         script_edit.flag = False
-        script_edit.edit = QTextEdit()
-        script_edit.edit.setLineWrapMode(QTextEdit.NoWrap)
-        f = open('模板.py', 'r', encoding='utf-8')
-        script_edit.edit.setText(f.read())
+        script_edit.edit = edit2.QCodeEditor()
+        script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
+        f = open('script_template.py', 'r', encoding='utf-8')
+        script_edit.edit.setPlainText(f.read())
         try:
             completer = QCompleter(['print', 'click', 'double_click'], script_edit.edit)
             script_edit.edit.setCompleter(completer)
@@ -280,13 +262,13 @@ class MenuTools(QMainWindow):
             script_edit.path = open_path_information[0]
             script_edit.cwd = open_path_information[0][0:last_index]
             script_edit.edit_name = open_path_information[0][last_index + 1:]
-            script_edit.edit = QTextEdit()
-            script_edit.edit.setLineWrapMode(QTextEdit.NoWrap)
+            script_edit.edit = edit2.QCodeEditor()
+            script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
             script_edit.edit_layout = QHBoxLayout()
             script_edit.edit_layout.addWidget(script_edit.edit)
             script_edit.setLayout(script_edit.edit_layout)
             with open(open_path_information[0], 'r', encoding='utf-8', errors='ignore') as f:  # 文件读操作
-                script_edit.edit.setText(f.read())
+                script_edit.edit.setPlainText(f.read())
                 f.close()
             # 新增右键
             script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -358,12 +340,6 @@ class MenuTools(QMainWindow):
             self.edit_tab.removeTab(self.edit_tab.currentIndex())
         except Exception as e:
             print(e)
-
-    '''def handle_cursor(self, row_position, column_position):
-        try:
-            self.edit_tab.currentWidget().label.setText("行:" + row_position + "列:" + column_position)
-        except Exception as e:
-            print(e)'''
 
 
 if __name__ == '__main__':
