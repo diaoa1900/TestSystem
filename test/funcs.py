@@ -6,6 +6,7 @@ import pyautogui
 from PIL import ImageGrab
 from PyQt5.QtWidgets import QFileDialog
 from airtest.core.helper import G
+from threading import Thread
 from test import IDE
 
 screenshot_dir = "D:/screenshotFolder/"
@@ -38,14 +39,19 @@ class Functions(IDE.MenuTools):
     def run(self):
         try:
             self.console_text.clear()
-            global sbp
-            sbp = subprocess.Popen("python " + self.edit_tab.currentWidget().edit_name,
-                                   cwd=self.edit_tab.currentWidget().cwd, stdout=subprocess.PIPE,
-                                   stderr=subprocess.PIPE)
-            self.console_text.insertPlainText(sbp.stdout.read().decode())
-            sbp.stdout.close()
-            self.console_text.insertPlainText(sbp.stderr.read().decode())
-            sbp.stderr.close()
+
+            def pp():
+                sbp = subprocess.Popen("python " + self.edit_tab.currentWidget().edit_name,
+                                       cwd=self.edit_tab.currentWidget().cwd, stdout=subprocess.PIPE,
+                                       stderr=subprocess.PIPE)
+                self.console_text.insertPlainText(sbp.stdout.read().decode())
+                self.console_text.insertPlainText(sbp.stderr.read().decode())
+                sbp.stdout.close()
+                sbp.stderr.close()
+
+            global t
+            t = Thread(target=pp)
+            t.start()
             '''logger = logging.getLogger(" ")
             logger.setLevel(logging.DEBUG)
             sh = logging.FileHandler()
@@ -56,8 +62,8 @@ class Functions(IDE.MenuTools):
             exec(f.read())'''
 
     def stop_run(self):
-        global sbp
-        sbp.kill()
+        global t
+        t.kill()
 
     def wait(self):
         self.setVisible(False)

@@ -9,6 +9,25 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from test import funcs
 
+'''class EditCursor(QThread):
+class EditCursor(QObject):
+    try:
+        cursor_position = pyqtSignal(str)
+
+        def run(self):
+            while True:
+                row_position = self.edit_tab.currentWidget().edit.textCursor().blockNumber()
+                column_position = self.edit_tab.currentWidget().edit.textCursor().columnNumber()
+                self.cursor_position.emit(str(row_position), str(column_position))
+    except Exception as e:
+        print(e)
+
+'''
+
+
+class EditCursor(QObject):
+    cursor_position = pyqtSignal(str)
+
 
 class MenuTools(QMainWindow):
     def __init__(self, parent=None):
@@ -20,7 +39,7 @@ class MenuTools(QMainWindow):
         h = win32print.GetDeviceCaps(hdc, win32con.DESKTOPVERTRES)
         self.setWindowTitle('testSystem')
         # self.resize(1700, 900)
-        self.resize(0.8*w, 0.8*h)
+        self.resize(0.8 * w, 0.8 * h)
         self.create_menu()
         self.create_tool()
         self.create_statusbar()
@@ -66,15 +85,9 @@ class MenuTools(QMainWindow):
         self.text_button = QPushButton("text")
         self.keyevent_button = QPushButton("keyevent")
         self.snapshot_button = QPushButton("snapshot")
-        '''self.paste_button = QPushButton("paste")
-        self.p_text_button = QPushButton("p_text")
-        self.p_paste_button = QPushButton("p_paste")'''
         layout.addWidget(self.text_button)
         layout.addWidget(self.keyevent_button)
         layout.addWidget(self.snapshot_button)
-        '''layout.addWidget(self.paste_button)
-        layout.addWidget(self.p_text_button)
-        layout.addWidget(self.p_paste_button)'''
         self.groupbox_3.setLayout(layout)
 
         self.groupbox_4 = QGroupBox("断言", self)
@@ -104,7 +117,7 @@ class MenuTools(QMainWindow):
         self.connect_button = QPushButton("建立连接")
         self.disconnect_button = QPushButton("断开连接")
         self.textEdit = QTextEdit()
-        self.send_button = QPushButton("发送")
+        self.send_button = QCommandLinkButton("发送")
 
         layout.addWidget(self.connect_button)
         layout.addWidget(self.disconnect_button)
@@ -123,9 +136,6 @@ class MenuTools(QMainWindow):
         self.text_button.clicked.connect(lambda: funcs.Functions.text(self))
         self.keyevent_button.clicked.connect(lambda: funcs.Functions.keyevent(self))
         self.snapshot_button.clicked.connect(lambda: funcs.Functions.snapshot(self))
-        '''self.paste_button.clicked.connect(lambda: funcs.Functions.paste(self))
-        self.p_text_button.clicked.connect(lambda: funcs.Functions.p_text(self))
-        self.p_paste_button.clicked.connect(lambda: funcs.Functions.p_paste(self))'''
         self.assert_equal_button.clicked.connect(lambda: funcs.Functions.assert_equal(self))
         self.assert_exist_button.clicked.connect(lambda: funcs.Functions.assert_exist(self))
 
@@ -158,13 +168,6 @@ class MenuTools(QMainWindow):
         self.setCentralWidget(widget)
 
         # 局部布局加到全局布局中
-        '''all_layout.addLayout(left_layout)
-        all_layout.addLayout(mid_layout)
-        all_layout.addLayout(right_layout)
-
-        widget = QWidget()
-        widget.setLayout(all_layout)
-        self.setCentralWidget(widget)'''
 
     # 创建菜单栏
     def create_menu(self):
@@ -239,11 +242,20 @@ class MenuTools(QMainWindow):
         script_edit.flag = False
         script_edit.edit = QTextEdit()
         script_edit.edit.setLineWrapMode(QTextEdit.NoWrap)
-        # script_edit.edit.setEnabled()
         f = open('模板.py', 'r', encoding='utf-8')
         script_edit.edit.setText(f.read())
-        script_edit.edit_layout = QHBoxLayout()
+        script_edit.label = QLabel(self)
+        script_edit.label.setText("行:" + '0' + "列:" + '0')  # 怎么让它实时改变呢？
+        script_edit.label.setAlignment(Qt.AlignRight)
+        '''try:
+            ec = EditCursor(self)
+            ec.cursor_position.connect(self.handle_cursor)
+            ec.start()
+        except Exception as e:
+            print(e)'''
+        script_edit.edit_layout = QVBoxLayout()
         script_edit.edit_layout.addWidget(script_edit.edit)
+        script_edit.edit_layout.addWidget(script_edit.label)
         script_edit.setLayout(script_edit.edit_layout)
         # 新增右键
         script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
@@ -257,12 +269,12 @@ class MenuTools(QMainWindow):
         if open_path_information[0]:
             last_index = open_path_information[0].rindex('/')
             script_edit = QWidget()
-            self.edit_tab.addTab(script_edit, open_path_information[0][last_index+1:])
+            self.edit_tab.addTab(script_edit, open_path_information[0][last_index + 1:])
             # flag为True时保存文件无需弹出文件对话框
             script_edit.flag = True
             script_edit.path = open_path_information[0]
             script_edit.cwd = open_path_information[0][0:last_index]
-            script_edit.edit_name = open_path_information[0][last_index+1:]
+            script_edit.edit_name = open_path_information[0][last_index + 1:]
             script_edit.edit = QTextEdit()
             script_edit.edit.setLineWrapMode(QTextEdit.NoWrap)
             script_edit.edit_layout = QHBoxLayout()
@@ -287,9 +299,9 @@ class MenuTools(QMainWindow):
                 f.close()
                 last_index = save_path_information[0].rindex('/')
                 self.edit_tab.currentWidget().cwd = save_path_information[0][0:last_index]
-                self.edit_tab.setTabText(self.edit_tab.currentIndex(), save_path_information[0][last_index+1:])
+                self.edit_tab.setTabText(self.edit_tab.currentIndex(), save_path_information[0][last_index + 1:])
                 self.edit_tab.currentWidget().flag = True
-                self.edit_tab.currentWidget().edit_name = save_path_information[0][last_index+1:]
+                self.edit_tab.currentWidget().edit_name = save_path_information[0][last_index + 1:]
             except Exception as e:
                 print(e)
         else:
@@ -336,19 +348,17 @@ class MenuTools(QMainWindow):
         except Exception as e:
             print(e)
 
-    '''def edit_screen(self):
-        self.edit_tab.currentWidget().showFullScreen()
-        self.edit_tab.currentWidget().showMaximized()
-        self.edit_tab.showFullScreen()
-        self.edit_tab.showMaximized()
-        self.edit_tab.currentWidget().edit.showFullScreen()
-        self.edit_tab.currentWidget().edit.showMaximized()'''
-
     def edit_close(self):
         try:
             self.edit_tab.removeTab(self.edit_tab.currentIndex())
         except Exception as e:
             print(e)
+
+    '''def handle_cursor(self, row_position, column_position):
+        try:
+            self.edit_tab.currentWidget().label.setText("行:" + row_position + "列:" + column_position)
+        except Exception as e:
+            print(e)'''
 
 
 if __name__ == '__main__':
