@@ -231,18 +231,8 @@ class MenuTools(QMainWindow):
             script_edit.edit.setCompleter(completer)
         except Exception as e:
             print(e)
-        script_edit.label = QLabel(self)
-        script_edit.label.setText("行:" + '0' + "列:" + '0')  # 怎么让它实时改变呢？
-        script_edit.label.setAlignment(Qt.AlignRight)
-        '''try:
-            ec = EditCursor(self)
-            ec.cursor_position.connect(self.handle_cursor)
-            ec.start()
-        except Exception as e:
-            print(e)'''
         script_edit.edit_layout = QVBoxLayout()
         script_edit.edit_layout.addWidget(script_edit.edit)
-        script_edit.edit_layout.addWidget(script_edit.label)
         script_edit.setLayout(script_edit.edit_layout)
         # 新增右键
         script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
