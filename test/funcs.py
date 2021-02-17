@@ -210,7 +210,7 @@ class Functions(IDE.MenuTools):
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "assert_equal(Template(r\"" + screenshot_dir + i + ".jpg\"))")
+            "assert_equal(Template(r\"" + screenshot_dir + i + ".jpg\"), \"预测值\", \"请填写测试点\")")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
@@ -225,7 +225,7 @@ class Functions(IDE.MenuTools):
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         img.save(screenshot_dir + i + ".jpg")
         self.edit_tab.currentWidget().edit.insertPlainText(
-            "assert_exists(Template(r\"" + screenshot_dir + i + ".jpg\"))")
+            "assert_exists(Template(r\"" + screenshot_dir + i + ".jpg\"), \"请填写测试点\")")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
