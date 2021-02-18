@@ -89,9 +89,22 @@ class MenuTools(QMainWindow):
         self.edit_tab = QTabWidget()
 
         # 控制台栏
+        self.output_tab = QTabWidget()
+        self.console_window = QWidget()
         self.console_text = QTextEdit()
         self.console_text.setLineWrapMode(QTextEdit.NoWrap)  # 怎么换行呢？是个问题
         self.console_text.setReadOnly(True)
+        layout = QHBoxLayout()
+        layout.addWidget(self.console_text)
+        self.console_window.setLayout(layout)
+        self.run_result_window = QWidget()
+        self.run_result = QTextEdit()
+        self.run_result.setReadOnly(True)
+        layout = QHBoxLayout()
+        layout.addWidget(self.run_result)
+        self.run_result_window.setLayout(layout)
+        self.output_tab.addTab(self.run_result_window, "函数运行结果")
+        self.output_tab.addTab(self.console_window, "控制台")
 
         # 右侧栏
         self.groupbox_6 = QGroupBox("通信管理", self)
@@ -128,7 +141,7 @@ class MenuTools(QMainWindow):
         left_layout.addWidget(self.groupbox_4, 2)
 
         mid_widget.addWidget(self.edit_tab)
-        mid_widget.addWidget(self.console_text)
+        mid_widget.addWidget(self.output_tab)
         mid_widget.setStretchFactor(0, 40)
         mid_widget.setStretchFactor(1, 1)
 
