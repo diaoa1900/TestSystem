@@ -1,4 +1,5 @@
 import logging
+import os
 import subprocess
 import time
 import keyboard
@@ -10,7 +11,10 @@ from airtest.core.helper import G
 from threading import Thread
 from test import IDE
 
-screenshot_dir = "D:/screenshotFolder/"
+screenshot_dir = "D:/screenshotFolder"
+if not os.path.exists(screenshot_dir):
+    os.makedirs(screenshot_dir)
+screenshot_dir += '/'
 
 
 class Functions(IDE.MenuTools):
@@ -172,7 +176,7 @@ class Functions(IDE.MenuTools):
         self.edit_tab.currentWidget().edit.setFocus()
         pyautogui.press('enter')
 
-    def cover(self):
+    def hover(self):
         # 鼠标悬浮在该图片位置上
         pass
 
