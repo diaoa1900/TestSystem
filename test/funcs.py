@@ -113,8 +113,8 @@ class Functions(IDE.MenuTools):
     def double_click(self):
         Functions.screenshot_function(self, "double_click")
 
-    def rightClick(self):
-        Functions.screenshot_function(self, "rightClick")
+    def right_click(self):
+        Functions.screenshot_function(self, "right_click")
 
     def swipe(self):
         self.setVisible(False)
