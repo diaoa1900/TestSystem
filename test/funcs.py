@@ -1,36 +1,63 @@
 import logging
-import os
 import subprocess
+import sys
 import time
 import keyboard
 import pyautogui
 from PIL import ImageGrab
 from PyQt5.QtGui import QTextCursor
-from PyQt5.QtWidgets import QFileDialog, QInputDialog
-from airtest.core.helper import G
+from PyQt5.QtWidgets import QFileDialog, QInputDialog, QApplication
 from threading import Thread
 from test import IDE
+from test import screenShot
 
-screenshot_dir = "D:/screenshotFolder"
-if not os.path.exists(screenshot_dir):
-    os.makedirs(screenshot_dir)
-screenshot_dir += '/'
+import os
+
+father_dir = os.path.dirname(os.path.abspath(__file__))
+grandfather_dir = os.path.dirname(father_dir)
+while not father_dir == grandfather_dir:
+    father_dir = grandfather_dir
+    grandfather_dir = os.path.dirname(grandfather_dir)
+temporary_screenshot_dir = grandfather_dir[0] + ":/screenshotFolder"
+if not os.path.exists(temporary_screenshot_dir):
+    os.makedirs(temporary_screenshot_dir)
+screenshot_dir = temporary_screenshot_dir + '/'
 
 
 class Functions(IDE.MenuTools):
 
-    def screenshot(self):
+    def screenshot_function(self, method):
+        global shot_flag
+        shot_flag = False
         self.setVisible(False)
         time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save(screenshot_dir + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "Template(r\"" + screenshot_dir + i + ".jpg\")")
-        self.setVisible(True)
+        if sys.platform.startswith('win32'):
+            scs = screenShot.ScreenShot(screenshot_dir, i)
+            shot_flag = scs.shot_flag
+        elif sys.platform.startswith('linux'):
+            clib = QApplication.clipboard()
+            clib.clear()
+            pyautogui.hotkey('shift', 'ctrl', 'prtsc')
+            while True:
+                if clib.mimeData().hasImage():
+                    clib.image().save(screenshot_dir + i + ".jpg", "jpg")
+                    shot_flag = True
+        if shot_flag:
+            if method:
+                self.edit_tab.currentWidget().edit.insertPlainText(
+                    method + "(Template(r\"" + screenshot_dir + i + ".jpg\"))")
+                self.setVisible(True)
+                self.edit_tab.currentWidget().edit.setFocus()
+                pyautogui.press('enter')
+            else:
+                self.edit_tab.currentWidget().edit.insertPlainText(
+                    "Template(r\"" + screenshot_dir + i + ".jpg\")")
+                self.setVisible(True)
+            shot_flag = False
+
+    def screenshot(self):
+        Functions.screenshot_function(self)
 
     def insert_picture(self):
         picture_path_information = QFileDialog.getOpenFileName(self, '请选择图片', '.', '*.jpg *.png *.jpeg')
@@ -72,94 +99,22 @@ class Functions(IDE.MenuTools):
         t.stop()
 
     def wait(self):
-        self.setVisible(False)
-        time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save(screenshot_dir + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "wait(Template(r\"" + screenshot_dir + i + ".jpg\"))")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
+        Functions.screenshot_function(self, "wait")
 
     def waitVanish(self):
-        self.setVisible(False)
-        time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save(screenshot_dir + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "waitVanish(Template(r\"" + screenshot_dir + i + ".jpg\"))")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
+        Functions.screenshot_function(self, "waitVanish")
 
     def exists(self):
-        self.setVisible(False)
-        time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save(screenshot_dir + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "exists(Template(r\"" + screenshot_dir + i + ".jpg\"))")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
+        Functions.screenshot_function(self, "exists")
 
     def click(self):
-        self.setVisible(False)
-        time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save(screenshot_dir + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "click(Template(r\"" + screenshot_dir + i + ".jpg\"))")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
+        Functions.screenshot_function(self, "click")
 
     def double_click(self):
-        self.setVisible(False)
-        time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save(screenshot_dir + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "double_click(Template(r\"" + screenshot_dir + i + ".jpg\"))")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
+        Functions.screenshot_function(self, "double_click")
 
     def rightClick(self):
-        self.setVisible(False)
-        time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save(screenshot_dir + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "rightClick(Template(r\"" + screenshot_dir + i + ".jpg\"))")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
+        Functions.screenshot_function(self, "rightClick")
 
     def swipe(self):
         self.setVisible(False)
@@ -178,7 +133,7 @@ class Functions(IDE.MenuTools):
 
     def hover(self):
         # 鼠标悬浮在该图片位置上
-        pass
+        Functions.screenshot_function(self, "hover")
 
     def keyevent(self):
         # 模拟按下键盘上某个键
@@ -205,31 +160,51 @@ class Functions(IDE.MenuTools):
             pyautogui.press('enter')
 
     def assert_equal(self):
+        global shot_flag
+        shot_flag = False
         self.setVisible(False)
         time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save(screenshot_dir + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "assert_equal(Template(r\"" + screenshot_dir + i + ".jpg\"), \"预测值\", \"请填写测试点\")")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
+        if sys.platform.startswith('win32'):
+            scs = screenShot.ScreenShot(screenshot_dir, i)
+            shot_flag = scs.shot_flag
+        elif sys.platform.startswith('linux'):
+            clib = QApplication.clipboard()
+            clib.clear()
+            pyautogui.hotkey('shift', 'ctrl', 'prtsc')
+            while True:
+                if clib.mimeData().hasImage():
+                    clib.image().save(screenshot_dir + i + ".jpg", "jpg")
+                    shot_flag = True
+        if shot_flag:
+            self.edit_tab.currentWidget().edit.insertPlainText(
+                "assert_equal(Template(r\"" + screenshot_dir + i + ".jpg\"), \"预测值\", \"请填写测试点\")")
+            self.setVisible(True)
+            self.edit_tab.currentWidget().edit.setFocus()
+            pyautogui.press('enter')
+            shot_flag = False
 
     def assert_exist(self):
+        global shot_flag
+        shot_flag = False
         self.setVisible(False)
         time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save(screenshot_dir + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "assert_exists(Template(r\"" + screenshot_dir + i + ".jpg\"), \"请填写测试点\")")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
+        if sys.platform.startswith('win32'):
+            scs = screenShot.ScreenShot(screenshot_dir, i)
+            shot_flag = scs.shot_flag
+        elif sys.platform.startswith('linux'):
+            clib = QApplication.clipboard()
+            clib.clear()
+            pyautogui.hotkey('shift', 'ctrl', 'prtsc')
+            while True:
+                if clib.mimeData().hasImage():
+                    clib.image().save(screenshot_dir + i + ".jpg", "jpg")
+                    shot_flag = True
+        if shot_flag:
+            self.edit_tab.currentWidget().edit.insertPlainText(
+                "assert_exists(Template(r\"" + screenshot_dir + i + ".jpg\"), \"请填写测试点\")")
+            self.setVisible(True)
+            self.edit_tab.currentWidget().edit.setFocus()
+            pyautogui.press('enter')
+            shot_flag = False
