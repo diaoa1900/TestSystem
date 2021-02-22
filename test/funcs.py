@@ -26,7 +26,7 @@ screenshot_dir = temporary_screenshot_dir + '/'
 
 class Functions(IDE.MenuTools):
 
-    def screenshot_function(self, method):
+    def screenshot_function(self, method=None):
         global shot_flag
         shot_flag = False
         self.setVisible(False)
@@ -39,10 +39,15 @@ class Functions(IDE.MenuTools):
             clib = QApplication.clipboard()
             clib.clear()
             pyautogui.hotkey('shift', 'ctrl', 'prtsc')
+            start_time = time.time()
             while True:
+                end_time = time.time()
                 if clib.mimeData().hasImage():
                     clib.image().save(screenshot_dir + i + ".jpg", "jpg")
                     shot_flag = True
+                    break
+                if end_time - start_time > 10:
+                    break
         if shot_flag:
             if method:
                 self.edit_tab.currentWidget().edit.insertPlainText(
@@ -149,7 +154,9 @@ class Functions(IDE.MenuTools):
 
     def snapshot(self):
         # 截取当前屏幕全图
-        pass
+        self.edit_tab.currentWidget().edit.insertPlainText("snapshot(msg=\"请填写测试点\")")
+        self.edit_tab.currentWidget().edit.setFocus()
+        pyautogui.press('enter')
 
     def text(self):
         # 输入文本，文本框需要处于激活状态
