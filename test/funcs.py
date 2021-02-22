@@ -60,6 +60,8 @@ class Functions(IDE.MenuTools):
                     "Template(r\"" + screenshot_dir + i + ".jpg\")")
                 self.setVisible(True)
             shot_flag = False
+        else:
+            self.setVisible(True)
 
     def screenshot(self):
         Functions.screenshot_function(self)
