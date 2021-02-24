@@ -85,6 +85,7 @@ class Functions(IDE.MenuTools):
                                        stderr=subprocess.STDOUT)
                 for line in iter(sbp.stdout.readline, 'b'):
                     self.console_text.insertPlainText(line.decode())
+                    self.console_text.moveCursor(QTextCursor.End)
                     if not subprocess.Popen.poll(sbp) is None:
                         break
                 sbp.stdout.close()

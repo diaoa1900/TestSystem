@@ -9,9 +9,12 @@ from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
 from test import funcs
 from test import edit2
+from system_hotkey import SystemHotkey
 
 
 class MenuTools(QMainWindow):
+    sig_hotkey = pyqtSignal(str)
+
     def __init__(self, parent=None):
         super(MenuTools, self).__init__(parent)
         hdc = win32gui.GetDC(0)
@@ -26,6 +29,8 @@ class MenuTools(QMainWindow):
         self.create_tool()
         self.create_statusbar()
         # os.startfile("D:\Learn\Snipaste-2.5.1-Beta-x64\Snipaste.exe")
+        self.sig_hotkey.connect(self.process)
+        SystemHotkey().register(('control', 'q'), callback=lambda x: self.send_event("开始截图"))
 
         # 全局水平布局
         all_layout = QHBoxLayout()
@@ -356,6 +361,13 @@ class MenuTools(QMainWindow):
             self.edit_tab.removeTab(self.edit_tab.currentIndex())
         except Exception as e:
             print(e)
+
+    def process(self, word):
+        print(word)
+        funcs.Functions.screenshot_function(self)
+
+    def send_event(self, word):
+        self.sig_hotkey.emit(word)
 
 
 if __name__ == '__main__':
