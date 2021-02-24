@@ -13,15 +13,18 @@ from test import screenShot
 
 import os
 
-father_dir = os.path.dirname(os.path.abspath(__file__))
-grandfather_dir = os.path.dirname(father_dir)
-while not father_dir == grandfather_dir:
-    father_dir = grandfather_dir
-    grandfather_dir = os.path.dirname(grandfather_dir)
-temporary_screenshot_dir = grandfather_dir[0] + ":/screenshotFolder"
-if not os.path.exists(temporary_screenshot_dir):
-    os.makedirs(temporary_screenshot_dir)
-screenshot_dir = temporary_screenshot_dir + '/'
+if sys.platform.startswith('win32'):
+    father_dir = os.path.dirname(os.path.abspath(__file__))
+    grandfather_dir = os.path.dirname(father_dir)
+    while not father_dir == grandfather_dir:
+        father_dir = grandfather_dir
+        grandfather_dir = os.path.dirname(grandfather_dir)
+    temporary_screenshot_dir = grandfather_dir[0] + ":/screenshotFolder"
+    if not os.path.exists(temporary_screenshot_dir):
+        os.makedirs(temporary_screenshot_dir)
+    screenshot_dir = temporary_screenshot_dir + '/'
+elif sys.platform.startswith('linux'):
+    pass
 
 
 class Functions(IDE.MenuTools):
