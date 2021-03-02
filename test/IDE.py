@@ -92,10 +92,16 @@ class MenuTools(QMainWindow):
         layout = QVBoxLayout()
         self.assert_equal_button = QPushButton("assert_equal")
         self.assert_equal_button.setToolTip("断言两个图像是否相同")
-        self.assert_exist_button = QPushButton("assert_exist")
-        self.assert_exist_button.setToolTip("断言该图像是否存在")
+        self.assert_picture_exist_button = QPushButton("assert_picture_exist")
+        self.assert_picture_exist_button.setToolTip("断言该图像是否存在")
+        self.assert_file_exist_button = QPushButton("assert_file_exist")
+        self.assert_file_exist_button.setToolTip("断言该文件是否存在")
+        self.assert_word_exist_button = QPushButton("assert_word_exist")
+        self.assert_word_exist_button.setToolTip("断言该句日志是否在末尾")
         layout.addWidget(self.assert_equal_button)
-        layout.addWidget(self.assert_exist_button)
+        layout.addWidget(self.assert_picture_exist_button)
+        layout.addWidget(self.assert_file_exist_button)
+        layout.addWidget(self.assert_word_exist_button)
         self.groupbox_4.setLayout(layout)
 
         # 脚本编辑栏
@@ -115,13 +121,13 @@ class MenuTools(QMainWindow):
         layout = QHBoxLayout()
         layout.addWidget(self.console_text)
         self.console_window.setLayout(layout)
-        self.run_result_window = QWidget()
+        '''self.run_result_window = QWidget()
         self.run_result = QTextEdit()
         self.run_result.setReadOnly(True)
         layout = QHBoxLayout()
         layout.addWidget(self.run_result)
         self.run_result_window.setLayout(layout)
-        self.output_tab.addTab(self.run_result_window, "函数运行结果")
+        self.output_tab.addTab(self.run_result_window, "函数运行结果")'''
         self.output_tab.addTab(self.console_window, "控制台")
 
         # 右侧栏
@@ -150,13 +156,15 @@ class MenuTools(QMainWindow):
         self.keyevent_button.clicked.connect(lambda: funcs.Functions.keyevent(self))
         self.snapshot_button.clicked.connect(lambda: funcs.Functions.snapshot(self))
         self.assert_equal_button.clicked.connect(lambda: funcs.Functions.assert_equal(self))
-        self.assert_exist_button.clicked.connect(lambda: funcs.Functions.assert_exist(self))
+        self.assert_picture_exist_button.clicked.connect(lambda: funcs.Functions.assert_exist(self))
+        self.assert_file_exist_button.clicked.connect(lambda: funcs.Functions.assert_file_exist(self))
+        self.assert_word_exist_button.clicked.connect(lambda: funcs.Functions.assert_word_exist(self))
 
         # 将控件加入布局
         left_layout.addWidget(self.groupbox_1, 3)
         left_layout.addWidget(self.groupbox_2, 5)
         left_layout.addWidget(self.groupbox_3, 3)
-        left_layout.addWidget(self.groupbox_4, 2)
+        left_layout.addWidget(self.groupbox_4, 4)
 
         mid_widget.addWidget(self.edit_tab)
         mid_widget.addWidget(self.output_tab)

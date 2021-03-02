@@ -221,3 +221,9 @@ class Functions(IDE.MenuTools):
             self.edit_tab.currentWidget().edit.setFocus()
             pyautogui.press('enter')
             shot_flag = False
+
+    def assert_file_exist(self):
+        pass
+
+    def assert_word_exist(self):
+        pass
