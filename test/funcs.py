@@ -1,16 +1,12 @@
-import logging
 import subprocess
 import sys
 import time
-import keyboard
 import pyautogui
-from PIL import ImageGrab
 from PyQt5.QtGui import QTextCursor
 from PyQt5.QtWidgets import QFileDialog, QInputDialog, QApplication
 from threading import Thread
 from test import IDE
 from test import screenShot
-
 import os
 
 if sys.platform.startswith('win32'):
@@ -128,7 +124,7 @@ class Functions(IDE.MenuTools):
         Functions.screenshot_function(self, "right_click")
 
     def swipe(self):
-        self.setVisible(False)
+        """self.setVisible(False)
         time.sleep(1)
         pyautogui.press('f1')
         keyboard.wait('enter')
@@ -140,7 +136,8 @@ class Functions(IDE.MenuTools):
             "swipe(Template(r\"" + screenshot_dir + i + ".jpg\"))")
         self.setVisible(True)
         self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
+        pyautogui.press('enter')"""
+        pass
 
     def hover(self):
         # 鼠标悬浮在该图片位置上
@@ -223,7 +220,12 @@ class Functions(IDE.MenuTools):
             shot_flag = False
 
     def assert_file_exist(self):
-        pass
+        try:
+            exist_path_information = QFileDialog.getSaveFileName(self, '判断是否存在文件', '.')
+            file = exist_path_information[0]
+        except Exception as e:
+            print(e)
+        self.edit_tab.currentWidget().edit.insertPlainText("assert_file_exist(\"" + file + "\")")
 
     def assert_word_exist(self):
         pass
