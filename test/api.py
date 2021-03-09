@@ -2,6 +2,7 @@
 """
 This module contains the Airtest Core APIs.
 """
+import operator
 import os
 import sys
 import time
@@ -804,3 +805,33 @@ def assert_file_exist(file):
         write_result("assert_file_exist")
     else:
         raise AssertionError("%s is not exist" % file)
+
+
+@logwrap
+def assert_word_exist(file, row, words_given):
+    f = open(file, 'rb')
+    offset = -50
+    assert_word_exist_flag = False
+    while True:
+        f.seek(offset, 2)
+        lines = f.readlines()
+        if len(lines) >= row + 1:
+            if row > 1:
+                words_in_file = lines[-row:0]
+                words_in_file_co = ''
+                for i in range(len(words_in_file)):
+                    words_in_file_co += str(words_in_file[i], encoding='utf-8')
+                if words_in_file_co == words_given:
+                    assert_word_exist_flag = True
+            else:
+                words_in_file = lines[-1]
+                words_in_file = str(words_in_file, encoding='utf-8')
+                if words_in_file == words_given:
+                    assert_word_exist_flag = True
+            break
+        else:
+            offset *= 2
+    if assert_word_exist_flag is True:
+        write_result("assert_word_exist")
+    else:
+        raise AssertionError("{} is not on the last {} lines of {}".format(words_given, row, file))

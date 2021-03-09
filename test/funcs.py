@@ -220,12 +220,25 @@ class Functions(IDE.MenuTools):
             shot_flag = False
 
     def assert_file_exist(self):
-        try:
-            exist_path_information = QFileDialog.getSaveFileName(self, '判断是否存在文件', '.')
+        exist_path_information = QFileDialog.getSaveFileName(self, '判断是否存在文件', '.')
+        if exist_path_information[0]:
             file = exist_path_information[0]
-        except Exception as e:
-            print(e)
-        self.edit_tab.currentWidget().edit.insertPlainText("assert_file_exist(\"" + file + "\")")
+            self.edit_tab.currentWidget().edit.insertPlainText("assert_file_exist(\"" + file + "\")")
 
     def assert_word_exist(self):
-        pass
+        file_value = QFileDialog.getOpenFileName(self, '选择要对比的文件', '.')
+        if file_value[0]:
+            row_value = QInputDialog.getInt(self, '对比最后n行', '请给出n的取值', 1, 1)
+            if row_value[1] is True:
+                compare_value = QInputDialog.getMultiLineText(self, '最后n行的预期内容', '请给出您的预期')
+                if compare_value[1] is True:
+                    compare_v = ''
+                    if row_value[0] > 1:
+                        for i in compare_value[0].split('\n'):
+                            compare_v += i
+                    else:
+                        compare_v = compare_value[0]
+                    self.edit_tab.currentWidget().edit.insertPlainText(
+                        "assert_word_exist(\"" + file_value[0] + "\"," + str(row_value[0]) + ",\"" + compare_v + "\")")
+                    self.edit_tab.currentWidget().edit.setFocus()
+                    pyautogui.press('enter')
