@@ -819,9 +819,13 @@ def assert_file_exist(file):
 def assert_word_exist(file, row, words_given):
     f = open(file, 'rb')
     offset = -50
+    file_size = os.stat(file).st_size
     assert_word_exist_flag = False
     while True:
-        f.seek(offset, 2)
+        if -offset > file_size:
+            f.seek(0, 0)
+        else:
+            f.seek(offset, 2)
         lines = f.readlines()
         if len(lines) >= row + 1:
             if row > 1:
