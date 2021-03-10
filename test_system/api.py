@@ -147,7 +147,7 @@ def auto_setup(basedir=None, devices=None, logdir=None, project_root=None, compr
     :Example:
         >>> auto_setup(__file__)
         >>> auto_setup(__file__, devices=["Android://127.0.0.1:5037/SJE5T17B17"],
-        ...             logdir=True, project_root=r"D:\\test\\logs", compress=90)
+        ...             logdir=True, project_root=r"D:\\test_system\\logs", compress=90)
     """
     if basedir:
         if os.path.isfile(basedir):
@@ -248,9 +248,9 @@ def install(filepath, **kwargs):
     :return: None
     :platforms: Android
     :Example:
-        >>> install(r"D:\\demo\\test.apk")
-        >>> # adb install -r -t D:\\demo\\test.apk
-        >>> install(r"D:\\demo\\test.apk", ["-r", "-t"])
+        >>> install(r"D:\\demo\\test_system.apk")
+        >>> # adb install -r -t D:\\demo\\test_system.apk
+        >>> install(r"D:\\demo\\test_system.apk", ["-r", "-t"])
     """
     return G.DEVICE.install_app(filepath, **kwargs)
 
@@ -283,8 +283,8 @@ def snapshot(filename=None, msg="", quality=None, max_size=None):
     :platforms: Android, iOS, Windows
     :Example:
         >>> snapshot(msg="index")
-        >>> # save the screenshot to test.jpg
-        >>> snapshot(filename="test.png", msg="test")
+        >>> # save the screenshot to test_system.jpg
+        >>> snapshot(filename="test_system.png", msg="test_system")
 
         The quality and size of the screenshot can be set::
 
@@ -296,9 +296,9 @@ def snapshot(filename=None, msg="", quality=None, max_size=None):
         >>> # The quality of the screenshot is 30, and the size does not exceed 600*600
         >>> touch((100, 100))
         >>> # The quality of the screenshot of this sentence is 90
-        >>> snapshot(filename="test.png", msg="test", quality=90)
+        >>> snapshot(filename="test_system.png", msg="test_system", quality=90)
         >>> # The quality of the screenshot is 90, and the size does not exceed 1200*1200
-        >>> snapshot(filename="test2.png", msg="test", quality=90, max_size=1200)
+        >>> snapshot(filename="test2.png", msg="test_system", quality=90, max_size=1200)
 
     """
     if not quality:
@@ -588,12 +588,12 @@ def text(text, enter=True, **kwargs):
     :platforms: Android, Windows, iOS
     :Example:
 
-        >>> text("test")
-        >>> text("test", enter=False)
+        >>> text("test_system")
+        >>> text("test_system", enter=False)
 
         On Android, sometimes you need to click the search button after typing::
 
-        >>> text("test", search=True)
+        >>> text("test_system", search=True)
 
         .. seealso::
 
@@ -601,7 +601,7 @@ def text(text, enter=True, **kwargs):
 
             If you want to enter other keys on the keyboard, you can use the interface::
 
-                >>> text("test")
+                >>> text("test_system")
                 >>> device().yosemite_ime.code("3")  # 3 = IME_ACTION_SEARCH
 
             Ref: `Editor Action Code <http://developer.android.com/reference/android/view/inputmethod/EditorInfo.html>`_
