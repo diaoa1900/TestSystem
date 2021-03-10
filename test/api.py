@@ -8,7 +8,7 @@ import time
 
 from six.moves.urllib.parse import parse_qsl, urlparse
 
-from airtest.core.cv import Template, loop_find, try_log_screen
+from airtest.core.cv import Template, loop_find, try_log_screen, loop_find_vanish
 from airtest.core.error import TargetNotFoundError
 from airtest.core.settings import Settings as ST
 from airtest.utils.compat import script_log_dir
@@ -655,6 +655,15 @@ def wait(v, timeout=None, interval=0.5, intervalfunc=None):
     timeout = timeout or ST.FIND_TIMEOUT
     pos = loop_find(v, timeout=timeout, interval=interval, intervalfunc=intervalfunc)
     write_result("wait", v)
+    return pos
+
+
+@logwrap
+def waitVanish(v, timeout=None, interval=0.5, intervalfunc=None):
+    timeout = timeout or ST.FIND_TIMEOUT
+    pos = loop_find(v, timeout=timeout, interval=interval, intervalfunc=intervalfunc)
+    vanish_pos = loop_find_vanish(v, timeout=timeout, interval=interval, intervalfunc=intervalfunc)
+    write_result("waitVanish", v)
     return pos
 
 
