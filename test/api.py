@@ -2,7 +2,6 @@
 """
 This module contains the Airtest Core APIs.
 """
-import operator
 import os
 import sys
 import time
@@ -817,15 +816,16 @@ def assert_word_exist(file, row, words_given):
         lines = f.readlines()
         if len(lines) >= row + 1:
             if row > 1:
-                words_in_file = lines[-row:0]
+                words_in_file = lines[-row:]
                 words_in_file_co = ''
-                for i in range(len(words_in_file)):
-                    words_in_file_co += str(words_in_file[i], encoding='utf-8')
+                for j in range(len(words_in_file)):
+                    words_in_file_co += str(words_in_file[j], encoding='gbk')
+                words_in_file_co = words_in_file_co.replace('\r\n', '')
                 if words_in_file_co == words_given:
                     assert_word_exist_flag = True
             else:
                 words_in_file = lines[-1]
-                words_in_file = str(words_in_file, encoding='utf-8')
+                words_in_file = str(words_in_file, encoding='gbk')
                 if words_in_file == words_given:
                     assert_word_exist_flag = True
             break
