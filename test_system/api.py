@@ -821,13 +821,15 @@ def assert_word_exist(file, row, words_given):
     offset = -50
     file_size = os.stat(file).st_size
     assert_word_exist_flag = False
+    beginning_of_file_flag = False
     while True:
         if -offset > file_size:
             f.seek(0, 0)
+            beginning_of_file_flag = True
         else:
             f.seek(offset, 2)
         lines = f.readlines()
-        if len(lines) >= row + 1:
+        if len(lines) >= row + 1 or (len(lines) == row and beginning_of_file_flag):
             if row > 1:
                 words_in_file = lines[-row:]
                 words_in_file_co = ''
