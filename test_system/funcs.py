@@ -5,8 +5,8 @@ import pyautogui
 from PyQt5.QtGui import QTextCursor
 from PyQt5.QtWidgets import QFileDialog, QInputDialog, QApplication
 from threading import Thread
-from test_system import IDE
-from test_system import screenShot
+import IDE
+import screenShot
 import os
 
 if sys.platform.startswith('win32'):

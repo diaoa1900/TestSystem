@@ -1,11 +1,9 @@
-﻿import time
-import tkinter as tk
+﻿import tkinter as tk
 import win32con
 import win32gui
 import win32print
 from PIL import ImageGrab
 from win32api import GetSystemMetrics
-from test_system import funcs
 
 
 def get_real_resolution():

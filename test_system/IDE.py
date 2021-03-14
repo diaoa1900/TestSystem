@@ -7,8 +7,8 @@ from PyQt5 import QtCore
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-from test_system import funcs
-from test_system import edit2
+import funcs
+import edit2
 from system_hotkey import SystemHotkey
 
 
