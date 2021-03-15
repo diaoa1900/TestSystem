@@ -6,7 +6,7 @@ from PyQt5.QtGui import QTextCursor
 from PyQt5.QtWidgets import QFileDialog, QInputDialog, QApplication
 from threading import Thread
 import IDE
-import screenShot
+import screenCapture
 import os
 
 if sys.platform.startswith('win32'):
@@ -26,14 +26,11 @@ elif sys.platform.startswith('linux'):
 class Functions(IDE.MenuTools):
 
     def screenshot_function(self, method=None):
-        global shot_flag
-        shot_flag = False
         self.setVisible(False)
         time.sleep(1)
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         if sys.platform.startswith('win32'):
-            scs = screenShot.ScreenShot(screenshot_dir, i)
-            shot_flag = scs.shot_flag
+            self.ss = screenCapture.CaptureScreen(self, screenshot_dir, i, method)
         elif sys.platform.startswith('linux'):
             clib = QApplication.clipboard()
             clib.clear()
@@ -43,24 +40,22 @@ class Functions(IDE.MenuTools):
                 end_time = time.time()
                 if clib.mimeData().hasImage():
                     clib.image().save(screenshot_dir + i + ".jpg", "jpg")
-                    shot_flag = True
+                    if method:
+                        if method == 'assert_equal':
+                            self.edit_tab.currentWidget().edit.insertPlainText(
+                                "assert_equal(Template(r\"" + screenshot_dir + i + ".jpg\"), \"预测值\", \"请填写测试点\")")
+                        elif method == 'assert_exists':
+                            self.edit_tab.currentWidget().edit.insertPlainText(
+                                "assert_exists(Template(r\"" + screenshot_dir + i + ".jpg\"), \"请填写测试点\")")
+                        self.setVisible(True)
+                        self.edit_tab.currentWidget().edit.setFocus()
+                        pyautogui.press('enter')
+                    else:
+                        self.edit_tab.currentWidget().edit.insertPlainText("(Template(r\"" + screenshot_dir + i + ".jpg\")")
+                        self.setVisible(True)
                     break
                 if end_time - start_time > 10:
                     break
-        if shot_flag:
-            if method:
-                self.edit_tab.currentWidget().edit.insertPlainText(
-                    method + "(Template(r\"" + screenshot_dir + i + ".jpg\"))")
-                self.setVisible(True)
-                self.edit_tab.currentWidget().edit.setFocus()
-                pyautogui.press('enter')
-            else:
-                self.edit_tab.currentWidget().edit.insertPlainText(
-                    "Template(r\"" + screenshot_dir + i + ".jpg\")")
-                self.setVisible(True)
-            shot_flag = False
-        else:
-            self.setVisible(True)
 
     def screenshot(self):
         Functions.screenshot_function(self)
@@ -170,54 +165,10 @@ class Functions(IDE.MenuTools):
             pyautogui.press('enter')
 
     def assert_equal(self):
-        global shot_flag
-        shot_flag = False
-        self.setVisible(False)
-        time.sleep(1)
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        if sys.platform.startswith('win32'):
-            scs = screenShot.ScreenShot(screenshot_dir, i)
-            shot_flag = scs.shot_flag
-        elif sys.platform.startswith('linux'):
-            clib = QApplication.clipboard()
-            clib.clear()
-            pyautogui.hotkey('shift', 'ctrl', 'prtsc')
-            while True:
-                if clib.mimeData().hasImage():
-                    clib.image().save(screenshot_dir + i + ".jpg", "jpg")
-                    shot_flag = True
-        if shot_flag:
-            self.edit_tab.currentWidget().edit.insertPlainText(
-                "assert_equal(Template(r\"" + screenshot_dir + i + ".jpg\"), \"预测值\", \"请填写测试点\")")
-            self.setVisible(True)
-            self.edit_tab.currentWidget().edit.setFocus()
-            pyautogui.press('enter')
-            shot_flag = False
+        Functions.screenshot_function(self, "assert_equal")
 
     def assert_exist(self):
-        global shot_flag
-        shot_flag = False
-        self.setVisible(False)
-        time.sleep(1)
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        if sys.platform.startswith('win32'):
-            scs = screenShot.ScreenShot(screenshot_dir, i)
-            shot_flag = scs.shot_flag
-        elif sys.platform.startswith('linux'):
-            clib = QApplication.clipboard()
-            clib.clear()
-            pyautogui.hotkey('shift', 'ctrl', 'prtsc')
-            while True:
-                if clib.mimeData().hasImage():
-                    clib.image().save(screenshot_dir + i + ".jpg", "jpg")
-                    shot_flag = True
-        if shot_flag:
-            self.edit_tab.currentWidget().edit.insertPlainText(
-                "assert_exists(Template(r\"" + screenshot_dir + i + ".jpg\"), \"请填写测试点\")")
-            self.setVisible(True)
-            self.edit_tab.currentWidget().edit.setFocus()
-            pyautogui.press('enter')
-            shot_flag = False
+        Functions.screenshot_function(self, "assert_exists")
 
     def assert_file_exist(self):
         exist_path_information = QFileDialog.getSaveFileName(self, '判断是否存在文件', '.')
