@@ -1,8 +1,4 @@
 import sys
-
-import win32con
-import win32gui
-import win32print
 from PyQt5 import QtCore
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
@@ -17,18 +13,17 @@ class MenuTools(QMainWindow):
 
     def __init__(self, parent=None):
         super(MenuTools, self).__init__(parent)
-        hdc = win32gui.GetDC(0)
+        a = QWidget()
         # 横向分辨率
-        w = win32print.GetDeviceCaps(hdc, win32con.DESKTOPHORZRES)
+        w = QGuiApplication.primaryScreen().grabWindow(QApplication.desktop().winId()).width()
         # 纵向分辨率
-        h = win32print.GetDeviceCaps(hdc, win32con.DESKTOPVERTRES)
+        h = QGuiApplication.primaryScreen().grabWindow(QApplication.desktop().winId()).height()
+        a.destroy()
         self.setWindowTitle('testSystem')
-        # self.resize(1700, 900)
-        self.resize(0.8 * w, 0.8 * h)
+        self.resize(int(0.8 * w), int(0.8 * h))
         self.create_menu()
         self.create_tool()
         self.create_statusbar()
-        # os.startfile("D:\Learn\Snipaste-2.5.1-Beta-x64\Snipaste.exe")
         self.sig_hotkey.connect(self.process)
         SystemHotkey().register(('control', 'q'), callback=lambda x: self.send_event("开始截图"))
 
@@ -263,6 +258,7 @@ class MenuTools(QMainWindow):
         script_edit.flag = False
         script_edit.edit = edit2.QCodeEditor()
         script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
+        script_edit.edit.textChanged.connect(self.text_changed)
         f = open('script_template.py', 'r', encoding='utf-8')
         script_edit.edit.setPlainText(f.read())
         try:
@@ -287,18 +283,19 @@ class MenuTools(QMainWindow):
             script_edit = QWidget()
             self.edit_tab.addTab(script_edit, open_path_information[0][last_index + 1:])
             # flag为True时保存文件无需弹出文件对话框
-            script_edit.flag = True
             script_edit.path = open_path_information[0]
             script_edit.cwd = open_path_information[0][0:last_index]
             script_edit.edit_name = open_path_information[0][last_index + 1:]
             script_edit.edit = edit2.QCodeEditor()
             script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
+            script_edit.edit.textChanged.connect(self.text_changed)
             script_edit.edit_layout = QHBoxLayout()
             script_edit.edit_layout.addWidget(script_edit.edit)
             script_edit.setLayout(script_edit.edit_layout)
             with open(open_path_information[0], 'r', encoding='utf-8', errors='ignore') as f:  # 文件读操作
                 script_edit.edit.setPlainText(f.read())
                 f.close()
+            script_edit.flag = True
             # 新增右键
             script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
             script_edit.edit.customContextMenuRequested.connect(self.edit_right)
@@ -306,9 +303,9 @@ class MenuTools(QMainWindow):
 
     # 保存文件
     def save_file(self):
-        if not self.edit_tab.currentWidget().flag:
+        if self.edit_tab.tabText(self.edit_tab.currentIndex()) == '新脚本':
             save_path_information = QFileDialog.getSaveFileName(self, '选择保存脚本的路径', '.', '*.py')
-            try:
+            if save_path_information[0]:
                 self.edit_tab.currentWidget().path = save_path_information[0]
                 f = open(save_path_information[0], 'w', encoding='utf-8')
                 f.write(self.edit_tab.currentWidget().edit.toPlainText())
@@ -318,15 +315,11 @@ class MenuTools(QMainWindow):
                 self.edit_tab.setTabText(self.edit_tab.currentIndex(), save_path_information[0][last_index + 1:])
                 self.edit_tab.currentWidget().flag = True
                 self.edit_tab.currentWidget().edit_name = save_path_information[0][last_index + 1:]
-            except Exception as e:
-                print(e)
         else:
-            try:
-                f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
-                f.write(self.edit_tab.currentWidget().edit.toPlainText())
-                f.close()
-            except Exception as e:
-                print(e)
+            f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
+            f.write(self.edit_tab.currentWidget().edit.toPlainText())
+            f.close()
+            self.edit_tab.currentWidget().flag = True
 
     '''def maybeSave(self):
         # 检查是否做了修改
@@ -354,21 +347,15 @@ class MenuTools(QMainWindow):
         # 脚本栏的右键点击事件
 
     def edit_right(self):
-        try:
-            pop_menu = QMenu(self)
-            # qp = pop_menu.addAction(u'全屏')
-            gb = pop_menu.addAction(u'关闭')
-            # qp.triggered.connect(self.edit_screen)
-            gb.triggered.connect(self.edit_close)
-            pop_menu.exec_(QCursor.pos())
-        except Exception as e:
-            print(e)
+        pop_menu = QMenu(self)
+        # qp = pop_menu.addAction(u'全屏')
+        gb = pop_menu.addAction(u'关闭')
+        # qp.triggered.connect(self.edit_screen)
+        gb.triggered.connect(self.edit_close)
+        pop_menu.exec_(QCursor.pos())
 
     def edit_close(self):
-        try:
-            self.edit_tab.removeTab(self.edit_tab.currentIndex())
-        except Exception as e:
-            print(e)
+        self.edit_tab.removeTab(self.edit_tab.currentIndex())
 
     def process(self, word):
         print(word)
@@ -376,6 +363,9 @@ class MenuTools(QMainWindow):
 
     def send_event(self, word):
         self.sig_hotkey.emit(word)
+
+    def text_changed(self):
+        self.edit_tab.currentWidget().flag = False
 
 
 if __name__ == '__main__':

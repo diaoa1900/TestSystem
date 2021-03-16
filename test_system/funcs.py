@@ -3,7 +3,7 @@ import sys
 import time
 import pyautogui
 from PyQt5.QtGui import QTextCursor
-from PyQt5.QtWidgets import QFileDialog, QInputDialog, QApplication
+from PyQt5.QtWidgets import QFileDialog, QInputDialog, QApplication, QMessageBox
 from threading import Thread
 import IDE
 import screenCapture
@@ -72,21 +72,23 @@ class Functions(IDE.MenuTools):
     def run(self):
         try:
             self.console_text.clear()
+            if not self.edit_tab.currentWidget().flag:
+                QMessageBox.information(self, 'Warning', '请先保存再运行', QMessageBox.Ok)
+            else:
+                def pp():
+                    sbp = subprocess.Popen("python " + self.edit_tab.currentWidget().edit_name,
+                                           cwd=self.edit_tab.currentWidget().cwd, stdout=subprocess.PIPE,
+                                           stderr=subprocess.STDOUT)
+                    for line in iter(sbp.stdout.readline, 'b'):
+                        self.console_text.insertPlainText(line.decode())
+                        self.console_text.moveCursor(QTextCursor.End)
+                        if not subprocess.Popen.poll(sbp) is None:
+                            break
+                    sbp.stdout.close()
 
-            def pp():
-                sbp = subprocess.Popen("python " + self.edit_tab.currentWidget().edit_name,
-                                       cwd=self.edit_tab.currentWidget().cwd, stdout=subprocess.PIPE,
-                                       stderr=subprocess.STDOUT)
-                for line in iter(sbp.stdout.readline, 'b'):
-                    self.console_text.insertPlainText(line.decode())
-                    self.console_text.moveCursor(QTextCursor.End)
-                    if not subprocess.Popen.poll(sbp) is None:
-                        break
-                sbp.stdout.close()
-
-            global t
-            t = Thread(target=pp)
-            t.start()
+                global t
+                t = Thread(target=pp)
+                t.start()
             '''logger = logging.getLogger(" ")
             logger.setLevel(logging.DEBUG)
             sh = logging.FileHandler()
