@@ -19,7 +19,7 @@ from airtest.core.helper import (G, delay_after_operation, import_device_cls,
 Device Setup APIs
 """
 
-if sys.platform.startswith('win32'):
+'''if sys.platform.startswith('win32'):
     father_dir = os.path.dirname(os.path.abspath(__file__))
     grandfather_dir = os.path.dirname(father_dir)
     while not father_dir == grandfather_dir:
@@ -31,7 +31,23 @@ if sys.platform.startswith('win32'):
         os.mkdir(grandfather_dir[0] + ":/TestLog")
     result_pen = open(temporary_result, 'a')
 elif sys.platform.startswith('linux'):
-    pass
+    pass'''
+
+
+def report_name(name):
+    if sys.platform.startswith('win32'):
+        father_dir = os.path.dirname(os.path.abspath(__file__))
+        grandfather_dir = os.path.dirname(father_dir)
+        while not father_dir == grandfather_dir:
+            father_dir = grandfather_dir
+            grandfather_dir = os.path.dirname(grandfather_dir)
+        temporary_result = grandfather_dir[0] + ":/TestLog/" + name + ".txt"
+        if not os.path.exists(grandfather_dir[0] + ":/TestLog"):
+            os.mkdir(grandfather_dir[0] + ":/TestLog")
+        global result_pen
+        result_pen = open(temporary_result, 'w')
+    elif sys.platform.startswith('linux'):
+        pass
 
 
 def write_result(method, v=None):
@@ -45,6 +61,10 @@ def write_result(method, v=None):
             result_pen.write("{}\t{:20s}\t\t\t\t\t\t\t\t success\n".format(j, method))
     elif sys.platform.startswith('linux'):
         pass
+
+
+def run_end():
+    result_pen.close()
 
 
 def init_device(platform="Android", uuid=None, **kwargs):

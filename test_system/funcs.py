@@ -30,7 +30,7 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         if sys.platform.startswith('win32'):
-            self.ss = screenCapture.CaptureScreen(self, screenshot_dir, i, method)
+            self.cs = screenCapture.CaptureScreen(self, screenshot_dir, i, method)
         elif sys.platform.startswith('linux'):
             clib = QApplication.clipboard()
             clib.clear()
@@ -75,6 +75,16 @@ class Functions(IDE.MenuTools):
             if not self.edit_tab.currentWidget().flag:
                 QMessageBox.information(self, 'Warning', '请先保存再运行', QMessageBox.Ok)
             else:
+                '''cursor = self.edit_tab.currentWidget().edit.textCursor()
+                cursor.setPosition(self.edit_tab.currentWidget().edit.document().findBlockByLineNumber(13).position())
+                self.edit_tab.currentWidget().edit.insertPlainText(
+                    "report_name(\""+self.edit_tab.tabText(self.edit_tab.currentIndex())[:-3]+"\")")'''
+                self.edit_tab.currentWidget().edit.appendPlainText("run_end()")
+                f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
+                f.write(self.edit_tab.currentWidget().edit.toPlainText())
+                f.close()
+                self.edit_tab.currentWidget().flag = True
+
                 def pp():
                     sbp = subprocess.Popen("python " + self.edit_tab.currentWidget().edit_name,
                                            cwd=self.edit_tab.currentWidget().cwd, stdout=subprocess.PIPE,
@@ -99,7 +109,6 @@ class Functions(IDE.MenuTools):
             exec(f.read())'''
 
     def stop_run(self):
-        global t
         t.stop()
 
     def wait(self):

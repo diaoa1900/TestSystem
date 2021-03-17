@@ -258,9 +258,11 @@ class MenuTools(QMainWindow):
         script_edit.flag = False
         script_edit.edit = edit2.QCodeEditor()
         script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
+        script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ')*4)
         script_edit.edit.textChanged.connect(self.text_changed)
         f = open('script_template.py', 'r', encoding='utf-8')
         script_edit.edit.setPlainText(f.read())
+        script_edit.edit.moveCursor(QTextCursor.End)
         try:
             completer = QCompleter(['print', 'click', 'double_click'], script_edit.edit)
             script_edit.edit.setCompleter(completer)
@@ -288,6 +290,7 @@ class MenuTools(QMainWindow):
             script_edit.edit_name = open_path_information[0][last_index + 1:]
             script_edit.edit = edit2.QCodeEditor()
             script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
+            script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ')*4)
             script_edit.edit.textChanged.connect(self.text_changed)
             script_edit.edit_layout = QHBoxLayout()
             script_edit.edit_layout.addWidget(script_edit.edit)

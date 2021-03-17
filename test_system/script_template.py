@@ -11,6 +11,6 @@ if not cli_setup():
             "Windows:///",
     ])
 
-
+report_name("请输入即将生成的报告的名字")
 # script 
 
