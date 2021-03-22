@@ -106,6 +106,7 @@ class MenuTools(QMainWindow):
         self.addDockWidget(Qt.NoDockWidgetArea, self.dockerable_edit)'''
 
         self.edit_tab = QTabWidget()
+        self.edit_tab.setTabsClosable(True)
 
         # 控制台栏
         self.output_tab = QTabWidget()
@@ -255,7 +256,6 @@ class MenuTools(QMainWindow):
         script_edit = QWidget()
         self.edit_tab.addTab(script_edit, '新脚本')
         # flag为False时保存文件需要弹出文件对话框
-        script_edit.flag = False
         script_edit.edit = edit2.QCodeEditor()
         script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
         script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ')*4)
@@ -284,7 +284,7 @@ class MenuTools(QMainWindow):
             last_index = open_path_information[0].rindex('/')
             script_edit = QWidget()
             self.edit_tab.addTab(script_edit, open_path_information[0][last_index + 1:])
-            # flag为True时保存文件无需弹出文件对话框
+
             script_edit.path = open_path_information[0]
             script_edit.cwd = open_path_information[0][0:last_index]
             script_edit.edit_name = open_path_information[0][last_index + 1:]
@@ -298,7 +298,6 @@ class MenuTools(QMainWindow):
             with open(open_path_information[0], 'r', encoding='utf-8', errors='ignore') as f:  # 文件读操作
                 script_edit.edit.setPlainText(f.read())
                 f.close()
-            script_edit.flag = True
             # 新增右键
             script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
             script_edit.edit.customContextMenuRequested.connect(self.edit_right)
@@ -306,7 +305,7 @@ class MenuTools(QMainWindow):
 
     # 保存文件
     def save_file(self):
-        if self.edit_tab.tabText(self.edit_tab.currentIndex()) == '新脚本':
+        if self.edit_tab.tabText(self.edit_tab.currentIndex()) == '*新脚本':
             save_path_information = QFileDialog.getSaveFileName(self, '选择保存脚本的路径', '.', '*.py')
             if save_path_information[0]:
                 self.edit_tab.currentWidget().path = save_path_information[0]
@@ -316,13 +315,12 @@ class MenuTools(QMainWindow):
                 last_index = save_path_information[0].rindex('/')
                 self.edit_tab.currentWidget().cwd = save_path_information[0][0:last_index]
                 self.edit_tab.setTabText(self.edit_tab.currentIndex(), save_path_information[0][last_index + 1:])
-                self.edit_tab.currentWidget().flag = True
                 self.edit_tab.currentWidget().edit_name = save_path_information[0][last_index + 1:]
         else:
             f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
             f.write(self.edit_tab.currentWidget().edit.toPlainText())
             f.close()
-            self.edit_tab.currentWidget().flag = True
+            self.edit_tab.setTabText(self.edit_tab.currentIndex(), self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
 
     '''def maybeSave(self):
         # 检查是否做了修改
@@ -368,7 +366,8 @@ class MenuTools(QMainWindow):
         self.sig_hotkey.emit(word)
 
     def text_changed(self):
-        self.edit_tab.currentWidget().flag = False
+        if not self.edit_tab.tabText(self.edit_tab.currentIndex())[0] == '*':
+            self.edit_tab.setTabText(self.edit_tab.currentIndex(), '*'+self.edit_tab.tabText(self.edit_tab.currentIndex()))
 
 
 if __name__ == '__main__':
