@@ -272,6 +272,7 @@ class MenuTools(QMainWindow):
         script_edit.edit_layout = QVBoxLayout()
         script_edit.edit_layout.addWidget(script_edit.edit)
         script_edit.setLayout(script_edit.edit_layout)
+        self.edit_tab.setCurrentWidget(script_edit)
         # 新增右键
         script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         script_edit.edit.customContextMenuRequested.connect(self.edit_right)
@@ -302,6 +303,7 @@ class MenuTools(QMainWindow):
             # 新增右键
             script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
             script_edit.edit.customContextMenuRequested.connect(self.edit_right)
+            self.edit_tab.setCurrentWidget(script_edit)
             # 右键新增结束
 
     # 保存文件
