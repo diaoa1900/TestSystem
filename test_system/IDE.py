@@ -27,8 +27,6 @@ class MenuTools(QMainWindow):
         self.sig_hotkey.connect(self.process)
         SystemHotkey().register(('control', 'q'), callback=lambda x: self.send_event("开始截图"))
 
-        # 全局水平布局
-        all_layout = QHBoxLayout()
         # 设置局部布局
         # 左侧垂直布局
         left_layout = QVBoxLayout()
@@ -176,6 +174,7 @@ class MenuTools(QMainWindow):
         right_widget = QWidget()
         right_widget.setLayout(right_layout)
 
+        # 局部布局加到全局布局中
         widget = QSplitter(Qt.Horizontal)
         widget.addWidget(left_widget)
         widget.addWidget(mid_widget)
@@ -184,8 +183,6 @@ class MenuTools(QMainWindow):
         widget.setStretchFactor(1, 7)
         widget.setStretchFactor(2, 2)
         self.setCentralWidget(widget)
-
-        # 局部布局加到全局布局中
 
     # 创建菜单栏
     def create_menu(self):
@@ -232,8 +229,10 @@ class MenuTools(QMainWindow):
 
         ins = QAction(self)
         tb.addAction(ins)
-        ins1 = QAction(self)
-        tb.addAction(ins1)
+
+        save_file_action = QAction(QIcon("../image/save.png"), "保存文件", self)
+        tb.addAction(save_file_action)
+        save_file_action.triggered.connect(self.save_file)
 
         run = QAction(QIcon("../image/play-circle.png"), "运行", self)
         tb.addAction(run)
