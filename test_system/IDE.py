@@ -107,6 +107,7 @@ class MenuTools(QMainWindow):
 
         self.edit_tab = QTabWidget()
         self.edit_tab.setTabsClosable(True)
+        self.edit_tab.tabCloseRequested.connect(self.tab_close)
 
         # 控制台栏
         self.output_tab = QTabWidget()
@@ -357,6 +358,9 @@ class MenuTools(QMainWindow):
 
     def edit_close(self):
         self.edit_tab.removeTab(self.edit_tab.currentIndex())
+
+    def tab_close(self, index):
+        self.edit_tab.removeTab(index)
 
     def process(self, word):
         print(word)
