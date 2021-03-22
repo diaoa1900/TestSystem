@@ -256,23 +256,22 @@ class MenuTools(QMainWindow):
     def new_file(self):
         script_edit = QWidget()
         self.edit_tab.addTab(script_edit, '新脚本')
-        # flag为False时保存文件需要弹出文件对话框
         script_edit.edit = edit2.QCodeEditor()
         script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
         script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ')*4)
-        script_edit.edit.textChanged.connect(self.text_changed)
         f = open('script_template.py', 'r', encoding='utf-8')
         script_edit.edit.setPlainText(f.read())
         script_edit.edit.moveCursor(QTextCursor.End)
-        try:
+        '''try:
             completer = QCompleter(['print', 'click', 'double_click'], script_edit.edit)
             script_edit.edit.setCompleter(completer)
         except Exception as e:
-            print(e)
+            print(e)'''
         script_edit.edit_layout = QVBoxLayout()
         script_edit.edit_layout.addWidget(script_edit.edit)
         script_edit.setLayout(script_edit.edit_layout)
         self.edit_tab.setCurrentWidget(script_edit)
+        script_edit.edit.textChanged.connect(self.text_changed)
         # 新增右键
         script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
         script_edit.edit.customContextMenuRequested.connect(self.edit_right)
@@ -286,14 +285,12 @@ class MenuTools(QMainWindow):
             last_index = open_path_information[0].rindex('/')
             script_edit = QWidget()
             self.edit_tab.addTab(script_edit, open_path_information[0][last_index + 1:])
-
             script_edit.path = open_path_information[0]
             script_edit.cwd = open_path_information[0][0:last_index]
             script_edit.edit_name = open_path_information[0][last_index + 1:]
             script_edit.edit = edit2.QCodeEditor()
             script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
             script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ')*4)
-            script_edit.edit.textChanged.connect(self.text_changed)
             script_edit.edit_layout = QHBoxLayout()
             script_edit.edit_layout.addWidget(script_edit.edit)
             script_edit.setLayout(script_edit.edit_layout)
@@ -304,6 +301,7 @@ class MenuTools(QMainWindow):
             script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
             script_edit.edit.customContextMenuRequested.connect(self.edit_right)
             self.edit_tab.setCurrentWidget(script_edit)
+            script_edit.edit.textChanged.connect(self.text_changed)
             # 右键新增结束
 
     # 保存文件
@@ -324,19 +322,6 @@ class MenuTools(QMainWindow):
             f.write(self.edit_tab.currentWidget().edit.toPlainText())
             f.close()
             self.edit_tab.setTabText(self.edit_tab.currentIndex(), self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
-
-    '''def maybeSave(self):
-        # 检查是否做了修改
-        if self.edit1.document().isModified():
-            # 进行提示，提供三个选择
-            ret = QMessageBox.warning(self, "Application",
-                                      "您想要在关闭之前保存对这个文档所做的改变么？\n如果您不保存，您的这些改变将丢失",
-                                      QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel)
-            if ret == QMessageBox.Save:
-                return self.save()
-            if ret == QMessageBox.Cancel:
-                return False
-        return True'''
 
     def save_another_file(self):
         save_another_path = QFileDialog.getSaveFileName(self, '选择要另存为的路径', '.', '*.py')
