@@ -1,12 +1,12 @@
 import sys
-from PyQt5 import QtCore
+from os import startfile
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
-import funcs
-import edit2
 from system_hotkey import SystemHotkey
-from os import startfile
+
+import edit2
+import funcs
 
 
 class MenuTools(QMainWindow):
