@@ -272,8 +272,8 @@ class MenuTools(QMainWindow):
         self.edit_tab.setCurrentWidget(script_edit)
         script_edit.edit.textChanged.connect(self.text_changed)
         # 新增右键
-        script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-        script_edit.edit.customContextMenuRequested.connect(self.edit_right)
+        '''script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        script_edit.edit.customContextMenuRequested.connect(self.edit_right)'''
         script_edit.setWindowFlags(Qt.WindowFullscreenButtonHint | Qt.WindowCloseButtonHint)
         # 右键新增结束
 
@@ -297,8 +297,8 @@ class MenuTools(QMainWindow):
                 script_edit.edit.setPlainText(f.read())
                 f.close()
             # 新增右键
-            script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
-            script_edit.edit.customContextMenuRequested.connect(self.edit_right)
+            '''script_edit.edit.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+            script_edit.edit.customContextMenuRequested.connect(self.edit_right)'''
             self.edit_tab.setCurrentWidget(script_edit)
             script_edit.edit.textChanged.connect(self.text_changed)
             # 右键新增结束
@@ -334,7 +334,7 @@ class MenuTools(QMainWindow):
 
         # 脚本栏的右键点击事件
 
-    def edit_right(self):
+    '''def edit_right(self):
         pop_menu = QMenu(self)
         # qp = pop_menu.addAction(u'全屏')
         gb = pop_menu.addAction(u'关闭')
@@ -343,7 +343,7 @@ class MenuTools(QMainWindow):
         pop_menu.exec_(QCursor.pos())
 
     def edit_close(self):
-        self.edit_tab.removeTab(self.edit_tab.currentIndex())
+        self.edit_tab.removeTab(self.edit_tab.currentIndex())'''
 
     def tab_close(self, index):
         self.edit_tab.removeTab(index)
@@ -364,4 +364,5 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     form = MenuTools()
     form.show()
+    form.new_file()
     sys.exit(app.exec_())
