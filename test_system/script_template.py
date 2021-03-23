@@ -10,7 +10,7 @@ if not cli_setup():
     auto_setup(__file__, logdir=True, devices=[
             "Windows:///",
     ])
-
-report_name("请输入即将生成的报告的名字")
+# 若要修改即将生成的报告的名字在此处修改
+report_name("新脚本")
 # script 
 
