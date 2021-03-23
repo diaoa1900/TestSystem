@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import *
 import funcs
 import edit2
 from system_hotkey import SystemHotkey
+from os import startfile
 
 
 class MenuTools(QMainWindow):
@@ -330,7 +331,7 @@ class MenuTools(QMainWindow):
             f.close()
 
     def show_report(self):
-        pass
+        startfile(funcs.grandfather_dir[0]+':/TestLog')
 
         # 脚本栏的右键点击事件
 
