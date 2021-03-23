@@ -41,7 +41,7 @@ def report_name(name):
         while not father_dir == grandfather_dir:
             father_dir = grandfather_dir
             grandfather_dir = os.path.dirname(grandfather_dir)
-        temporary_result = grandfather_dir[0] + ":/TestLog/" + name + ".txt"
+        temporary_result = grandfather_dir[0] + ":/TestLog/" + name + ".html"
         if not os.path.exists(grandfather_dir[0] + ":/TestLog"):
             os.mkdir(grandfather_dir[0] + ":/TestLog")
         global result_pen
@@ -55,10 +55,10 @@ def write_result(method, v=None):
         j = time.strftime('[%H:%M:%S]', time.localtime(time.time()))
         if v:
             # result_pen.write(j + "\t" + method + "\t" + str(v)[9:-1] + "\t" + "success\n")
-            result_pen.write("{}\t{:20s}\t{}\t\t\t success\n".format(j, method, str(v)[9:-1]))
+            result_pen.write("<div>{}{:20s}<img src=\"{}\" /> <font color=\"green\">success</font></div>".format(j, method, str(v)[9:-1]))
         else:
             # result_pen.write(j + "\t" + method + "\t success\n")
-            result_pen.write("{}\t{:20s}\t\t\t\t\t\t\t\t success\n".format(j, method))
+            result_pen.write("<div>{}{:20s} <font color=\"green\">success</font></div>".format(j, method))
     elif sys.platform.startswith('linux'):
         pass
 
