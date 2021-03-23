@@ -71,6 +71,7 @@ class Functions(IDE.MenuTools):
 
     def run(self):
         try:
+            self.showMinimized()
             self.console_text.clear()
             '''cursor = self.edit_tab.currentWidget().edit.textCursor()
             cursor.setPosition(self.edit_tab.currentWidget().edit.document().findBlockByLineNumber(13).position())
