@@ -158,7 +158,7 @@ class Functions(IDE.MenuTools):
             keyevent_dialog.setWindowTitle('输入要按下的键的键码')"""
         keyevent_value = QInputDialog.getText(self, '按键输入', '例如:(tab/enter/f1)')
         if keyevent_value[1] is True:
-            self.edit_tab.currentWidget().edit.insertPlainText("keyevent(\"" + keyevent_value[0] + "\")")
+            self.edit_tab.currentWidget().edit.insertPlainText("keyevent(\"{" + keyevent_value[0] + "}\")")
             self.edit_tab.currentWidget().edit.setFocus()
             pyautogui.press('enter')
 
