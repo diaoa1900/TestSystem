@@ -84,7 +84,7 @@ class MenuTools(QMainWindow):
 
         self.groupbox_4 = QGroupBox("断言", self)
         layout = QVBoxLayout()
-        self.assert_equal_button = QPushButton("assert_equal")
+        self.assert_equal_button = QPushButton("assert_picture_equal")
         self.assert_equal_button.setToolTip("断言两个图像是否相同")
         self.assert_picture_exist_button = QPushButton("assert_picture_exist")
         self.assert_picture_exist_button.setToolTip("断言该图像是否存在")
