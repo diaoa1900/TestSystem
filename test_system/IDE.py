@@ -321,7 +321,8 @@ class MenuTools(QMainWindow):
             f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
             f.write(self.edit_tab.currentWidget().edit.toPlainText())
             f.close()
-            self.edit_tab.setTabText(self.edit_tab.currentIndex(), self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
+            if self.edit_tab.tabText(self.edit_tab.currentIndex())[0] == '*':
+                self.edit_tab.setTabText(self.edit_tab.currentIndex(), self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
 
     def save_another_file(self):
         save_another_path = QFileDialog.getSaveFileName(self, '选择要另存为的路径', '.', '*.py')

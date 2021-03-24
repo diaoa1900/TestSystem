@@ -77,8 +77,11 @@ class Functions(IDE.MenuTools):
             cursor.setPosition(self.edit_tab.currentWidget().edit.document().findBlockByLineNumber(13).position())
             self.edit_tab.currentWidget().edit.insertPlainText(
                 "report_name(\""+self.edit_tab.tabText(self.edit_tab.currentIndex())[:-3]+"\")")'''
-            self.edit_tab.currentWidget().edit.appendPlainText("run_end()")
-            self.edit_tab.setTabText(self.edit_tab.currentIndex(), self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
+            self.edit_tab.currentWidget().edit.moveCursor(QTextCursor.Start)
+            if not self.edit_tab.currentWidget().edit.find("run_end()"):
+                self.edit_tab.currentWidget().edit.appendPlainText("run_end()")
+            if self.edit_tab.tabText(self.edit_tab.currentIndex())[0] == '*':
+                self.edit_tab.setTabText(self.edit_tab.currentIndex(), self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
             f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
             f.write(self.edit_tab.currentWidget().edit.toPlainText())
             f.close()
