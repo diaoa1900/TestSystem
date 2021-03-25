@@ -1,3 +1,4 @@
+import os
 import sys
 from os import startfile
 from PyQt5.QtCore import *
@@ -189,6 +190,15 @@ class MenuTools(QMainWindow):
         widget.setStretchFactor(2, 2)
         self.setCentralWidget(widget)
 
+        if sys.platform.startswith('win32'):
+            father_dir = os.path.dirname(os.path.abspath(__file__))
+            grandfather_dir = os.path.dirname(father_dir)
+            while not father_dir == grandfather_dir:
+                father_dir = grandfather_dir
+                grandfather_dir = os.path.dirname(grandfather_dir)
+            self.temporary_file = grandfather_dir[0] + ":/TestScripts/新脚本.py"
+            if not os.path.exists(grandfather_dir[0] + ":/TestScripts"):
+                os.mkdir(grandfather_dir[0] + ":/TestScripts")
     # 创建菜单栏
     def create_menu(self):
         bar = self.menuBar()
@@ -261,6 +271,10 @@ class MenuTools(QMainWindow):
     def new_file(self):
         script_edit = QWidget()
         self.edit_tab.addTab(script_edit, '新脚本')
+        script_edit.path = self.temporary_file
+        last_index = self.temporary_file.rindex('/')
+        script_edit.cwd = self.temporary_file[0:last_index]
+        script_edit.edit_name = self.temporary_file[last_index+1:]
         script_edit.edit = edit2.QCodeEditor()
         script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
         script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ')*4)
