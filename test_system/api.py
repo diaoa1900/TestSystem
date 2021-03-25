@@ -46,24 +46,27 @@ def report_name(name):
             os.mkdir(grandfather_dir[0] + ":/TestLog")
         global result_pen
         result_pen = open(temporary_result, 'w')
+        result_pen.write("<!DOCTYPE html>\n<html>\n\t<head></head>\n\t<body>\n\t\t<table width=\"80%\" border=\"1px\" cellspacing=\"0px\" style=\"border-collapse: collapse\">\n\t\t\t<tr>\n\t\t\t\t<th>时间</th>\n\t\t\t\t<th>方法</th>\n\t\t\t\t<th>状态</th>\n\t\t\t\t<th>图片</th>\n\t\t\t</tr>\n")
     elif sys.platform.startswith('linux'):
         pass
 
 
 def write_result(method, v=None):
     if sys.platform.startswith('win32'):
-        j = time.strftime('[%H:%M:%S]', time.localtime(time.time()))
+        j = time.strftime('%H:%M:%S', time.localtime(time.time()))
         if v:
             # result_pen.write(j + "\t" + method + "\t" + str(v)[9:-1] + "\t" + "success\n")
-            result_pen.write("<div>{}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{:20s}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <font color=\"green\">success</font>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<img src=\"{}\" /> </div>".format(j, method, str(v)[9:-1]))
+            result_pen.write("\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td><a href=\"{}\" target=\"_self\"><img width=\"120px\" height=\"120px\" src=\"{}\"/></a></td>\n\t\t\t</tr>\n".format(j, method, str(v)[9:-1], str(v)[9:-1]))
         else:
             # result_pen.write(j + "\t" + method + "\t success\n")
-            result_pen.write("<div>{}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{:20s}&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp <font color=\"green\">success</font></div>".format(j, method))
+            result_pen.write("\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td>无需图片</td>\n\t\t\t</tr>\n".format(j, method))
     elif sys.platform.startswith('linux'):
         pass
 
 
 def run_end():
+    result_pen.write("\t\t</table>\n\t</body>\n</html>")
+    time.sleep(2.0)
     result_pen.close()
 
 
