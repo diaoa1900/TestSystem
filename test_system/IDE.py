@@ -77,9 +77,12 @@ class MenuTools(QMainWindow):
         self.keyevent_button.setToolTip("键盘按下该键码所对应的键")
         self.snapshot_button = QPushButton("snapshot")
         self.snapshot_button.setToolTip("截取全屏图像")
+        self.sleep_button = QPushButton("sleep")
+        self.sleep_button.setToolTip("等待n秒")
         layout.addWidget(self.text_button)
         layout.addWidget(self.keyevent_button)
         layout.addWidget(self.snapshot_button)
+        layout.addWidget(self.sleep_button)
         self.groupbox_3.setLayout(layout)
 
         self.groupbox_4 = QGroupBox("断言", self)
@@ -151,6 +154,7 @@ class MenuTools(QMainWindow):
         self.text_button.clicked.connect(lambda: funcs.Functions.text(self))
         self.keyevent_button.clicked.connect(lambda: funcs.Functions.keyevent(self))
         self.snapshot_button.clicked.connect(lambda: funcs.Functions.snapshot(self))
+        self.sleep_button.clicked.connect(lambda: funcs.Functions.sleep(self))
         self.assert_equal_button.clicked.connect(lambda: funcs.Functions.assert_equal(self))
         self.assert_picture_exist_button.clicked.connect(lambda: funcs.Functions.assert_exist(self))
         self.assert_file_exist_button.clicked.connect(lambda: funcs.Functions.assert_file_exist(self))
@@ -159,7 +163,7 @@ class MenuTools(QMainWindow):
         # 将控件加入布局
         left_layout.addWidget(self.groupbox_1, 3)
         left_layout.addWidget(self.groupbox_2, 5)
-        left_layout.addWidget(self.groupbox_3, 3)
+        left_layout.addWidget(self.groupbox_3, 4)
         left_layout.addWidget(self.groupbox_4, 4)
 
         mid_widget.addWidget(self.edit_tab)
@@ -221,6 +225,7 @@ class MenuTools(QMainWindow):
     def create_tool(self):
         tb = self.addToolBar("file")
         screen_shot = QAction(QIcon("../image/camera.png"), "自由截图", self)
+        screen_shot.setToolTip("快捷键Ctrl+Q")
         tb.addAction(screen_shot)
         screen_shot.triggered.connect(lambda: funcs.Functions.screenshot(self))
 

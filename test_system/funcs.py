@@ -180,6 +180,13 @@ class Functions(IDE.MenuTools):
             self.edit_tab.currentWidget().edit.setFocus()
             pyautogui.press('enter')
 
+    def sleep(self):
+        sleep_value = QInputDialog.getDouble(self, '等待n秒', '给出n的值', 1.0, 0)
+        if sleep_value[1] is True:
+            self.edit_tab.currentWidget().edit.insertPlainText("sleep("+str(sleep_value[0])+")")
+            self.edit_tab.currentWidget().edit.setFocus()
+            pyautogui.press('enter')
+
     def assert_equal(self):
         Functions.screenshot_function(self, "assert_equal")
 
