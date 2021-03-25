@@ -78,6 +78,10 @@ class Functions(IDE.MenuTools):
             self.edit_tab.currentWidget().edit.insertPlainText(
                 "report_name(\""+self.edit_tab.tabText(self.edit_tab.currentIndex())[:-3]+"\")")'''
             self.edit_tab.currentWidget().edit.moveCursor(QTextCursor.Start)
+            f = open('script_template.py', 'r', encoding='utf-8')
+            if not self.edit_tab.currentWidget().edit.find(f.read()):
+                self.edit_tab.currentWidget().edit.insertPlainText(f.read())
+            self.edit_tab.currentWidget().edit.moveCursor(QTextCursor.Start)
             if not self.edit_tab.currentWidget().edit.find("run_end()"):
                 self.edit_tab.currentWidget().edit.appendPlainText("run_end()")
             if self.edit_tab.tabText(self.edit_tab.currentIndex())[0] == '*':
