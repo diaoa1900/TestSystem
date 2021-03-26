@@ -1,7 +1,7 @@
 import pyautogui
 from PyQt5.QtGui import QGuiApplication, QColor, QPen, QPainter
 from PyQt5.QtWidgets import QWidget, QApplication
-from PyQt5.QtCore import Qt, qAbs, QRect, pyqtSignal
+from PyQt5.QtCore import Qt, qAbs, QRect
 
 
 class CaptureScreen(QWidget):
@@ -16,8 +16,6 @@ class CaptureScreen(QWidget):
     end_pos = None
     capture_pixmap = None
     painter = QPainter()
-    capture_after = pyqtSignal(str, str)
-    capture_cancel = pyqtSignal()
 
     def __init__(self, cx, screenshot_dir, picture_name, method):
         QWidget.__init__(self)
