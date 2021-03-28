@@ -2,9 +2,9 @@ import subprocess
 import sys
 import time
 import pyautogui
+from PyQt5.QtCore import QThread
 from PyQt5.QtGui import QTextCursor
-from PyQt5.QtWidgets import QFileDialog, QInputDialog, QApplication, QMessageBox
-from threading import Thread
+from PyQt5.QtWidgets import QFileDialog, QInputDialog, QApplication
 import IDE
 import screenCapture
 import os
@@ -21,6 +21,23 @@ if sys.platform.startswith('win32'):
     screenshot_dir = temporary_screenshot_dir + '/'
 elif sys.platform.startswith('linux'):
     pass
+
+
+class MyThread(QThread):
+    def __init__(self, ide):
+        super().__init__()
+        self.ide = ide
+
+    def run(self):
+        sbp = subprocess.Popen("python " + self.ide.edit_tab.currentWidget().edit_name,
+                               cwd=self.ide.edit_tab.currentWidget().cwd, stdout=subprocess.PIPE,
+                               stderr=subprocess.STDOUT)
+        for line in iter(sbp.stdout.readline, 'b'):
+            self.ide.console_text.insertPlainText(line.decode())
+            self.ide.console_text.moveCursor(QTextCursor.End)
+            if not subprocess.Popen.poll(sbp) is None:
+                break
+        sbp.stdout.close()
 
 
 class Functions(IDE.MenuTools):
@@ -73,18 +90,17 @@ class Functions(IDE.MenuTools):
         try:
             self.showMinimized()
             self.console_text.clear()
-            '''cursor = self.edit_tab.currentWidget().edit.textCursor()
-            cursor.setPosition(self.edit_tab.currentWidget().edit.document().findBlockByLineNumber(13).position())
-            self.edit_tab.currentWidget().edit.insertPlainText(
-                "report_name(\""+self.edit_tab.tabText(self.edit_tab.currentIndex())[:-3]+"\")")'''
             self.edit_tab.currentWidget().edit.moveCursor(QTextCursor.Start)
             f = open('./script_template.py', 'r', encoding='utf-8')
             script_head = f.read()
-            if not self.edit_tab.currentWidget().edit.find(script_head):
+            if not self.edit_tab.currentWidget().edit.find('# script'):
                 self.edit_tab.currentWidget().edit.insertPlainText(script_head)
             f.close()
             if not self.edit_tab.currentWidget().edit.find('report_name'):
-                self.edit_tab.currentWidget().edit.insertPlainText("report_name(\"" + self.edit_tab.tabText(self.edit_tab.currentIndex())[1:] + "\")\n")
+                if self.edit_tab.tabText(self.edit_tab.currentIndex()).endswith('.py'):
+                    self.edit_tab.currentWidget().edit.insertPlainText("report_name(\"" + self.edit_tab.tabText(self.edit_tab.currentIndex())[1:-3] + "\")\n")
+                else:
+                    self.edit_tab.currentWidget().edit.insertPlainText("report_name(\"" + self.edit_tab.tabText(self.edit_tab.currentIndex())[1:] + "\")\n")
             self.edit_tab.currentWidget().edit.moveCursor(QTextCursor.Start)
             if not self.edit_tab.currentWidget().edit.find("run_end()"):
                 self.edit_tab.currentWidget().edit.appendPlainText("run_end()")
@@ -93,32 +109,18 @@ class Functions(IDE.MenuTools):
             f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
             f.write(self.edit_tab.currentWidget().edit.toPlainText())
             f.close()
-
-            def pp():
-                sbp = subprocess.Popen("python " + self.edit_tab.currentWidget().edit_name,
-                                       cwd=self.edit_tab.currentWidget().cwd, stdout=subprocess.PIPE,
-                                       stderr=subprocess.STDOUT)
-                for line in iter(sbp.stdout.readline, 'b'):
-                    self.console_text.insertPlainText(line.decode())
-                    self.console_text.moveCursor(QTextCursor.End)
-                    if not subprocess.Popen.poll(sbp) is None:
-                        break
-                sbp.stdout.close()
-
-            global t
-            t = Thread(target=pp)
-            t.start()
-            '''logger = logging.getLogger(" ")
-            logger.setLevel(logging.DEBUG)
-            sh = logging.FileHandler()
-            logger.addHandler(sh)'''
+            self.thread = MyThread(self)
+            self.thread.start()
         except Exception as e:
             print(e)
         '''with open(self.edit_tab.currentWidget().path, 'r', encoding='utf-8') as f:
             exec(f.read())'''
 
     def stop_run(self):
-        t.stop()
+        self.thread.setTerminationEnabled(True)
+        self.thread.terminate()
+        self.thread.wait()
+        self.thread.deleteLater()
 
     def wait(self):
         Functions.screenshot_function(self, "wait")
