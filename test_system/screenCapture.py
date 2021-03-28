@@ -44,7 +44,7 @@ class CaptureScreen(QWidget):
             self.is_mouse_pressed = True
             self.begin_pos = event.pos()
         if event.button() == Qt.RightButton:
-            self.destroy()
+            self.close()
             self._cx.setVisible(True)
         return QWidget.mousePressEvent(self, event)
 
@@ -74,7 +74,7 @@ class CaptureScreen(QWidget):
 
     def keyPressEvent(self, event):
         if event.key() == Qt.Key_Escape:
-            self.destroy()
+            self.close()
             self._cx.setVisible(True)
         if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
             self.capture_pixmap.save(self._screenshot_dir + self._picture_name + ".jpg")
@@ -97,7 +97,7 @@ class CaptureScreen(QWidget):
                 self._cx.edit_tab.currentWidget().edit.insertPlainText(
                     "Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\")")
                 self._cx.setVisible(True)
-            self.destroy()
+            self.close()
 
     def get_rect(self, beginPoint, endPoint):
         width = qAbs(beginPoint.x() - endPoint.x())
