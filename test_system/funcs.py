@@ -8,6 +8,7 @@ from PyQt5.QtWidgets import QFileDialog, QInputDialog, QApplication
 import IDE
 import screenCapture
 import os
+import get_point
 
 if sys.platform.startswith('win32'):
     father_dir = os.path.dirname(os.path.abspath(__file__))
@@ -141,20 +142,9 @@ class Functions(IDE.MenuTools):
         Functions.screenshot_function(self, "right_click")
 
     def swipe(self):
-        """self.setVisible(False)
+        self.setVisible(False)
         time.sleep(1)
-        pyautogui.press('f1')
-        keyboard.wait('enter')
-        time.sleep(1)
-        img = ImageGrab.grabclipboard()
-        i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
-        img.save(screenshot_dir + i + ".jpg")
-        self.edit_tab.currentWidget().edit.insertPlainText(
-            "swipe(Template(r\"" + screenshot_dir + i + ".jpg\"))")
-        self.setVisible(True)
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')"""
-        pass
+        self.point = get_point.Point(self)
 
     def hover(self):
         # 鼠标悬浮在该图片位置上
