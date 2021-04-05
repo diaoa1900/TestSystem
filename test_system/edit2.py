@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# QcodeEditor.py by acbetter.
 # -*- coding: utf-8 -*-
 
 from PyQt5.QtCore import Qt, QRect, QSize
