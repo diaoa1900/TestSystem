@@ -47,7 +47,7 @@ class MenuTools(QMainWindow):
         self.exists_button = QPushButton("exists")
         self.exists_button.setToolTip("页面是否存在该图像")
         self.ocr_button = QPushButton("ocr")
-        self.exists_button.setToolTip("图像转文字")
+        self.ocr_button.setToolTip("图像转文字")
         layout.addWidget(self.wait_button)
         layout.addWidget(self.waitVanish_button)
         layout.addWidget(self.exists_button)

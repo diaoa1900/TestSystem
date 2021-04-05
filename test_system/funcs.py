@@ -159,7 +159,7 @@ class Functions(IDE.MenuTools):
             keyevent_dialog.open()  # exec 模态,应用程序级,其他窗口不可见;open 窗口级,除了关联的之外都可交互;show 所有都可正常交互
             keyevent_dialog.resize(400, 100)
             keyevent_dialog.setWindowTitle('输入要按下的键的键码')"""
-        keyevent_value = QInputDialog.getText(self, '按键输入', '例如:(tab/enter/f1)')
+        keyevent_value = QInputDialog.getText(self, '按键输入', '例如:(TAB/ENTER/F1)')
         if keyevent_value[1] is True:
             self.edit_tab.currentWidget().edit.insertPlainText("keyevent(\"{" + keyevent_value[0] + "}\")")
             self.edit_tab.currentWidget().edit.setFocus()
