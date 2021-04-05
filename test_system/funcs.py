@@ -132,6 +132,9 @@ class Functions(IDE.MenuTools):
     def exists(self):
         Functions.screenshot_function(self, "exists")
 
+    def ocr(self):
+        Functions.screenshot_function(self, "ocr")
+
     def click(self):
         Functions.screenshot_function(self, "click")
 

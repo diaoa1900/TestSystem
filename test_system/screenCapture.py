@@ -87,6 +87,11 @@ class CaptureScreen(QWidget):
                     self._cx.edit_tab.currentWidget().edit.insertPlainText(
                         "assert_exists(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"), "
                                                                                                    "\"请填写测试点\")")
+                elif self._method in ['click', 'double_click', 'right_click', 'hover']:
+                    self._cx.edit_tab.currentWidget().edit.insertPlainText(
+                        self._method + "(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\", "
+                                                                                                     "target_pos=5))")
+
                 else:
                     self._cx.edit_tab.currentWidget().edit.insertPlainText(
                         self._method + "(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"))")

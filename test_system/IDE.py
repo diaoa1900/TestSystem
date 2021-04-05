@@ -46,9 +46,12 @@ class MenuTools(QMainWindow):
         self.waitVanish_button.setToolTip("等待该图像消失")
         self.exists_button = QPushButton("exists")
         self.exists_button.setToolTip("页面是否存在该图像")
+        self.ocr_button = QPushButton("ocr")
+        self.exists_button.setToolTip("图像转文字")
         layout.addWidget(self.wait_button)
         layout.addWidget(self.waitVanish_button)
         layout.addWidget(self.exists_button)
+        layout.addWidget(self.ocr_button)
         self.groupbox_1.setLayout(layout)
 
         self.groupbox_2 = QGroupBox("鼠标动作", self)
@@ -60,7 +63,7 @@ class MenuTools(QMainWindow):
         self.rightClick_button = QPushButton("rightClick")
         self.rightClick_button.setToolTip("鼠标右键单击该图像")
         self.swipe_button = QPushButton("swipe")
-        self.swipe_button.setToolTip("鼠标左键按住拖拽至指定位置")
+        self.swipe_button.setToolTip("拖拽,截图时左键选择起点，右键选择终点")
         self.hover_button = QPushButton("hover")
         self.hover_button.setToolTip("鼠标悬停在该图像处")
         layout.addWidget(self.click_button)
@@ -147,6 +150,7 @@ class MenuTools(QMainWindow):
         self.wait_button.clicked.connect(lambda: funcs.Functions.wait(self))
         self.waitVanish_button.clicked.connect(lambda: funcs.Functions.waitVanish(self))
         self.exists_button.clicked.connect(lambda: funcs.Functions.exists(self))
+        self.ocr_button.clicked.connect(lambda: funcs.Functions.ocr(self))
         self.click_button.clicked.connect(lambda: funcs.Functions.click(self))
         self.doubleClick_button.clicked.connect(lambda: funcs.Functions.double_click(self))
         self.rightClick_button.clicked.connect(lambda: funcs.Functions.right_click(self))
@@ -162,7 +166,7 @@ class MenuTools(QMainWindow):
         self.assert_word_exist_button.clicked.connect(lambda: funcs.Functions.assert_word_exist(self))
 
         # 将控件加入布局
-        left_layout.addWidget(self.groupbox_1, 3)
+        left_layout.addWidget(self.groupbox_1, 4)
         left_layout.addWidget(self.groupbox_2, 5)
         left_layout.addWidget(self.groupbox_3, 4)
         left_layout.addWidget(self.groupbox_4, 4)
@@ -199,6 +203,7 @@ class MenuTools(QMainWindow):
             self.temporary_file = grandfather_dir[0] + ":/TestScripts/新脚本.py"
             if not os.path.exists(grandfather_dir[0] + ":/TestScripts"):
                 os.mkdir(grandfather_dir[0] + ":/TestScripts")
+
     # 创建菜单栏
     def create_menu(self):
         bar = self.menuBar()
@@ -274,10 +279,10 @@ class MenuTools(QMainWindow):
         script_edit.path = self.temporary_file
         last_index = self.temporary_file.rindex('/')
         script_edit.cwd = self.temporary_file[0:last_index]
-        script_edit.edit_name = self.temporary_file[last_index+1:]
+        script_edit.edit_name = self.temporary_file[last_index + 1:]
         script_edit.edit = edit2.QCodeEditor()
         script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
-        script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ')*4)
+        script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ') * 4)
         '''try:
             completer = QCompleter(['print', 'click', 'double_click'], script_edit.edit)
             script_edit.edit.setCompleter(completer)
@@ -306,7 +311,7 @@ class MenuTools(QMainWindow):
             script_edit.edit_name = open_path_information[0][last_index + 1:]
             script_edit.edit = edit2.QCodeEditor()
             script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
-            script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ')*4)
+            script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ') * 4)
             script_edit.edit_layout = QHBoxLayout()
             script_edit.edit_layout.addWidget(script_edit.edit)
             script_edit.setLayout(script_edit.edit_layout)
@@ -338,7 +343,8 @@ class MenuTools(QMainWindow):
             f.write(self.edit_tab.currentWidget().edit.toPlainText())
             f.close()
             if self.edit_tab.tabText(self.edit_tab.currentIndex())[0] == '*':
-                self.edit_tab.setTabText(self.edit_tab.currentIndex(), self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
+                self.edit_tab.setTabText(self.edit_tab.currentIndex(),
+                                         self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
 
     def save_another_file(self):
         save_another_path = QFileDialog.getSaveFileName(self, '选择要另存为的路径', '.', '*.py')
@@ -348,7 +354,7 @@ class MenuTools(QMainWindow):
             f.close()
 
     def show_report(self):
-        startfile(funcs.grandfather_dir[0]+':/TestLog')
+        startfile(funcs.grandfather_dir[0] + ':/TestLog')
 
         # 脚本栏的右键点击事件
 
@@ -375,7 +381,8 @@ class MenuTools(QMainWindow):
 
     def text_changed(self):
         if not self.edit_tab.tabText(self.edit_tab.currentIndex())[0] == '*':
-            self.edit_tab.setTabText(self.edit_tab.currentIndex(), '*'+self.edit_tab.tabText(self.edit_tab.currentIndex()))
+            self.edit_tab.setTabText(self.edit_tab.currentIndex(),
+                                     '*' + self.edit_tab.tabText(self.edit_tab.currentIndex()))
 
 
 if __name__ == '__main__':

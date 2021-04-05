@@ -5,7 +5,7 @@ This module contains the Airtest Core APIs.
 import os
 import sys
 import time
-
+import pytesseract
 from six.moves.urllib.parse import parse_qsl, urlparse
 
 from airtest.core.cv import Template, loop_find, try_log_screen, loop_find_vanish
@@ -51,10 +51,12 @@ def report_name(name):
         pass
 
 
-def write_result(method, v=None):
+def write_result(method, v=None, u=None):
     if sys.platform.startswith('win32'):
         j = time.strftime('%H:%M:%S', time.localtime(time.time()))
-        if v:
+        if u:
+            result_pen.write("\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td>from{}to{}</td>\n\t\t\t</tr>\n".format(j, method, u, v))
+        elif v:
             # result_pen.write(j + "\t" + method + "\t" + str(v)[9:-1] + "\t" + "success\n")
             result_pen.write("\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td><a href=\"{}\" target=\"_self\"><img width=\"120px\" height=\"120px\" src=\"{}\"/></a></td>\n\t\t\t</tr>\n".format(j, method, str(v)[9:-1], str(v)[9:-1]))
         else:
@@ -520,7 +522,7 @@ def swipe(v1, v2=None, vector=None, **kwargs):
         raise Exception("no enough params for swipe")
 
     G.DEVICE.swipe(pos1, pos2, **kwargs)
-    write_result("swipe", v1)
+    write_result("swipe", pos1, pos2)
     delay_after_operation()
     return pos1, pos2
 
@@ -873,3 +875,6 @@ def assert_word_exist(file, row, words_given):
         write_result("assert_word_exist")
     else:
         raise AssertionError("{} is not on the last {} lines of {}".format(words_given, row, file))
+
+def ocr(v):
+    return pytesseract.image_to_string(v)
