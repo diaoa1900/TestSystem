@@ -30,6 +30,7 @@ class MyThread(QThread):
         self.ide = ide
 
     def run(self):
+        self.ide.stop_action.setEnabled(True)
         sbp = subprocess.Popen("python " + self.ide.edit_tab.currentWidget().edit_name,
                                cwd=self.ide.edit_tab.currentWidget().cwd, stdout=subprocess.PIPE,
                                stderr=subprocess.STDOUT)
@@ -39,6 +40,7 @@ class MyThread(QThread):
             if not subprocess.Popen.poll(sbp) is None:
                 break
         sbp.stdout.close()
+        self.ide.stop_action.setEnabled(False)
 
 
 class Functions(IDE.MenuTools):
@@ -112,6 +114,7 @@ class Functions(IDE.MenuTools):
             f.close()
             self.thread = MyThread(self)
             self.thread.start()
+
         except Exception as e:
             print(e)
         '''with open(self.edit_tab.currentWidget().path, 'r', encoding='utf-8') as f:
@@ -122,6 +125,7 @@ class Functions(IDE.MenuTools):
         self.thread.terminate()
         self.thread.wait()
         self.thread.deleteLater()
+        self.stop_action.setEnabled(False)
 
     def wait(self):
         Functions.screenshot_function(self, "wait")
