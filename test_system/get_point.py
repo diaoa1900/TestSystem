@@ -39,8 +39,9 @@ class Point(QWidget):
             self.close()
             self._cx.setVisible(True)
         if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
-            self._cx.edit_tab.currentWidget().edit.insertPlainText(
-                "swipe(({},{}),({},{}))\n".format(self.point1.x(), self.point1.y(), self.point2.x(), self.point2.y()))
+            if self.point1 and self.point2:
+                self._cx.edit_tab.currentWidget().edit.insertPlainText(
+                    "swipe(({},{}),({},{}))\n".format(self.point1.x(), self.point1.y(), self.point2.x(), self.point2.y()))
             self._cx.setVisible(True)
             self.close()
 

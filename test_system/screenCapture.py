@@ -77,32 +77,36 @@ class CaptureScreen(QWidget):
             self.close()
             self._cx.setVisible(True)
         if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
-            self.capture_pixmap.save(self._screenshot_dir + self._picture_name + ".jpg")
-            if self._method:
-                if self._method == 'assert_equal':
-                    self._cx.edit_tab.currentWidget().edit.insertPlainText(
-                        "assert_equal(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"), \"预测值\", "
-                                                                                                  "\"请填写测试点\")")
-                elif self._method == 'assert_exists':
-                    self._cx.edit_tab.currentWidget().edit.insertPlainText(
-                        "assert_exists(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"), "
-                                                                                                   "\"请填写测试点\")")
-                elif self._method in ['click', 'double_click', 'right_click', 'hover']:
-                    self._cx.edit_tab.currentWidget().edit.insertPlainText(
-                        self._method + "(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\", "
-                                                                                                     "target_pos=5))")
+            if self.capture_pixmap:
+                self.capture_pixmap.save(self._screenshot_dir + self._picture_name + ".jpg")
+                if self._method:
+                    if self._method == 'assert_equal':
+                        self._cx.edit_tab.currentWidget().edit.insertPlainText(
+                            "assert_equal(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"), \"预测值\", "
+                                                                                                      "\"请填写测试点\")")
+                    elif self._method == 'assert_exists':
+                        self._cx.edit_tab.currentWidget().edit.insertPlainText(
+                            "assert_exists(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"), "
+                                                                                                       "\"请填写测试点\")")
+                    elif self._method in ['click', 'double_click', 'right_click', 'hover']:
+                        self._cx.edit_tab.currentWidget().edit.insertPlainText(
+                            self._method + "(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\", "
+                                                                                                         "target_pos=5))")
 
+                    else:
+                        self._cx.edit_tab.currentWidget().edit.insertPlainText(
+                            self._method + "(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"))")
+                    self._cx.setVisible(True)
+                    self._cx.edit_tab.currentWidget().edit.setFocus()
+                    pyautogui.press('enter')
                 else:
                     self._cx.edit_tab.currentWidget().edit.insertPlainText(
-                        self._method + "(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"))")
-                self._cx.setVisible(True)
-                self._cx.edit_tab.currentWidget().edit.setFocus()
-                pyautogui.press('enter')
+                        "Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\")")
+                    self._cx.setVisible(True)
+                self.close()
             else:
-                self._cx.edit_tab.currentWidget().edit.insertPlainText(
-                    "Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\")")
+                self.close()
                 self._cx.setVisible(True)
-            self.close()
 
     def get_rect(self, beginPoint, endPoint):
         width = qAbs(beginPoint.x() - endPoint.x())
