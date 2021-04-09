@@ -311,6 +311,16 @@ class Windows(Device):
             self.mouse.move(coords=(to_x, to_y))
         time.sleep(interval)
         self.mouse.release(coords=(to_x, to_y))
+        """p1 = self._fix_op_pos(p1)
+                p2 = self._fix_op_pos(p2)
+
+                from_x, from_y = self._action_pos(p1)
+                to_x, to_y = self._action_pos(p2)
+                self.mouse.press(coords=(from_x, from_y))
+                time.sleep(0.5)
+                self.mouse.move(coords=(to_x, to_y))
+                time.sleep(0.5)
+                self.mouse.release(coords=(to_x, to_y))"""
 
     def mouse_move(self, pos):
         """Simulates a `mousemove` event.

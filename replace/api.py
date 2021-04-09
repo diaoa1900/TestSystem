@@ -5,6 +5,8 @@ This module contains the Airtest Core APIs.
 import os
 import sys
 import time
+
+import cv2
 import pytesseract
 from six.moves.urllib.parse import parse_qsl, urlparse
 
@@ -46,7 +48,8 @@ def report_name(name):
             os.mkdir(grandfather_dir[0] + ":/TestLog")
         global result_pen
         result_pen = open(temporary_result, 'w')
-        result_pen.write("<!DOCTYPE html>\n<html>\n\t<head></head>\n\t<body>\n\t\t<table width=\"80%\" border=\"1px\" cellspacing=\"0px\" style=\"border-collapse: collapse\">\n\t\t\t<tr>\n\t\t\t\t<th>时间</th>\n\t\t\t\t<th>方法</th>\n\t\t\t\t<th>状态</th>\n\t\t\t\t<th>图片</th>\n\t\t\t</tr>\n")
+        result_pen.write(
+            "<!DOCTYPE html>\n<html>\n\t<head></head>\n\t<body>\n\t\t<table width=\"80%\" border=\"1px\" cellspacing=\"0px\" style=\"border-collapse: collapse\">\n\t\t\t<tr>\n\t\t\t\t<th>时间</th>\n\t\t\t\t<th>方法</th>\n\t\t\t\t<th>状态</th>\n\t\t\t\t<th>图片</th>\n\t\t\t</tr>\n")
     elif sys.platform.startswith('linux'):
         pass
 
@@ -55,13 +58,19 @@ def write_result(method, v=None, u=None):
     if sys.platform.startswith('win32'):
         j = time.strftime('%H:%M:%S', time.localtime(time.time()))
         if u:
-            result_pen.write("\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td>from{}to{}</td>\n\t\t\t</tr>\n".format(j, method, u, v))
+            result_pen.write(
+                "\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td>from{}to{}</td>\n\t\t\t</tr>\n".format(
+                    j, method, v, u))
         elif v:
             # result_pen.write(j + "\t" + method + "\t" + str(v)[9:-1] + "\t" + "success\n")
-            result_pen.write("\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td><a href=\"{}\" target=\"_self\"><img width=\"120px\" height=\"120px\" src=\"{}\"/></a></td>\n\t\t\t</tr>\n".format(j, method, str(v)[9:-1], str(v)[9:-1]))
+            result_pen.write(
+                "\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td><a href=\"{}\" target=\"_self\"><img width=\"120px\" height=\"120px\" src=\"{}\"/></a></td>\n\t\t\t</tr>\n".format(
+                    j, method, str(v)[9:-1], str(v)[9:-1]))
         else:
             # result_pen.write(j + "\t" + method + "\t success\n")
-            result_pen.write("\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td>无需图片</td>\n\t\t\t</tr>\n".format(j, method))
+            result_pen.write(
+                "\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td>无需图片</td>\n\t\t\t</tr>\n".format(
+                    j, method))
     elif sys.platform.startswith('linux'):
         pass
 
@@ -876,5 +885,6 @@ def assert_word_exist(file, row, words_given):
     else:
         raise AssertionError("{} is not on the last {} lines of {}".format(words_given, row, file))
 
+
 def ocr(v):
-    return pytesseract.image_to_string(v)
+    return pytesseract.image_to_string(cv2.imread(str(v)[9:-1]))
