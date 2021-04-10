@@ -277,8 +277,9 @@ class MenuTools(QMainWindow):
         tb.addAction(run)
         run.triggered.connect(lambda: funcs.Functions.run(self))
 
-        # run1 = QAction(QIcon("../image/fast-forward.png"), "逐步运行", self)
-        # tb.addAction(run1)
+        part_run = QAction(QIcon("../icons/fast-forward.png"), "逐步运行", self)
+        tb.addAction(part_run)
+        part_run.triggered.connect(lambda: funcs.Functions.part_run(self))
         self.stop_action = QAction(QIcon("../icons/stop.png"), "停止", self)
         tb.addAction(self.stop_action)
         self.stop_action.setEnabled(False)

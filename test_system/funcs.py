@@ -1,6 +1,9 @@
 import subprocess
 import sys
+
 import time
+from threading import Thread
+
 import pyautogui
 from PyQt5.QtCore import QThread
 from PyQt5.QtGui import QTextCursor
@@ -71,7 +74,8 @@ class Functions(IDE.MenuTools):
                         self.edit_tab.currentWidget().edit.setFocus()
                         pyautogui.press('enter')
                     else:
-                        self.edit_tab.currentWidget().edit.insertPlainText("(Template(r\"" + screenshot_dir + i + ".jpg\")")
+                        self.edit_tab.currentWidget().edit.insertPlainText(
+                            "(Template(r\"" + screenshot_dir + i + ".jpg\")")
                         self.setVisible(True)
                     break
                 if end_time - start_time > 10:
@@ -101,14 +105,17 @@ class Functions(IDE.MenuTools):
             f.close()
             if not self.edit_tab.currentWidget().edit.find('report_name'):
                 if self.edit_tab.tabText(self.edit_tab.currentIndex()).endswith('.py'):
-                    self.edit_tab.currentWidget().edit.insertPlainText("report_name(\"" + self.edit_tab.tabText(self.edit_tab.currentIndex())[1:-3] + "\")\n")
+                    self.edit_tab.currentWidget().edit.insertPlainText(
+                        "report_name(\"" + self.edit_tab.tabText(self.edit_tab.currentIndex())[1:-3] + "\")\n")
                 else:
-                    self.edit_tab.currentWidget().edit.insertPlainText("report_name(\"" + self.edit_tab.tabText(self.edit_tab.currentIndex())[1:] + "\")\n")
+                    self.edit_tab.currentWidget().edit.insertPlainText(
+                        "report_name(\"" + self.edit_tab.tabText(self.edit_tab.currentIndex())[1:] + "\")\n")
             self.edit_tab.currentWidget().edit.moveCursor(QTextCursor.Start)
             if not self.edit_tab.currentWidget().edit.find("run_end()"):
                 self.edit_tab.currentWidget().edit.appendPlainText("run_end()")
             if self.edit_tab.tabText(self.edit_tab.currentIndex())[0] == '*':
-                self.edit_tab.setTabText(self.edit_tab.currentIndex(), self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
+                self.edit_tab.setTabText(self.edit_tab.currentIndex(),
+                                         self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
             f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
             f.write(self.edit_tab.currentWidget().edit.toPlainText())
             f.close()
@@ -119,6 +126,16 @@ class Functions(IDE.MenuTools):
             print(e)
         '''with open(self.edit_tab.currentWidget().path, 'r', encoding='utf-8') as f:
             exec(f.read())'''
+
+    def part_run(self):
+        def part():
+            f = open('./script_template.py', 'r', encoding='utf-8')
+            script_head = f.read()
+            cursor = self.edit_tab.currentWidget().edit.textCursor()
+            exec(script_head + "\n" + cursor.selectedText() + "\nrun_end()")
+
+        part_run_thread = Thread(target=part)
+        part_run_thread.start()
 
     def stop_run(self):
         self.thread.setTerminationEnabled(True)
@@ -186,7 +203,7 @@ class Functions(IDE.MenuTools):
     def sleep(self):
         sleep_value = QInputDialog.getDouble(self, '等待n秒', '给出n的值', 1.0, 0)
         if sleep_value[1] is True:
-            self.edit_tab.currentWidget().edit.insertPlainText("sleep("+str(sleep_value[0])+")")
+            self.edit_tab.currentWidget().edit.insertPlainText("sleep(" + str(sleep_value[0]) + ")")
             self.edit_tab.currentWidget().edit.setFocus()
             pyautogui.press('enter')
 
