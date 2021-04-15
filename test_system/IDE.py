@@ -1,8 +1,8 @@
 import os
 import sys
 from os import startfile
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
+from PyQt5.QtCore import pyqtSignal, Qt, QSize
+from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtWidgets import *
 from system_hotkey import SystemHotkey
 
@@ -31,6 +31,8 @@ class MenuTools(QMainWindow):
         SystemHotkey().register(('control', 'q'), callback=lambda x: self.send_event("开始截图"))
 
         # 设置局部布局
+        # 文件树布局
+        file_layout = QVBoxLayout()
         # 左侧垂直布局
         left_layout = QVBoxLayout()
         # 中间垂直布局
@@ -38,6 +40,20 @@ class MenuTools(QMainWindow):
         # 右边垂直布局
         right_layout = QVBoxLayout()
 
+        # 文件树
+        self.dir_url = QLabel('')
+        self.file_tree = QTreeView()
+        self.dir_model = QFileSystemModel()
+        self.dir_model.setRootPath("/")
+        self.dir_model.setReadOnly(False)
+        self.file_tree.setModel(self.dir_model)
+        self.file_tree.setColumnHidden(1, True)
+        self.file_tree.setColumnHidden(2, True)
+        self.file_tree.setColumnHidden(3, True)
+        self.file_tree.header().setHidden(True)
+        self.file_tree.doubleClicked.connect(self.open_script)
+        file_layout.addWidget(self.dir_url)
+        file_layout.addWidget(self.file_tree)
         # 左侧栏
         self.groupbox_1 = QGroupBox("查找", self)
         layout = QVBoxLayout()
@@ -196,6 +212,9 @@ class MenuTools(QMainWindow):
 
         right_layout.addWidget(self.groupbox_6)
 
+        file_widget = QWidget()
+        file_widget.setLayout(file_layout)
+
         left_widget = QWidget()
         left_widget.setLayout(left_layout)
 
@@ -204,12 +223,14 @@ class MenuTools(QMainWindow):
 
         # 局部布局加到全局布局中
         widget = QSplitter(Qt.Horizontal)
+        widget.addWidget(file_widget)
         widget.addWidget(left_widget)
         widget.addWidget(mid_widget)
         widget.addWidget(right_widget)
-        widget.setStretchFactor(0, 1)
-        widget.setStretchFactor(1, 7)
-        widget.setStretchFactor(2, 2)
+        widget.setStretchFactor(0, 2)
+        widget.setStretchFactor(1, 1)
+        widget.setStretchFactor(2, 7)
+        widget.setStretchFactor(3, 2)
         self.setCentralWidget(widget)
 
         if sys.platform.startswith('win32'):
@@ -225,7 +246,7 @@ class MenuTools(QMainWindow):
     # 创建菜单栏
     def create_menu(self):
         bar = self.menuBar()
-        file_menu = bar.addMenu("文件")
+        '''file_menu = bar.addMenu("文件")
         new_action = QAction(QIcon(), '新建', self)
         new_action.setShortcut('Ctrl+N')
         new_action.setStatusTip('Create a new file')
@@ -247,7 +268,12 @@ class MenuTools(QMainWindow):
         saves_action = QAction(QIcon(), '另存为', self)
         saves_action.setStatusTip('Save the document under a new name')
         saves_action.triggered.connect(self.save_another_file)
-        file_menu.addAction(saves_action)
+        file_menu.addAction(saves_action)'''
+        dir_menu = bar.addMenu("目录")
+        # select_menu = QAction('选择目录')
+        dir_menu.addAction('选择目录')
+        dir_menu.triggered.connect(self.choose_dir)
+
 
         check_menu = bar.addMenu("&查看")
         check_menu.addAction("查看报告")
@@ -294,7 +320,7 @@ class MenuTools(QMainWindow):
         self.statusBar().showMessage("Ready")
 
     # 新建文件
-    def new_file(self):
+    """def new_file(self):
         script_edit = QWidget()
         self.edit_tab.addTab(script_edit, '新脚本')
         script_edit.path = self.temporary_file
@@ -344,7 +370,27 @@ class MenuTools(QMainWindow):
             script_edit.edit.customContextMenuRequested.connect(self.edit_right)'''
             self.edit_tab.setCurrentWidget(script_edit)
             script_edit.edit.textChanged.connect(self.text_changed)
-            # 右键新增结束
+            # 右键新增结束"""
+
+    def open_script(self, tree_id):
+        path = self.dir_model.filePath(tree_id)
+        script_edit = QWidget()
+        script_name_index = path.rindex('/')
+        self.edit_tab.addTab(script_edit, path[script_name_index + 1:])
+        script_edit.path = path
+        script_edit.cwd = path[0:script_name_index]
+        script_edit.edit_name = path[script_name_index + 1:]
+        script_edit.edit = edit2.QCodeEditor()
+        script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
+        script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ') * 4)
+        script_edit.edit_layout = QHBoxLayout()
+        script_edit.edit_layout.addWidget(script_edit.edit)
+        script_edit.setLayout(script_edit.edit_layout)
+        with open(path, 'r', encoding='utf-8', errors='ignore') as f:  # 文件读操作
+            script_edit.edit.setPlainText(f.read())
+            f.close()
+        self.edit_tab.setCurrentWidget(script_edit)
+        script_edit.edit.textChanged.connect(self.text_changed)
 
     # 保存文件
     def save_file(self):
@@ -405,10 +451,16 @@ class MenuTools(QMainWindow):
             self.edit_tab.setTabText(self.edit_tab.currentIndex(),
                                      '*' + self.edit_tab.tabText(self.edit_tab.currentIndex()))
 
+    def choose_dir(self):
+        selected_dir = QFileDialog.getExistingDirectoryUrl(self, '选择目录')
+        if selected_dir:
+            self.dir_url.setText(str(selected_dir)[27:-2])
+            self.file_tree.setRootIndex(self.dir_model.index(str(selected_dir)[27:-2]))
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     form = MenuTools()
     form.show()
-    form.new_file()
+    # form.new_file()
     sys.exit(app.exec_())
