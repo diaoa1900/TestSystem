@@ -42,6 +42,29 @@ class MenuTools(QMainWindow):
 
         # 文件树
         self.dir_url = QLabel('')
+        self.file_btn_window = QWidget()
+        layout = QHBoxLayout()
+        self.new_file_button = QPushButton('')
+        self.new_file_button.setIcon(QIcon("../icons/add.ico"))
+        self.new_file_button.setToolTip("新增脚本")
+        self.new_file_button.clicked.connect(self.new_script)
+        self.delete_file_button = QPushButton('')
+        self.delete_file_button.setIcon(QIcon("../icons/delete.ico"))
+        self.delete_file_button.setToolTip("删除脚本")
+        self.delete_file_button.clicked.connect(self.delete_script)
+        self.list_add_button = QPushButton('')
+        self.list_add_button.setIcon(QIcon("../icons/listadd.ico"))
+        self.list_add_button.setToolTip("加入脚本到运行队列")
+        self.list_add_button.clicked.connect(self.list_add)
+        self.run_list_button = QPushButton('')
+        self.run_list_button.setIcon(QIcon("../icons/run.ico"))
+        self.run_list_button.setToolTip("运行队列中的脚本")
+        self.run_list_button.clicked.connect(self.run_list)
+        layout.addWidget(self.new_file_button)
+        layout.addWidget(self.delete_file_button)
+        layout.addWidget(self.list_add_button)
+        layout.addWidget(self.run_list_button)
+        self.file_btn_window.setLayout(layout)
         self.file_tree = QTreeView()
         self.dir_model = QFileSystemModel()
         self.dir_model.setRootPath("/")
@@ -53,6 +76,7 @@ class MenuTools(QMainWindow):
         self.file_tree.header().setHidden(True)
         self.file_tree.doubleClicked.connect(self.open_script)
         file_layout.addWidget(self.dir_url)
+        file_layout.addWidget(self.file_btn_window)
         file_layout.addWidget(self.file_tree)
         # 左侧栏
         self.groupbox_1 = QGroupBox("查找", self)
@@ -274,7 +298,6 @@ class MenuTools(QMainWindow):
         dir_menu.addAction('选择目录')
         dir_menu.triggered.connect(self.choose_dir)
 
-
         check_menu = bar.addMenu("&查看")
         check_menu.addAction("查看报告")
         check_menu.triggered.connect(self.show_report)
@@ -456,6 +479,28 @@ class MenuTools(QMainWindow):
         if selected_dir:
             self.dir_url.setText(str(selected_dir)[27:-2])
             self.file_tree.setRootIndex(self.dir_model.index(str(selected_dir)[27:-2]))
+
+    def new_script(self):
+        path = self.dir_model.filePath(self.file_tree.currentIndex())
+        if os.path.isdir(path):
+            f = open(path + "/新脚本.py", 'w')
+            f.close()
+        else:
+            f = open(path[:path.rindex('/')] + "/新脚本.py", 'w')
+            f.close()
+
+    def delete_script(self):
+        path = self.dir_model.filePath(self.file_tree.currentIndex())
+        if os.path.isfile(path):
+            os.remove(path)
+        else:
+            os.rmdir(path)
+
+    def list_add(self):
+        pass
+
+    def run_list(self):
+        pass
 
 
 if __name__ == '__main__':
