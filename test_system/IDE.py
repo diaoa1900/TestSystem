@@ -257,7 +257,7 @@ class MenuTools(QMainWindow):
         widget.setStretchFactor(3, 2)
         self.setCentralWidget(widget)
 
-        if sys.platform.startswith('win32'):
+        """if sys.platform.startswith('win32'):
             father_dir = os.path.dirname(os.path.abspath(__file__))
             grandfather_dir = os.path.dirname(father_dir)
             while not father_dir == grandfather_dir:
@@ -265,7 +265,7 @@ class MenuTools(QMainWindow):
                 grandfather_dir = os.path.dirname(grandfather_dir)
             self.temporary_file = grandfather_dir[0] + ":/TestScripts/新脚本.py"
             if not os.path.exists(grandfather_dir[0] + ":/TestScripts"):
-                os.mkdir(grandfather_dir[0] + ":/TestScripts")
+                os.mkdir(grandfather_dir[0] + ":/TestScripts")"""
 
     # 创建菜单栏
     def create_menu(self):
@@ -326,7 +326,7 @@ class MenuTools(QMainWindow):
         tb.addAction(run)
         run.triggered.connect(lambda: funcs.Functions.run(self))
 
-        part_run = QAction(QIcon("../icons/fast-forward.png"), "逐步运行", self)
+        part_run = QAction(QIcon("../icons/fast-forward.png"), "运行选中语句", self)
         tb.addAction(part_run)
         part_run.triggered.connect(lambda: funcs.Functions.part_run(self))
         self.stop_action = QAction(QIcon("../icons/stop.png"), "停止", self)
