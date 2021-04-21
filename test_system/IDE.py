@@ -192,19 +192,65 @@ class MenuTools(QMainWindow):
         self.output_tab.addTab(self.console_window, "控制台")
 
         # 右侧栏
+        # 右侧栏
         self.groupbox_6 = QGroupBox("通信管理", self)
-        layout = QVBoxLayout()
-        self.connect_button = QPushButton("建立连接")
-        self.disconnect_button = QPushButton("断开连接")
-        self.textEdit = QTextEdit()
-        self.send_button = QCommandLinkButton("发送")
+        self.formlayout = QFormLayout()
 
-        layout.addWidget(self.connect_button)
-        layout.addWidget(self.disconnect_button)
-        layout.addWidget(self.textEdit)
-        layout.addWidget(self.send_button, 0, Qt.AlignCenter)
-        self.groupbox_6.setLayout(layout)
+        self.btn_connect = QPushButton("建立连接")
 
+        self.btn_disconnect = QPushButton("断开连接")
+        self.btn_disconnect.setEnabled(False)
+        self.formlayout.addRow(self.btn_connect)
+        self.formlayout.addRow(self.btn_disconnect)
+        self.groupbox_6.setLayout(self.formlayout)
+
+        self.groupbox_7 = QGroupBox("数据日志", self)
+        self.formlayout1 = QFormLayout()
+
+        self.textEdit_send = QTextEdit()
+
+        self.btn_addDevice = QPushButton("NewDevice")
+
+        self.btn_response = QPushButton("AddKey")
+
+        self.btn_data = QPushButton("AddData")
+
+        self.btn_deleteDevice = QPushButton("DeleteDevice")
+
+        self.btn_deleteCommand = QPushButton("DeleteKey")
+
+        self.btn_open = QPushButton("打开文件")
+
+        self.btn_open.setEnabled(False)
+
+        # self.btn_open.setFixedSize(280,25)
+        self.btn_send = QPushButton("立即执行")
+
+        self.btn_send.setEnabled(False)
+        self.btn_close = QPushButton("清除")
+        # self.btn_close.setFixedSize(115,27)
+        self.formlayout1.addRow(self.textEdit_send)
+
+        self.formlayout1.addRow(self.btn_addDevice)
+        self.formlayout1.addRow(self.btn_response)
+        self.formlayout1.addRow(self.btn_data)
+        self.formlayout1.addRow(self.btn_deleteDevice)
+        self.formlayout1.addRow(self.btn_deleteCommand)
+        self.formlayout1.addRow(self.btn_open)
+        self.formlayout1.addRow(self.btn_send)
+        self.formlayout1.addRow(self.btn_close)
+        self.groupbox_7.setLayout(self.formlayout1)
+
+        self.btn_connect.clicked.connect(lambda: funcs.Functions.dialog_connect(self))
+        self.btn_disconnect.clicked.connect(lambda: funcs.Functions.disconnect_clicked(self))
+        self.btn_addDevice.clicked.connect(lambda: funcs.Functions.dialog_newDevice(self))
+        self.btn_response.clicked.connect(lambda: funcs.Functions.dialog_response(self))
+        self.btn_data.clicked.connect(lambda: funcs.Functions.dialog_data(self))
+        self.btn_deleteDevice.clicked.connect(lambda: funcs.Functions.dialog_deleteDevice(self))
+        self.btn_deleteCommand.clicked.connect(lambda: funcs.Functions.dialog_deleteKey(self))
+        self.btn_open.clicked.connect(lambda: funcs.Functions.send_file(self))
+        self.btn_send.clicked.connect(lambda: funcs.Functions.on_btnSend_clicked(self))
+        self.btn_close.clicked.connect(lambda: funcs.Functions.on_btn_clear_clicked(self))
         self.wait_button.clicked.connect(lambda: funcs.Functions.wait(self))
         self.waitVanish_button.clicked.connect(lambda: funcs.Functions.waitVanish(self))
         self.exists_button.clicked.connect(lambda: funcs.Functions.exists(self))
@@ -235,7 +281,7 @@ class MenuTools(QMainWindow):
         mid_widget.setStretchFactor(1, 1)
 
         right_layout.addWidget(self.groupbox_6)
-
+        right_layout.addWidget(self.groupbox_7)
         file_widget = QWidget()
         file_widget.setLayout(file_layout)
 

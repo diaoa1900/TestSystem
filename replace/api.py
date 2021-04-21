@@ -5,11 +5,13 @@ This module contains the Airtest Core APIs.
 import os
 import sys
 import time
-
+import sys
+import time
+import socket
 import cv2
 import pytesseract
 from six.moves.urllib.parse import parse_qsl, urlparse
-
+from PyQt5.QtNetwork import *
 from airtest.core.cv import Template, loop_find, try_log_screen, loop_find_vanish
 from airtest.core.error import TargetNotFoundError
 from airtest.core.settings import Settings as ST
@@ -35,6 +37,7 @@ Device Setup APIs
 elif sys.platform.startswith('linux'):
     pass'''
 
+sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
 def report_name(name):
     if sys.platform.startswith('win32'):
@@ -888,3 +891,38 @@ def assert_word_exist(file, row, words_given):
 
 def ocr(v):
     return pytesseract.image_to_string(cv2.imread(str(v)[9:-1]))
+
+@logwrap
+def newDevice(fileName):
+    f = open(fileName, 'rb')
+    str = f.read()
+    sock.send(str)
+    f.close()
+
+@logwrap
+def AddKey(fileName):
+    f = open(fileName, 'rb')
+    str = f.read()
+    sock.send(str)
+    f.close()
+
+@logwrap
+def AddDate(fileName):
+    f = open(fileName, 'rb')
+    str = f.read()
+    sock.send(str)
+    f.close()
+
+@logwrap
+def DeleteDevice(fileName):
+    f = open(fileName, 'rb')
+    str = f.read()
+    sock.send(str)
+    f.close()
+
+@logwrap
+def DeleteKey(fileName):
+    f = open(fileName, 'rb')
+    str = f.read()
+    sock.send(str)
+    f.close()
