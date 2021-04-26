@@ -7,11 +7,11 @@ import IDE
 import screenCapture
 import os
 import get_point
-from PyQt5.QtCore import QThread,QFile,QIODevice,QTextStream,QDateTime,Qt
+from PyQt5.QtCore import QThread, QFile, QIODevice, QTextStream, QDateTime, Qt
 from PyQt5.QtGui import QTextCursor
 from PyQt5.QtWidgets import *
-from PyQt5.QtNetwork import QTcpSocket,QTcpServer
-from PyQt5.QtXml import QDomDocument,QDomProcessingInstruction,QDomAttr,QDomElement
+from PyQt5.QtNetwork import QTcpSocket, QTcpServer
+from PyQt5.QtXml import QDomDocument, QDomProcessingInstruction, QDomAttr, QDomElement
 
 if sys.platform.startswith('win32'):
     father_dir = os.path.dirname(os.path.abspath(__file__))
@@ -28,14 +28,19 @@ elif sys.platform.startswith('linux'):
 
 
 class MyThread(QThread):
-    def __init__(self, ide):
+    def __init__(self, ide, path, *paths):
         super().__init__()
         self.ide = ide
+        self.command = ''
+        if path:
+            self.command = "python " + path
+        for pat in paths:
+            self.command += " & python " + pat
+        self.command = self.command[3:]
 
     def run(self):
         self.ide.stop_action.setEnabled(True)
-        sbp = subprocess.Popen("python " + self.ide.edit_tab.currentWidget().edit_name,
-                               cwd=self.ide.edit_tab.currentWidget().cwd, stdout=subprocess.PIPE,
+        sbp = subprocess.Popen(self.command, stdout=subprocess.PIPE,
                                stderr=subprocess.STDOUT)
         for line in iter(sbp.stdout.readline, 'b'):
             self.ide.console_text.insertPlainText(line.decode())
@@ -45,7 +50,9 @@ class MyThread(QThread):
         sbp.stdout.close()
         self.ide.stop_action.setEnabled(False)
 
+
 device_message = {}
+
 
 class Functions(IDE.MenuTools):
 
@@ -120,7 +127,7 @@ class Functions(IDE.MenuTools):
             f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
             f.write(self.edit_tab.currentWidget().edit.toPlainText())
             f.close()
-            self.thread = MyThread(self)
+            self.thread = MyThread(self, self.edit_tab.currentWidget().path)
             self.thread.start()
 
         except Exception as e:
@@ -237,6 +244,7 @@ class Functions(IDE.MenuTools):
                         "assert_word_exist(\"" + file_value[0] + "\"," + str(row_value[0]) + ",\"" + compare_v + "\")")
                     self.edit_tab.currentWidget().edit.setFocus()
                     pyautogui.press('enter')
+
     def dialog_connect(self):
         self.connect_dialog = QDialog()
         connect_form = QFormLayout(self.connect_dialog)
@@ -251,10 +259,9 @@ class Functions(IDE.MenuTools):
         self.lineedit_port = QLineEdit("9948")
         self.btn_con = QPushButton("确定")
 
-
-        connect_form.addRow(self.label_ip_style,self.combox_ip)
-        connect_form.addRow(self.label_ip,self.lineedit_ip)
-        connect_form.addRow(self.label_port,self.lineedit_port)
+        connect_form.addRow(self.label_ip_style, self.combox_ip)
+        connect_form.addRow(self.label_ip, self.lineedit_ip)
+        connect_form.addRow(self.label_port, self.lineedit_port)
         connect_form.addRow(self.btn_con)
         self.btn_con.clicked.connect(lambda: Functions.connect_clicked(self))
         self.connect_dialog.exec_()
@@ -273,7 +280,8 @@ class Functions(IDE.MenuTools):
             self.socket.connectToHost(self.host_ip_addr, self.port)
             self.textEdit_send.setText("connect to {} on port {} success!\n".format(self.host_ip_addr, self.port))
             self.textEdit_send.insertPlainText(time.strftime("[%Y-%m-%d %H:%M:%S]\n", time.localtime()))
-            self.edit_tab.currentWidget().edit.insertPlainText("connect_Server(\""+ self.host_ip_addr + "\","+self.lineedit_port.text()+")")
+            self.edit_tab.currentWidget().edit.insertPlainText(
+                "connect_Server(\"" + self.host_ip_addr + "\"," + self.lineedit_port.text() + ")")
 
             self.btn_disconnect.setEnabled(True)
             self.btn_send.setEnabled(True)
@@ -363,7 +371,7 @@ class Functions(IDE.MenuTools):
         self.combox_newDevice_port.addItem(newDevice_port)
 
     def dialog_response(self):
-        
+
         self.response = QDialog()
         self.response.setWindowTitle("添加回令")
         self.response.setFixedSize(855, 820)
@@ -371,20 +379,20 @@ class Functions(IDE.MenuTools):
         self.tableWidget = QTableWidget(19, 4)
         self.tableWidget.setHorizontalHeaderLabels(['序号', '字段名称', '字节数', '数值'])
         self.tableWidget.verticalHeader().setVisible(False)
-        self.tableWidget.setSpan(11,0,10,1)
-        self.tableWidget.setSpan(12,1,9,3)
+        self.tableWidget.setSpan(11, 0, 10, 1)
+        self.tableWidget.setSpan(12, 1, 9, 3)
 
         tabWidget = QTabWidget()
-        tabWidget.addTab(self.tableWidget,"自定义帧")
+        tabWidget.addTab(self.tableWidget, "自定义帧")
         tableWidget1 = QTableWidget(19, 4)
-        tabWidget.insertTab(1,tableWidget1,"modbus")
+        tabWidget.insertTab(1, tableWidget1, "modbus")
 
         datetime = QDateTime(QDateTime.currentDateTime())
         date = datetime.toString("yyyy/MM/dd")
         date_time = datetime.toString("hh:mm")
 
         newItem1 = QTableWidgetItem("1")
-        self.tableWidget.setItem(0,0,newItem1)
+        self.tableWidget.setItem(0, 0, newItem1)
         newItem1.setTextAlignment(Qt.AlignCenter)
         newItem1_1 = QTableWidgetItem("帧类型")
         self.tableWidget.setItem(0, 1, newItem1_1)
@@ -536,7 +544,7 @@ class Functions(IDE.MenuTools):
         self.tableWidget.setItem(11, 2, newItem12_2)
         newItem12_2.setTextAlignment(Qt.AlignCenter)
         self.textEdit_buf = QTextEdit()
-        self.tableWidget.setCellWidget(12,1,self.textEdit_buf)
+        self.tableWidget.setCellWidget(12, 1, self.textEdit_buf)
 
         hbox = QVBoxLayout()
         vbox = QHBoxLayout()
@@ -552,7 +560,7 @@ class Functions(IDE.MenuTools):
         label6 = QLabel()
         self.btn_translate = QPushButton("<<")
 
-        self.btn_translate.clicked.connect(lambda:Functions.left_translate(self))
+        self.btn_translate.clicked.connect(lambda: Functions.left_translate(self))
         self.btn_reverse_translate = QPushButton(">>")
         self.btn_reverse_translate.clicked.connect(lambda: Functions.rigth_translate(self))
 
@@ -572,23 +580,23 @@ class Functions(IDE.MenuTools):
 
         self.combox_send_model = QComboBox(self.response)
         self.combox_send_model.addItem("response")
-        gridlayout1.addRow(self.label_send_model,self.combox_send_model)
+        gridlayout1.addRow(self.label_send_model, self.combox_send_model)
         self.label_name = QLabel("设备名字:")
         self.combox_response_name = QComboBox()
         self.combox_response_name.setEditable(True)
 
-        gridlayout1.addRow(self.label_name,self.combox_response_name)
+        gridlayout1.addRow(self.label_name, self.combox_response_name)
         self.label_type = QLabel("设备类型:")
 
         self.combox_type = QComboBox(self.response)
         self.combox_type.addItem("TcpServer")
-        gridlayout1.addRow(self.label_type,self.combox_type)
+        gridlayout1.addRow(self.label_type, self.combox_type)
 
         self.label_ip = QLabel(" Ip地址:")
         self.combox_response_ip = QComboBox()
         self.combox_response_ip.setEditable(True)
 
-        gridlayout1.addRow(self.label_ip,self.combox_response_ip)
+        gridlayout1.addRow(self.label_ip, self.combox_response_ip)
         self.label_port = QLabel(" 端口号:")
 
         self.combox_response_port = QComboBox()
@@ -598,46 +606,46 @@ class Functions(IDE.MenuTools):
         self.label_key_value = QLabel(" 命令字:")
 
         self.edit_key_value = QLineEdit(self.response)
-        gridlayout1.addRow(self.label_key_value,self.edit_key_value)
+        gridlayout1.addRow(self.label_key_value, self.edit_key_value)
         self.label_index = QLabel("起始节点:")
 
         self.combox_index = QComboBox(self.response)
         self.combox_index.addItem("0")
         self.combox_index.addItem("1")
-        gridlayout1.addRow(self.label_index,self.combox_index)
+        gridlayout1.addRow(self.label_index, self.combox_index)
 
         self.label_length = QLabel("字节长度:")
         self.spin_length = QSpinBox(self.response)
-        gridlayout1.addRow(self.label_length,self.spin_length)
+        gridlayout1.addRow(self.label_length, self.spin_length)
         self.label_keyName = QLabel("命令名称:")
         self.edit_keyName = QLineEdit(self.response)
         self.edit_keyName.setText("命令")
-        gridlayout1.addRow(self.label_keyName,self.edit_keyName)
+        gridlayout1.addRow(self.label_keyName, self.edit_keyName)
         self.label_model = QLabel("回令模式:")
         self.combox_model = QComboBox(self.response)
         self.combox_model.addItem("正常发送")
         self.combox_model.addItem("循环发送")
         self.combox_model.addItem("延迟发送")
-        gridlayout1.addRow(self.label_model,self.combox_model)
+        gridlayout1.addRow(self.label_model, self.combox_model)
         self.label_responName = QLabel("回令名称:")
         self.edit_responName = QLineEdit(self.response)
         self.edit_responName.setText("回令")
-        gridlayout1.addRow(self.label_responName,self.edit_responName)
+        gridlayout1.addRow(self.label_responName, self.edit_responName)
         self.label_respon_value = QLabel("回令数据:")
         # self.edit_plainText = QPlainTextEdit()
         self.edit_respon_value = QPlainTextEdit()
 
         self.label_loop = QLabel("循环次数:")
         self.spin_loop = QSpinBox(self.response)
-        gridlayout1.addRow(self.label_loop,self.spin_loop)
+        gridlayout1.addRow(self.label_loop, self.spin_loop)
         self.label_delayed = QLabel("延迟时间:")
         self.edit_delayed = QLineEdit(self.response)
-        gridlayout1.addRow(self.label_delayed,self.edit_delayed)
-        self.btn_true = QPushButton("确定",self.response)
+        gridlayout1.addRow(self.label_delayed, self.edit_delayed)
+        self.btn_true = QPushButton("确定", self.response)
 
         self.btn_respons_xml = QPushButton("加载文件")
 
-        for k,v in device_message.items():
+        for k, v in device_message.items():
             self.combox_response_name.addItem(k)
             self.combox_response_ip.addItem(v[0])
             self.combox_response_port.addItem(v[1])
@@ -682,7 +690,6 @@ class Functions(IDE.MenuTools):
         self.edit_delayed.setText(response_delayed)
         response_loop = respon.attribute("loop")
 
-
     def left_translate(self):
         str = "A5"
         stri = self.tableWidget.item(0, 3).text()
@@ -691,7 +698,7 @@ class Functions(IDE.MenuTools):
         if len(stri) == 1:
             stri = "00" + " " + stri + "0"
         if len(stri) == 2:
-            stri = "00"+ " " + stri
+            stri = "00" + " " + stri
         if len(stri) == 3:
             stri1 = stri[0:2]
             stri2 = stri[2:3]
@@ -705,8 +712,8 @@ class Functions(IDE.MenuTools):
         print(str)
         k = 1
         while k < 8:
-            string = self.tableWidget.item(k,3).text()
-            if len(string)==1:
+            string = self.tableWidget.item(k, 3).text()
+            if len(string) == 1:
                 string = string + "0"
 
             # string = string[::-1] #字符串反转
@@ -715,7 +722,7 @@ class Functions(IDE.MenuTools):
                 str_date = str_date.split('/')
                 print(str_date)
                 j = 0
-                while j < len(str_date)+1:
+                while j < len(str_date) + 1:
                     if j == 0:
                         str_year1 = str_date[j]
                         str_year1 = hex(int(str_year1))
@@ -777,7 +784,7 @@ class Functions(IDE.MenuTools):
             if len(string_mesg) == 0:
                 string_mesg = "00" + " " + "00" + " " + "00" + " " + "00"
             if len(string_mesg) == 1:
-                string_mesg = "00" + " " + "00" + " " + "00" + " " + string_mesg +"0"
+                string_mesg = "00" + " " + "00" + " " + "00" + " " + string_mesg + "0"
             if len(string_mesg) == 2:
                 string_mesg = "00" + " " + "00" + " " + "00" + " " + string_mesg
             if len(string_mesg) == 3:
@@ -862,10 +869,10 @@ class Functions(IDE.MenuTools):
 
         buf = int(len(self.textEdit_buf.toPlainText()) / 2 + 22)
         buf = hex(buf)
-        if  buf.startswith("0x"):
+        if buf.startswith("0x"):
             buf = buf[2:]
-            buf = buf +" "+ "00"
-        str = str + " " + str_date2 + " " + str_date1 + " " + str_time2 + " " + str_time1 + string_mesg + buffer + " " + "00" +" "+ buf +" " +"00"+ " "+"A4"
+            buf = buf + " " + "00"
+        str = str + " " + str_date2 + " " + str_date1 + " " + str_time2 + " " + str_time1 + string_mesg + buffer + " " + "00" + " " + buf + " " + "00" + " " + "A4"
         self.edit_respon_value.clear()
         self.edit_respon_value.appendPlainText(str)
 
@@ -885,7 +892,7 @@ class Functions(IDE.MenuTools):
         str_key[12] = str(str_key[10]) + "/" + str(str_key[12]) + "/" + str(str_key[11])
         str_key[13] = int(str_key[13].upper(), 16)
         str_key[14] = int(str_key[14].upper(), 16)
-        str_key[14] =  str(str_key[14]) + ":" + str(str_key[13])
+        str_key[14] = str(str_key[14]) + ":" + str(str_key[13])
 
         newItem2_3 = QTableWidgetItem(str_key[3])
         self.tableWidget.setItem(1, 3, newItem2_3)
@@ -936,13 +943,13 @@ class Functions(IDE.MenuTools):
     def dialog_data(self):
         data = QDialog()
         data.setWindowTitle("添加数据")
-        data.setFixedSize(855,770)
-        self.data_tableWidget = QTableWidget(18,4)
-        #设置列宽
+        data.setFixedSize(855, 770)
+        self.data_tableWidget = QTableWidget(18, 4)
+        # 设置列宽
 
         self.data_tableWidget.setSpan(11, 0, 10, 1)
         self.data_tableWidget.setSpan(12, 1, 9, 3)
-        self.data_tableWidget.setHorizontalHeaderLabels(['序号','字段名称','字节数','数值'])
+        self.data_tableWidget.setHorizontalHeaderLabels(['序号', '字段名称', '字节数', '数值'])
         self.data_tableWidget.verticalHeader().setVisible(False)
 
         tabWidget = QTabWidget()
@@ -1071,7 +1078,6 @@ class Functions(IDE.MenuTools):
         self.data_tableWidget.setItem(8, 3, newItem9_3)
         newItem9_3.setTextAlignment(Qt.AlignCenter)
 
-
         newItem10 = QTableWidgetItem("10")
         self.data_tableWidget.setItem(9, 0, newItem10)
         newItem10.setTextAlignment(Qt.AlignCenter)
@@ -1137,19 +1143,19 @@ class Functions(IDE.MenuTools):
         self.label_data_model = QLabel(" 指令类型:")
         self.combox_data_model = QComboBox()
         self.combox_data_model.addItem("data")
-        gridlayout1.addRow(self.label_data_model,self.combox_data_model)
+        gridlayout1.addRow(self.label_data_model, self.combox_data_model)
         self.data_label_name = QLabel(" 设备名字:")
         self.combox_data_name = QComboBox()
         self.combox_data_name.setEditable(True)
-        gridlayout1.addRow(self.data_label_name,self.combox_data_name)
+        gridlayout1.addRow(self.data_label_name, self.combox_data_name)
         self.data_label_type = QLabel(" 设备类型:")
         self.data_combox_type = QComboBox(data)
         self.data_combox_type.addItem("TcpServer")
-        gridlayout1.addRow(self.data_label_type,self.data_combox_type)
+        gridlayout1.addRow(self.data_label_type, self.data_combox_type)
         self.data_label_ip = QLabel(" Ip 地址:")
         self.combox_data_ip = QComboBox()
         self.combox_data_ip.setEditable(True)
-        gridlayout1.addRow(self.data_label_ip,self.combox_data_ip)
+        gridlayout1.addRow(self.data_label_ip, self.combox_data_ip)
         self.data_label_port = QLabel(" 端口号:")
         self.combox_data_port = QComboBox()
         self.combox_data_port.setEditable(True)
@@ -1159,10 +1165,10 @@ class Functions(IDE.MenuTools):
             self.combox_data_ip.addItem(v[0])
             self.combox_data_port.addItem(v[1])
 
-        gridlayout1.addRow(self.data_label_port,self.combox_data_port)
+        gridlayout1.addRow(self.data_label_port, self.combox_data_port)
         self.data_label_value = QLabel(" 命令名称:", data)
         self.data_edit_key_value = QLineEdit("命令")
-        gridlayout1.addRow(self.data_label_value,self.data_edit_key_value)
+        gridlayout1.addRow(self.data_label_value, self.data_edit_key_value)
         self.data_label_re_value = QLabel(" 回令数据:", data)
         self.data_edit_respon_value = QPlainTextEdit()
 
@@ -1178,17 +1184,17 @@ class Functions(IDE.MenuTools):
         hbox.addLayout(gridlayout1)
         gridlayout1.setSpacing(16)
         hbox2.addSpacing(3)
-        vbox.addLayout(hbox,3)
-        vbox.addLayout(hbox2,1)
-        vbox.addWidget(tabWidget,8)
+        vbox.addLayout(hbox, 3)
+        vbox.addLayout(hbox2, 1)
+        vbox.addWidget(tabWidget, 8)
         data.setLayout(vbox)
 
-        self.data_btn_true.clicked.connect(lambda:Functions.data_xml(self))
+        self.data_btn_true.clicked.connect(lambda: Functions.data_xml(self))
         self.data_btn_true.clicked.connect(data.close)
         data.exec_()
 
     def data_analysis(self):
-        fileName = QFileDialog.getOpenFileName(self,"打开文件","./file_xml/data")
+        fileName = QFileDialog.getOpenFileName(self, "打开文件", "./file_xml/data")
         file = QFile(fileName[0])
         doc = QDomDocument()
         doc.setContent(file)
@@ -1377,15 +1383,15 @@ class Functions(IDE.MenuTools):
         buffer = ""
         data_buf = self.textEdit_data_buf.toPlainText()
         # data_buf = int(data_buf)
-        while  length < len(data_buf):
-            buffer = buffer + " "+ data_buf[length:length+2]
+        while length < len(data_buf):
+            buffer = buffer + " " + data_buf[length:length + 2]
             length = length + 2
 
-        buf = int(len(self.textEdit_data_buf.toPlainText())/2 + 22)
+        buf = int(len(self.textEdit_data_buf.toPlainText()) / 2 + 22)
         buf = hex(buf)
         if buf.startswith("0x"):
             buf = buf[2:]
-            buf = buf + " "+ "00"
+            buf = buf + " " + "00"
 
         str = str + " " + str_date2 + " " + str_date1 + " " + str_time2 + " " + str_time1 + string_mesg + buffer + " " + "00" + " " + buf + " " + "00" + " " + "A4"
 
@@ -1402,13 +1408,13 @@ class Functions(IDE.MenuTools):
         s1 = self.data_tableWidget.item(0, 3).text()
 
         str_data[10] = str_data[10] + str_data[9]
-        str_data[10] = int(str_data[10].upper(),16)
-        str_data[11] = int(str_data[11].upper(),16)
-        str_data[12] = int(str_data[12].upper(),16)
-        str_data[12] = str(str_data[10]+"/"+str_data[11]+"/"+str_data[12])
-        str_data[13] = int(str_data[13].upper(),16)
-        str_data[14] = int(str_data[14].upper(),16)
-        str_data[14] = str_data[13]+":"+str_data[14]
+        str_data[10] = int(str_data[10].upper(), 16)
+        str_data[11] = int(str_data[11].upper(), 16)
+        str_data[12] = int(str_data[12].upper(), 16)
+        str_data[12] = str(str_data[10] + "/" + str_data[11] + "/" + str_data[12])
+        str_data[13] = int(str_data[13].upper(), 16)
+        str_data[14] = int(str_data[14].upper(), 16)
+        str_data[14] = str_data[13] + ":" + str_data[14]
 
         newItem2_3 = QTableWidgetItem(str_data[3])
         self.data_tableWidget.setItem(1, 3, newItem2_3)
@@ -1435,12 +1441,11 @@ class Functions(IDE.MenuTools):
         self.data_tableWidget.setItem(8, 3, newItem9_3)
         newItem9_3.setTextAlignment(Qt.AlignCenter)
 
-
     def dialog_deleteDevice(self):
         deleteDevice = QDialog()
         self.formlayout_data = QFormLayout(deleteDevice)
         deleteDevice.setWindowTitle("删除设备")
-        deleteDevice.setFixedSize(300,240)
+        deleteDevice.setFixedSize(300, 240)
 
         self.label_deleteType = QLabel("指令类型")
         self.combox_deleteDeviceType = QComboBox(deleteDevice)
@@ -1475,10 +1480,10 @@ class Functions(IDE.MenuTools):
         self.data_btn_true.clicked.connect(deleteDevice.close)
 
         self.formlayout_data.addRow(self.label_deleteType, self.combox_deleteDeviceType)
-        self.formlayout_data.addRow(self.data_label_name,self.combox_delete_name)
+        self.formlayout_data.addRow(self.data_label_name, self.combox_delete_name)
         self.formlayout_data.addRow(self.data_label_type, self.data_combox_type)
-        self.formlayout_data.addRow(self.data_label_ip,self.combox_delete_ip)
-        self.formlayout_data.addRow(self.data_label_port,self.combox_delete_port)
+        self.formlayout_data.addRow(self.data_label_ip, self.combox_delete_ip)
+        self.formlayout_data.addRow(self.data_label_port, self.combox_delete_port)
         self.formlayout_data.addRow(self.data_btn_true)
         self.formlayout_data.addRow(self.data_btn_xml_deleteDevice)
 
@@ -1503,7 +1508,7 @@ class Functions(IDE.MenuTools):
         deleteKey = QDialog()
         self.formlayout_data = QFormLayout(deleteKey)
         deleteKey.setWindowTitle("删除回令")
-        deleteKey.setFixedSize(300,270)
+        deleteKey.setFixedSize(300, 270)
 
         self.label_deleteIp = QLabel("ip地址:")
         self.combox_deleteKey_ip = QComboBox()
@@ -1517,7 +1522,7 @@ class Functions(IDE.MenuTools):
         self.combox_deleteType = QComboBox(deleteKey)
         self.combox_deleteType.addItem("deleteCommand")
 
-        self.label_delete_Value = QLabel("回令:",deleteKey)
+        self.label_delete_Value = QLabel("回令:", deleteKey)
         self.edit_delete_Value = QLineEdit(deleteKey)
 
         self.label_deleteIndex = QLabel("起始节点:", deleteKey)
@@ -1531,16 +1536,16 @@ class Functions(IDE.MenuTools):
         self.delete_btn_true = QPushButton("确定", deleteKey)
         self.delete_btn_xml = QPushButton("加载文件")
 
-        self.delete_btn_xml.clicked.connect(lambda:Functions.deleteKey_analysis(self))
+        self.delete_btn_xml.clicked.connect(lambda: Functions.deleteKey_analysis(self))
         self.delete_btn_true.clicked.connect(lambda: Functions.deleteCommand_xml(self))
         self.delete_btn_true.clicked.connect(deleteKey.close)
 
         self.formlayout_data.addRow(self.label_deleteType, self.combox_deleteType)
-        self.formlayout_data.addRow(self.label_deleteIp,self.combox_deleteKey_ip)
-        self.formlayout_data.addRow(self.label_deletePort,self.combox_deleteKey_port)
-        self.formlayout_data.addRow(self.label_delete_Value,self.edit_delete_Value)
-        self.formlayout_data.addRow(self.label_deleteIndex,self.combox_deleteIndex)
-        self.formlayout_data.addRow(self.label_deleteLength,self.spin_deleteLength)
+        self.formlayout_data.addRow(self.label_deleteIp, self.combox_deleteKey_ip)
+        self.formlayout_data.addRow(self.label_deletePort, self.combox_deleteKey_port)
+        self.formlayout_data.addRow(self.label_delete_Value, self.edit_delete_Value)
+        self.formlayout_data.addRow(self.label_deleteIndex, self.combox_deleteIndex)
+        self.formlayout_data.addRow(self.label_deleteLength, self.spin_deleteLength)
         self.formlayout_data.addRow(self.delete_btn_true)
         self.formlayout_data.addRow(self.delete_btn_xml)
         deleteKey.exec_()
@@ -1559,7 +1564,6 @@ class Functions(IDE.MenuTools):
         delete_key = par.firstChildElement("key")
         delete_value = delete_key.attribute("value")
         self.edit_delete_Value.setText(delete_value)
-
 
     def newDevice_xml(self):
         if not os.path.exists('./file_xml/newDevice'):
@@ -1608,9 +1612,9 @@ class Functions(IDE.MenuTools):
                                                                         self.combox_newDevice_port.currentText()]
 
             stream = QTextStream(file_respon)
-            doc.save(stream,4)
+            doc.save(stream, 4)
             file_respon.close()
-            self.edit_tab.currentWidget().edit.insertPlainText("newDevice(\""+file[0]+"\")")
+            self.edit_tab.currentWidget().edit.insertPlainText("newDevice(\"" + file[0] + "\")")
 
     def response_xml(self):
         if not os.path.exists('./file_xml/response'):
@@ -1656,7 +1660,7 @@ class Functions(IDE.MenuTools):
             device_respon.appendChild(respon_para)
 
             device_message[self.combox_response_name.currentText()] = [self.combox_response_ip.currentText(),
-                                                                             self.combox_response_port.currentText()]
+                                                                       self.combox_response_port.currentText()]
 
             respon_key = doc.createElement("key")
             respon_value = QDomAttr()
@@ -1683,9 +1687,9 @@ class Functions(IDE.MenuTools):
             respon = doc.createElement("response")
             respon_mode = QDomAttr()
             respon_mode = doc.createAttribute("mode")
-            if(self.combox_model.currentText() == "正常发送"):
+            if (self.combox_model.currentText() == "正常发送"):
                 respon_mode.setNodeValue("0")
-            if(self.combox_model.currentText() == "循环发送"):
+            if (self.combox_model.currentText() == "循环发送"):
                 respon_mode.setNodeValue("1")
             if (self.combox_model.currentText() == "延迟发送"):
                 respon_mode.setNodeValue("2")
@@ -1716,7 +1720,7 @@ class Functions(IDE.MenuTools):
             doc.save(stream, 4)
             file_respon.close()
             self.edit_tab.currentWidget().edit.insertPlainText(
-                 "AddKey(\""+file[0]+"\")")
+                "AddKey(\"" + file[0] + "\")")
 
     def data_xml(self):
         if not os.path.exists('./file_xml/data'):
@@ -1761,7 +1765,7 @@ class Functions(IDE.MenuTools):
             data_device.appendChild(data_para)
 
             device_message[self.combox_data_name.currentText()] = [self.combox_data_ip.currentText(),
-                                                                            self.combox_data_port.currentText()]
+                                                                   self.combox_data_port.currentText()]
             data_respon = doc.createElement("response")
             data_responName = QDomAttr()
             data_responName = doc.createAttribute("name")
@@ -1777,7 +1781,7 @@ class Functions(IDE.MenuTools):
             doc.save(stream, 4)
             file_respon.close()
             self.edit_tab.currentWidget().edit.insertPlainText(
-                 "AddDate(\""+file[0]+"\")")
+                "AddDate(\"" + file[0] + "\")")
 
     def deleteDevice_xml(self):
         if not os.path.exists('./file_xml/deleteDevice'):
@@ -1822,12 +1826,12 @@ class Functions(IDE.MenuTools):
             delete_Device.appendChild(delete_para)
 
             device_message[self.combox_delete_name.currentText()] = [self.combox_delete_ip.currentText(),
-                                                                        self.combox_delete_port.currentText()]
+                                                                     self.combox_delete_port.currentText()]
             stream = QTextStream(file_respon)
             doc.save(stream, 4)
             file_respon.close()
             self.edit_tab.currentWidget().edit.insertPlainText(
-                "DeleteDevice(\""+file[0]+"\")")
+                "DeleteDevice(\"" + file[0] + "\")")
 
     def deleteCommand_xml(self):
         if not os.path.exists('./file_xml/deleteCommand'):
@@ -1880,12 +1884,12 @@ class Functions(IDE.MenuTools):
             doc.save(stream, 4)
             file_respon.close()
             self.edit_tab.currentWidget().edit.insertPlainText(
-                "DeleteKey(\""+file[0]+"\")")
+                "DeleteKey(\"" + file[0] + "\")")
 
     def disconnect_clicked(self):
         self.socket.disconnectFromHost()
         self.socket.close()
-        QMessageBox.information(self,"提示","网络断开")
+        QMessageBox.information(self, "提示", "网络断开")
         self.btn_send.setEnabled(False)
 
     def clear_text(self):

@@ -21,6 +21,7 @@ class MenuTools(QMainWindow):
         # 纵向分辨率
         h = QGuiApplication.primaryScreen().grabWindow(QApplication.desktop().winId()).height()
         a.destroy()
+        self.list = []
         self.setWindowTitle('半实物仿真自动化测试平台')
         self.setWindowIcon(QIcon("../icons/TestSystem.ico"))
         self.resize(int(0.8 * w), int(0.8 * h))
@@ -49,20 +50,25 @@ class MenuTools(QMainWindow):
         self.rename_file_button = QPushButton(QApplication.style().standardIcon(QStyle.StandardPixmap(46)), '')
         self.list_add_button = QPushButton()
         self.run_list_button = QPushButton()
+        self.stop_run_list_button = QPushButton()
         self.new_file_button.setIcon(QIcon("../icons/add.ico"))
         self.delete_file_button.setIcon(QApplication.style().standardIcon(QStyle.StandardPixmap(47)))
         self.list_add_button.setIcon(QIcon("../icons/listadd.ico"))
         self.run_list_button.setIcon(QApplication.style().standardIcon(QStyle.StandardPixmap(66)))
+        self.stop_run_list_button.setIcon(QIcon("../icons/stop.ico"))
         self.new_file_button.setToolTip("新增脚本")
         self.delete_file_button.setToolTip("删除脚本")
         self.rename_file_button.setToolTip("修改脚本名")
         self.list_add_button.setToolTip("加入脚本到运行队列")
         self.run_list_button.setToolTip("运行队列中的脚本")
+        self.stop_run_list_button.setToolTip("停止运行列表中的脚本")
         self.new_file_button.clicked.connect(self.new_script)
         self.delete_file_button.clicked.connect(self.delete_script)
         self.rename_file_button.clicked.connect(self.rename_script)
         self.list_add_button.clicked.connect(self.list_add)
         self.run_list_button.clicked.connect(self.run_list)
+        self.stop_run_list_button.clicked.connect(self.stop_run_list)
+        self.stop_run_list_button.setEnabled(False)
         self.file_btn_window = QWidget()
         layout = QHBoxLayout()
         layout.addWidget(self.new_file_button)
@@ -70,6 +76,7 @@ class MenuTools(QMainWindow):
         layout.addWidget(self.rename_file_button)
         layout.addWidget(self.list_add_button)
         layout.addWidget(self.run_list_button)
+        layout.addWidget(self.stop_run_list_button)
         self.file_btn_window.setLayout(layout)
         # #文件目录树
         self.file_tree = QTreeView()
@@ -378,8 +385,6 @@ class MenuTools(QMainWindow):
         """
         self.edit_tab.addTab(script_edit, path[script_name_index + 1:])
         script_edit.path = path
-        script_edit.cwd = path[0:script_name_index]
-        script_edit.edit_name = path[script_name_index + 1:]
         script_edit.edit = edit2.QCodeEditor()
         script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
         script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ') * 4)
@@ -419,9 +424,7 @@ class MenuTools(QMainWindow):
                 f.write(self.edit_tab.currentWidget().edit.toPlainText())
                 f.close()
                 last_index = save_path_information[0].rindex('/')
-                self.edit_tab.currentWidget().cwd = save_path_information[0][0:last_index]
                 self.edit_tab.setTabText(self.edit_tab.currentIndex(), save_path_information[0][last_index + 1:])
-                self.edit_tab.currentWidget().edit_name = save_path_information[0][last_index + 1:]
         else:
             f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
             f.write(self.edit_tab.currentWidget().edit.toPlainText())
@@ -438,10 +441,21 @@ class MenuTools(QMainWindow):
             f.close()
 
     def list_add(self):
-        pass
+        path = self.dir_model.filePath(self.file_tree.currentIndex())
+        self.list.append(path)
 
     def run_list(self):
-        pass
+        self.stop_run_list_button.setEnabled(True)
+        self.run_list_thread = funcs.MyQThread(self, self.list)
+        self.run_list_thread.start()
+        self.list.clear()
+
+    def stop_run_list(self):
+        self.run_list_thread.setTerminationEnabled(True)
+        self.run_list_thread.terminate()
+        self.run_list_thread.wait()
+        self.run_list_thread.deleteLater()
+        self.stop_run_list_button.setEnabled(False)
 
     # 查看报告函数
     def show_report(self):
