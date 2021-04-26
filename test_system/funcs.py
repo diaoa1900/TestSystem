@@ -51,6 +51,7 @@ class MyThread(QThread):
         self.ide.stop_action.setEnabled(False)
 
 device_message = {}
+
 class Functions(IDE.MenuTools):
 
     def screenshot_function(self, method=None):
@@ -355,7 +356,7 @@ class Functions(IDE.MenuTools):
         newDevice.exec_()
 
     def newDevice_analysis(self):
-        fileName = QFileDialog.getOpenFileName(self, '打开文件', './')
+        fileName = QFileDialog.getOpenFileName(self, '打开文件', './file_xml/newDevice')
         print(fileName[0])
         file_newDevice = QFile(fileName[0])
         doc = QDomDocument()
@@ -667,7 +668,7 @@ class Functions(IDE.MenuTools):
         self.response.exec_()
 
     def respon_analysis(self):
-        fileName = QFileDialog.getOpenFileName(self, '打开文件', './')
+        fileName = QFileDialog.getOpenFileName(self, '打开文件', './file_xml/response')
         file = QFile(fileName[0])
         doc = QDomDocument()
         doc.setContent(file)
@@ -1204,7 +1205,7 @@ class Functions(IDE.MenuTools):
         data.exec_()
 
     def data_analysis(self):
-        fileName = QFileDialog.getOpenFileName(self,"打开文件","./")
+        fileName = QFileDialog.getOpenFileName(self,"打开文件","./file_xml/data")
         file = QFile(fileName[0])
         doc = QDomDocument()
         doc.setContent(file)
@@ -1509,7 +1510,7 @@ class Functions(IDE.MenuTools):
         deleteDevice.exec_()
 
     def deleteDevice_analysis(self):
-        fileName = QFileDialog.getOpenFileName(self, '打开文件', './')
+        fileName = QFileDialog.getOpenFileName(self, '打开文件', './file_xml/deleteDevice')
         file_newDevice = QFile(fileName[0])
         doc = QDomDocument()
         doc.setContent(file_newDevice)
@@ -1570,7 +1571,7 @@ class Functions(IDE.MenuTools):
         deleteKey.exec_()
 
     def deleteKey_analysis(self):
-        fileName = QFileDialog.getOpenFileName(self, '打开文件', './')
+        fileName = QFileDialog.getOpenFileName(self, '打开文件', './file_xml/deleteCommand')
         file_newDevice = QFile(fileName[0])
         doc = QDomDocument()
         doc.setContent(file_newDevice)
@@ -1587,8 +1588,8 @@ class Functions(IDE.MenuTools):
 
     def newDevice_xml(self):
         if not os.path.exists('./file_xml/newDevice'):
-            os.mkdir('./file_xml/newDevice')
-        file = QFileDialog.getSaveFileName(self,"保存文件","./file_xml/newDevice")
+            os.makedirs('./file_xml/newDevice')
+        file = QFileDialog.getSaveFileName(self, "保存文件", "./file_xml/newDevice")
         file_respon = QFile(file[0])
 
         if file_respon.open(QIODevice.WriteOnly):
@@ -1638,7 +1639,7 @@ class Functions(IDE.MenuTools):
 
     def response_xml(self):
         if not os.path.exists('./file_xml/response'):
-            os.mkdir('./file_xml/response')
+            os.makedirs('./file_xml/response')
         file = QFileDialog.getSaveFileName(self, "保存文件", "./file_xml/response")
         file_respon = QFile(file[0])
         if file_respon.open(QIODevice.WriteOnly):
@@ -1744,7 +1745,7 @@ class Functions(IDE.MenuTools):
 
     def data_xml(self):
         if not os.path.exists('./file_xml/data'):
-            os.mkdir('./file_xml/data')
+            os.makedirs('./file_xml/data')
         file = QFileDialog.getSaveFileName(self, "保存文件", "./file_xml/data")
         file_respon = QFile(file[0])
         if file_respon.open(QIODevice.WriteOnly):
@@ -1805,7 +1806,7 @@ class Functions(IDE.MenuTools):
 
     def deleteDevice_xml(self):
         if not os.path.exists('./file_xml/deleteDevice'):
-            os.mkdir('./file_xml/deleteDevice')
+            os.makedirs('./file_xml/deleteDevice')
         file = QFileDialog.getSaveFileName(self, "保存文件", "./file_xml/deleteDevice")
         file_respon = QFile(file[0])
         if file_respon.open(QIODevice.WriteOnly):
@@ -1855,7 +1856,7 @@ class Functions(IDE.MenuTools):
 
     def deleteCommand_xml(self):
         if not os.path.exists('./file_xml/deleteCommand'):
-            os.mkdir('./file_xml/deleteCommand')
+            os.makedirs('./file_xml/deleteCommand')
         file = QFileDialog.getSaveFileName(self, "保存文件", "./file_xml/deleteCommand")
         file_respon = QFile(file[0])
         if file_respon.open(QIODevice.WriteOnly):
