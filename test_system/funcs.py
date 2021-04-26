@@ -372,6 +372,7 @@ class Functions(IDE.MenuTools):
         self.combox_newDevice_port.addItem(newDevice_port)
 
     def dialog_response(self):
+        
         self.response = QDialog()
         # self.response.setAttribute(Qt.WA_TranslucentBackground)
         self.response.setWindowTitle("添加回令")
