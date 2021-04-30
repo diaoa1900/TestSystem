@@ -174,23 +174,18 @@ class MenuTools(QMainWindow):
 
         self.groupbox_4 = QGroupBox("断言", self)
         layout = QVBoxLayout()
-        self.assert_equal_button = QPushButton("assert_picture_equal")
         self.assert_picture_exist_button = QPushButton("assert_picture_exist")
         self.assert_file_exist_button = QPushButton("assert_file_exist")
         self.assert_word_exist_button = QPushButton("assert_word_exist")
-        self.assert_equal_button.setToolTip("断言两个图像是否相同")
         self.assert_picture_exist_button.setToolTip("断言该图像是否存在")
         self.assert_file_exist_button.setToolTip("断言该文件是否存在")
         self.assert_word_exist_button.setToolTip("断言该句日志是否在末尾")
-        self.assert_equal_button.setIcon(QIcon('../icons/assert_equal.ico'))
         self.assert_picture_exist_button.setIcon(QIcon('../icons/assert_exist.ico'))
         self.assert_file_exist_button.setIcon(QIcon('../icons/assert_file.ico'))
         self.assert_word_exist_button.setIcon(QIcon('../icons/assert_word.ico'))
-        self.assert_equal_button.clicked.connect(lambda: funcs.Functions.assert_equal(self))
         self.assert_picture_exist_button.clicked.connect(lambda: funcs.Functions.assert_exist(self))
         self.assert_file_exist_button.clicked.connect(lambda: funcs.Functions.assert_file_exist(self))
         self.assert_word_exist_button.clicked.connect(lambda: funcs.Functions.assert_word_exist(self))
-        layout.addWidget(self.assert_equal_button)
         layout.addWidget(self.assert_picture_exist_button)
         layout.addWidget(self.assert_file_exist_button)
         layout.addWidget(self.assert_word_exist_button)
@@ -277,7 +272,7 @@ class MenuTools(QMainWindow):
         left_layout.addWidget(self.groupbox_1, 4)
         left_layout.addWidget(self.groupbox_2, 5)
         left_layout.addWidget(self.groupbox_3, 4)
-        left_layout.addWidget(self.groupbox_4, 4)
+        left_layout.addWidget(self.groupbox_4, 3)
 
         mid_widget.addWidget(self.edit_tab)
         mid_widget.addWidget(self.output_tab)
@@ -446,7 +441,7 @@ class MenuTools(QMainWindow):
 
     def run_list(self):
         self.stop_run_list_button.setEnabled(True)
-        self.run_list_thread = funcs.MyQThread(self, self.list)
+        self.run_list_thread = funcs.MyThread(self, paths=self.list)
         self.run_list_thread.start()
         self.list.clear()
 

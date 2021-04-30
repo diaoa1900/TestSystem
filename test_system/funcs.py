@@ -28,15 +28,18 @@ elif sys.platform.startswith('linux'):
 
 
 class MyThread(QThread):
-    def __init__(self, ide, path, *paths):
+    def __init__(self, ide, path=None, paths=None):
         super().__init__()
         self.ide = ide
         self.command = ''
         if path:
             self.command = "python " + path
-        for pat in paths:
-            self.command += " & python " + pat
-        self.command = self.command[3:]
+        if paths:
+            for i in range(len(paths)):
+                self.command += " & python " + paths[i]
+            self.command = self.command[3:]
+            print(self.command)
+            print(type(self.command))
 
     def run(self):
         self.ide.stop_action.setEnabled(True)
@@ -127,7 +130,7 @@ class Functions(IDE.MenuTools):
             f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
             f.write(self.edit_tab.currentWidget().edit.toPlainText())
             f.close()
-            self.thread = MyThread(self, self.edit_tab.currentWidget().path)
+            self.thread = MyThread(self, path=self.edit_tab.currentWidget().path)
             self.thread.start()
 
         except Exception as e:
