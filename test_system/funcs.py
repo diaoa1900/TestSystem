@@ -38,12 +38,10 @@ class MyThread(QThread):
             for i in range(len(paths)):
                 self.command += " & python " + paths[i]
             self.command = self.command[3:]
-            print(self.command)
-            print(type(self.command))
 
     def run(self):
         self.ide.stop_action.setEnabled(True)
-        sbp = subprocess.Popen(self.command, stdout=subprocess.PIPE,
+        sbp = subprocess.Popen(self.command, shell=True, stdout=subprocess.PIPE,
                                stderr=subprocess.STDOUT)
         for line in iter(sbp.stdout.readline, 'b'):
             self.ide.console_text.insertPlainText(line.decode())
@@ -52,6 +50,7 @@ class MyThread(QThread):
                 break
         sbp.stdout.close()
         self.ide.stop_action.setEnabled(False)
+        self.ide.stop_run_list_button.setEnabled(False)
 
 
 device_message = {}
