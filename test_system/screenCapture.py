@@ -80,25 +80,16 @@ class CaptureScreen(QWidget):
             if self.capture_pixmap:
                 self.capture_pixmap.save(self._screenshot_dir + self._picture_name + ".jpg")
                 if self._method:
-                    if self._method == 'assert_equal':
+                    if self._method == 'assert_exists':
                         self._cx.edit_tab.currentWidget().edit.insertPlainText(
-                            "assert_equal(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"), \"预测值\", "
-                                                                                                      "\"请填写测试点\")")
-                    elif self._method == 'assert_exists':
-                        self._cx.edit_tab.currentWidget().edit.insertPlainText(
-                            "assert_exists(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"), "
-                                                                                                       "\"请填写测试点\")")
+                            "\twith allure.step(\"assert_exists\"):\n" + "\t\tassert_exists(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"), \"请填写测试点\")\n" + "\t\tallure.attach.file('" + self._screenshot_dir + self._picture_name + ".jpg', attachment_type=allure.attachment_type.JPG)\n")
                     elif self._method in ['click', 'double_click', 'right_click', 'hover']:
                         self._cx.edit_tab.currentWidget().edit.insertPlainText(
-                            self._method + "(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\", "
-                                                                                                         "target_pos=5))")
-
+                            "\twith allure.step(\"" + self._method + "\"):\n" + "\t\t" + self._method + "(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\", target_pos=5))\n" + "\t\tallure.attach.file('" + self._screenshot_dir + self._picture_name + ".jpg', attachment_type=allure.attachment_type.JPG)\n")
                     else:
                         self._cx.edit_tab.currentWidget().edit.insertPlainText(
-                            self._method + "(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"))")
+                            "\twith allure.step(\"" + self._method + "\"):\n" + "\t\t" + self._method + "(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"))\n" + "\t\tallure.attach.file('" + self._screenshot_dir + self._picture_name + ".jpg', attachment_type=allure.attachment_type.JPG)\n")
                     self._cx.setVisible(True)
-                    self._cx.edit_tab.currentWidget().edit.setFocus()
-                    pyautogui.press('enter')
                 else:
                     self._cx.edit_tab.currentWidget().edit.insertPlainText(
                         "Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\")")

@@ -33,7 +33,7 @@ class MyThread(QThread):
         self.ide = ide
         self.command = ''
         if path:
-            self.command = "python " + path
+            self.command = "pytest " + path + " --alluredir=./result"
         if paths:
             for i in range(len(paths)):
                 self.command += " & python " + paths[i]
@@ -44,7 +44,7 @@ class MyThread(QThread):
         sbp = subprocess.Popen(self.command, shell=True, stdout=subprocess.PIPE,
                                stderr=subprocess.STDOUT)
         for line in iter(sbp.stdout.readline, 'b'):
-            self.ide.console_text.insertPlainText(line.decode())
+            self.ide.console_text.insertPlainText(line.decode('gbk'))
             self.ide.console_text.moveCursor(QTextCursor.End)
             if not subprocess.Popen.poll(sbp) is None:
                 break
@@ -113,7 +113,7 @@ class Functions(IDE.MenuTools):
             if not self.edit_tab.currentWidget().edit.find('# script'):
                 self.edit_tab.currentWidget().edit.insertPlainText(script_head)
             f.close()
-            if not self.edit_tab.currentWidget().edit.find('report_name'):
+            """if not self.edit_tab.currentWidget().edit.find('report_name'):
                 if self.edit_tab.tabText(self.edit_tab.currentIndex()).endswith('.py'):
                     self.edit_tab.currentWidget().edit.insertPlainText(
                         "report_name(\"" + self.edit_tab.tabText(self.edit_tab.currentIndex())[1:-3] + "\")\n")
@@ -122,7 +122,7 @@ class Functions(IDE.MenuTools):
                         "report_name(\"" + self.edit_tab.tabText(self.edit_tab.currentIndex())[1:] + "\")\n")
             self.edit_tab.currentWidget().edit.moveCursor(QTextCursor.Start)
             if not self.edit_tab.currentWidget().edit.find("run_end()"):
-                self.edit_tab.currentWidget().edit.appendPlainText("run_end()")
+                self.edit_tab.currentWidget().edit.appendPlainText("run_end()")"""
             if self.edit_tab.tabText(self.edit_tab.currentIndex())[0] == '*':
                 self.edit_tab.setTabText(self.edit_tab.currentIndex(),
                                          self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
