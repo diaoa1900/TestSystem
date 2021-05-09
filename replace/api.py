@@ -19,8 +19,6 @@ from airtest.core.helper import (G, delay_after_operation, import_device_cls,
 Device Setup APIs
 """
 
-sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
 
 def init_device(platform="Android", uuid=None, **kwargs):
     """
@@ -814,41 +812,55 @@ def ocr(v):
     return pytesseract.image_to_string(cv2.imread(str(v)[9:-1]))
 
 
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
 @logwrap
-def newDevice(fileName):
-    f = open(fileName, 'rb')
+def connect_server(host, host_port):
+    port = int(host_port)
+    sock.connect((host, port))
+
+
+@logwrap
+def new_device(file_name):
+    f = open(file_name, 'rb')
     str = f.read()
     sock.send(str)
     f.close()
 
 
 @logwrap
-def AddKey(fileName):
-    f = open(fileName, 'rb')
+def add_key(file_name):
+    f = open(file_name, 'rb')
     str = f.read()
     sock.send(str)
     f.close()
 
 
 @logwrap
-def AddDate(fileName):
-    f = open(fileName, 'rb')
+def add_data(file_name):
+    f = open(file_name, 'rb')
     str = f.read()
     sock.send(str)
     f.close()
 
 
 @logwrap
-def DeleteDevice(fileName):
-    f = open(fileName, 'rb')
+def delete_device(file_name):
+    f = open(file_name, 'rb')
     str = f.read()
     sock.send(str)
     f.close()
 
 
 @logwrap
-def DeleteKey(fileName):
-    f = open(fileName, 'rb')
+def delete_key(file_name):
+    f = open(file_name, 'rb')
     str = f.read()
     sock.send(str)
     f.close()
+
+
+@logwrap
+def close_socket():
+    sock.close()
