@@ -3,85 +3,23 @@
 This module contains the Airtest Core APIs.
 """
 import os
-import sys
-import time
-import sys
 import time
 import socket
 import cv2
 import pytesseract
 from six.moves.urllib.parse import parse_qsl, urlparse
-from PyQt5.QtNetwork import *
 from airtest.core.cv import Template, loop_find, try_log_screen, loop_find_vanish
 from airtest.core.error import TargetNotFoundError
 from airtest.core.settings import Settings as ST
 from airtest.utils.compat import script_log_dir
 from airtest.core.helper import (G, delay_after_operation, import_device_cls,
-                                 logwrap, set_logdir, using, log)
+                                 logwrap, set_logdir)
 
 """
 Device Setup APIs
 """
 
-'''if sys.platform.startswith('win32'):
-    father_dir = os.path.dirname(os.path.abspath(__file__))
-    grandfather_dir = os.path.dirname(father_dir)
-    while not father_dir == grandfather_dir:
-        father_dir = grandfather_dir
-        grandfather_dir = os.path.dirname(grandfather_dir)
-    i = time.strftime('%Y%m%d', time.localtime(time.time()))
-    temporary_result = grandfather_dir[0] + ":/TestLog/" + i + ".txt"
-    if not os.path.exists(grandfather_dir[0] + ":/TestLog"):
-        os.mkdir(grandfather_dir[0] + ":/TestLog")
-    result_pen = open(temporary_result, 'a')
-elif sys.platform.startswith('linux'):
-    pass'''
-
-sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-
-def report_name(name):
-    if sys.platform.startswith('win32'):
-        father_dir = os.path.dirname(os.path.abspath(__file__))
-        grandfather_dir = os.path.dirname(father_dir)
-        while not father_dir == grandfather_dir:
-            father_dir = grandfather_dir
-            grandfather_dir = os.path.dirname(grandfather_dir)
-        temporary_result = grandfather_dir[0] + ":/TestLog/" + name + ".html"
-        if not os.path.exists(grandfather_dir[0] + ":/TestLog"):
-            os.mkdir(grandfather_dir[0] + ":/TestLog")
-        global result_pen
-        result_pen = open(temporary_result, 'w')
-        result_pen.write(
-            "<!DOCTYPE html>\n<html>\n\t<head></head>\n\t<body>\n\t\t<table width=\"80%\" border=\"1px\" cellspacing=\"0px\" style=\"border-collapse: collapse\">\n\t\t\t<tr>\n\t\t\t\t<th>时间</th>\n\t\t\t\t<th>方法</th>\n\t\t\t\t<th>状态</th>\n\t\t\t\t<th>图片</th>\n\t\t\t</tr>\n")
-    elif sys.platform.startswith('linux'):
-        pass
-
-
-def write_result(method, v=None, u=None):
-    if sys.platform.startswith('win32'):
-        j = time.strftime('%H:%M:%S', time.localtime(time.time()))
-        if u:
-            result_pen.write(
-                "\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td>from{}to{}</td>\n\t\t\t</tr>\n".format(
-                    j, method, v, u))
-        elif v:
-            # result_pen.write(j + "\t" + method + "\t" + str(v)[9:-1] + "\t" + "success\n")
-            result_pen.write(
-                "\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td><a href=\"{}\" target=\"_self\"><img width=\"120px\" height=\"120px\" src=\"{}\"/></a></td>\n\t\t\t</tr>\n".format(
-                    j, method, str(v)[9:-1], str(v)[9:-1]))
-        else:
-            # result_pen.write(j + "\t" + method + "\t success\n")
-            result_pen.write(
-                "\t\t\t<tr align=\"center\">\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td>{}</td>\n\t\t\t\t<td><font color=\"green\">success</font></td>\n\t\t\t\t<td>无需图片</td>\n\t\t\t</tr>\n".format(
-                    j, method))
-    elif sys.platform.startswith('linux'):
-        pass
-
-
-def run_end():
-    result_pen.write("\t\t</table>\n\t</body>\n</html>")
-    time.sleep(2.0)
-    result_pen.close()
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
 def init_device(platform="Android", uuid=None, **kwargs):
@@ -420,7 +358,6 @@ def touch(v, times=1, **kwargs):
     for _ in range(times):
         G.DEVICE.touch(pos, **kwargs)
         time.sleep(0.05)
-        write_result("click", v)
     delay_after_operation()
     return pos
 
@@ -446,7 +383,6 @@ def double_click(v):
         try_log_screen()
         pos = v
     G.DEVICE.double_click(pos)
-    write_result("double_click", v)
     delay_after_operation()
     return pos
 
@@ -462,7 +398,6 @@ def right_click(v):
         try_log_screen()
         pos = v
     G.DEVICE.right_click(pos)
-    write_result("right_click", v)
     delay_after_operation()
     return pos
 
@@ -478,7 +413,6 @@ def hover(v):
         try_log_screen()
         pos = v
     G.DEVICE.hover(pos)
-    write_result("hover", v)
     delay_after_operation()
     return pos
 
@@ -534,7 +468,6 @@ def swipe(v1, v2=None, vector=None, **kwargs):
         raise Exception("no enough params for swipe")
 
     G.DEVICE.swipe(pos1, pos2, **kwargs)
-    write_result("swipe", pos1, pos2)
     delay_after_operation()
     return pos1, pos2
 
@@ -610,7 +543,6 @@ def keyevent(keyname, **kwargs):
 
     """
     G.DEVICE.keyevent(keyname, **kwargs)
-    write_result("keyevent")
     delay_after_operation()
 
 
@@ -645,7 +577,6 @@ def text(text, enter=True, **kwargs):
 
     """
     G.DEVICE.text(text, enter=enter, **kwargs)
-    write_result("text")
     delay_after_operation()
 
 
@@ -691,7 +622,6 @@ def wait(v, timeout=None, interval=0.5, intervalfunc=None):
     """
     timeout = timeout or ST.FIND_TIMEOUT
     pos = loop_find(v, timeout=timeout, interval=interval, intervalfunc=intervalfunc)
-    write_result("wait", v)
     return pos
 
 
@@ -700,7 +630,6 @@ def waitVanish(v, timeout=None, interval=0.5, intervalfunc=None):
     timeout = timeout or ST.FIND_TIMEOUT
     pos = loop_find(v, timeout=timeout, interval=interval, intervalfunc=intervalfunc)
     vanish_pos = loop_find_vanish(v, timeout=timeout, interval=interval, intervalfunc=intervalfunc)
-    write_result("waitVanish", v)
     return pos
 
 
@@ -729,7 +658,6 @@ def exists(v):
     except TargetNotFoundError:
         return False
     else:
-        write_result("exist", v)
         return pos
 
 
@@ -777,7 +705,6 @@ def assert_exists(v, msg=""):
     """
     try:
         pos = loop_find(v, timeout=ST.FIND_TIMEOUT, threshold=ST.THRESHOLD_STRICT or v.threshold)
-        write_result("assert_exists", v)
         return pos
     except TargetNotFoundError:
         raise AssertionError("%s does not exist in screen, message: %s" % (v, msg))
@@ -821,8 +748,6 @@ def assert_equal(first, second, msg=""):
     """
     if first != second:
         raise AssertionError("%s and %s are not equal, message: %s" % (first, second, msg))
-    else:
-        write_result("assert_equal", first)
 
 
 @logwrap
@@ -846,9 +771,7 @@ def assert_not_equal(first, second, msg=""):
 
 @logwrap
 def assert_file_exist(file):
-    if os.path.exists(file):
-        write_result("assert_file_exist")
-    else:
+    if not os.path.exists(file):
         raise AssertionError("%s is not exist" % file)
 
 
@@ -883,14 +806,13 @@ def assert_word_exist(file, row, words_given):
             break
         else:
             offset *= 2
-    if assert_word_exist_flag is True:
-        write_result("assert_word_exist")
-    else:
+    if assert_word_exist_flag is False:
         raise AssertionError("{} is not on the last {} lines of {}".format(words_given, row, file))
 
 
 def ocr(v):
     return pytesseract.image_to_string(cv2.imread(str(v)[9:-1]))
+
 
 @logwrap
 def newDevice(fileName):
@@ -899,12 +821,14 @@ def newDevice(fileName):
     sock.send(str)
     f.close()
 
+
 @logwrap
 def AddKey(fileName):
     f = open(fileName, 'rb')
     str = f.read()
     sock.send(str)
     f.close()
+
 
 @logwrap
 def AddDate(fileName):
@@ -913,12 +837,14 @@ def AddDate(fileName):
     sock.send(str)
     f.close()
 
+
 @logwrap
 def DeleteDevice(fileName):
     f = open(fileName, 'rb')
     str = f.read()
     sock.send(str)
     f.close()
+
 
 @logwrap
 def DeleteKey(fileName):

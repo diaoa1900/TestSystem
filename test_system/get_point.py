@@ -41,7 +41,7 @@ class Point(QWidget):
         if event.key() == Qt.Key_Return or event.key() == Qt.Key_Enter:
             if self.point1 and self.point2:
                 self._cx.edit_tab.currentWidget().edit.insertPlainText(
-                    "swipe(({},{}),({},{}))\n".format(self.point1.x(), self.point1.y(), self.point2.x(), self.point2.y()))
+                    "\twith allure.step(\"swipe\"):\n" + "\t\tswipe(({},{}),({},{}))\n".format(self.point1.x(), self.point1.y(), self.point2.x(), self.point2.y()) + "\t\tallure.attach('from({},{})to({},{})', '', allure.attachment_type.TEXT)\n".format(self.point1.x(), self.point1.y(), self.point2.x(), self.point2.y()))
             self._cx.setVisible(True)
             self.close()
 
