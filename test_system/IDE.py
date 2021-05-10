@@ -1,6 +1,6 @@
 import os
+import subprocess
 import sys
-from os import startfile
 from PyQt5.QtCore import pyqtSignal, Qt, QSize
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtWidgets import *
@@ -454,7 +454,7 @@ class MenuTools(QMainWindow):
 
     # 查看报告函数
     def show_report(self):
-        startfile(funcs.grandfather_dir[0] + ':/TestLog')
+        subprocess.Popen("allure serve ./result", shell=True)
 
     # 脚本栏的右键点击事件
     # 新增右键

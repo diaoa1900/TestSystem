@@ -2,7 +2,9 @@ import subprocess
 import sys
 import time
 from threading import Thread
+
 import pyautogui
+
 import IDE
 import screenCapture
 import os
@@ -79,10 +81,8 @@ class Functions(IDE.MenuTools):
                                 "assert_equal(Template(r\"" + screenshot_dir + i + ".jpg\"), \"预测值\", \"请填写测试点\")")
                         elif method == 'assert_exists':
                             self.edit_tab.currentWidget().edit.insertPlainText(
-                                "assert_exists(Template(r\"" + screenshot_dir + i + ".jpg\"), \"请填写测试点\")")
+                                "assert_exists(Template(r\"" + screenshot_dir + i + ".jpg\"), \"请填写测试点\")\n")
                         self.setVisible(True)
-                        self.edit_tab.currentWidget().edit.setFocus()
-                        pyautogui.press('enter')
                     else:
                         self.edit_tab.currentWidget().edit.insertPlainText(
                             "(Template(r\"" + screenshot_dir + i + ".jpg\")")
@@ -99,9 +99,6 @@ class Functions(IDE.MenuTools):
         picture_path = picture_path_information[0]
         if picture_path:
             self.edit_tab.currentWidget().edit.insertPlainText("Template(r\"" + picture_path + "\")")
-
-    def part_run(self):
-        pass
 
     def run(self):
         try:
@@ -192,33 +189,22 @@ class Functions(IDE.MenuTools):
             keyevent_dialog.setWindowTitle('输入要按下的键的键码')"""
         keyevent_value = QInputDialog.getText(self, '按键输入', '例如:(TAB/ENTER/F1)')
         if keyevent_value[1] is True:
-            self.edit_tab.currentWidget().edit.insertPlainText("keyevent(\"{" + keyevent_value[0] + "}\")")
-            self.edit_tab.currentWidget().edit.setFocus()
-            pyautogui.press('enter')
+            self.edit_tab.currentWidget().edit.insertPlainText("\twith allure.step(\"keyevent\"):\n" + "\t\tkeyevent(\"{" + keyevent_value[0] + "}\")\n" + "\t\tallure.attach('{}', '', allure.attachment_type.TEXT)\n".format(keyevent_value[0]))
 
     def snapshot(self):
         # 截取当前屏幕全图
-        self.edit_tab.currentWidget().edit.insertPlainText("snapshot(msg=\"请填写测试点\")")
-        self.edit_tab.currentWidget().edit.setFocus()
-        pyautogui.press('enter')
+        self.edit_tab.currentWidget().edit.insertPlainText("\twith allure.step(\"snapshot\"):\n" + "\t\tsnapshot(msg=\"请填写测试点\")\n")
 
     def text(self):
         # 输入文本，文本框需要处于激活状态
-        keyevent_value = QInputDialog.getText(self, '文字输入', '内容')
-        if keyevent_value[1] is True:
-            self.edit_tab.currentWidget().edit.insertPlainText("text(\"" + keyevent_value[0] + "\")")
-            self.edit_tab.currentWidget().edit.setFocus()
-            pyautogui.press('enter')
+        text_value = QInputDialog.getText(self, '文字输入', '内容')
+        if text_value[1] is True:
+            self.edit_tab.currentWidget().edit.insertPlainText("\twith allure.step(\"text\"):\n" + "\t\ttext(\"" + text_value[0] + "\")\n" + "\t\tallure.attach('{}', '', allure.attachment_type.TEXT)\n".format(text_value[0]))
 
     def sleep(self):
         sleep_value = QInputDialog.getDouble(self, '等待n秒', '给出n的值', 1.0, 0)
         if sleep_value[1] is True:
-            self.edit_tab.currentWidget().edit.insertPlainText("sleep(" + str(sleep_value[0]) + ")")
-            self.edit_tab.currentWidget().edit.setFocus()
-            pyautogui.press('enter')
-
-    def assert_equal(self):
-        Functions.screenshot_function(self, "assert_equal")
+            self.edit_tab.currentWidget().edit.insertPlainText("\twith allure.step(\"sleep\"):\n" + "\t\tsleep(" + str(sleep_value[0]) + ")\n" + "\t\tallure.attach('{}', '', allure.attachment_type.TEXT)\n".format(sleep_value[0]))
 
     def assert_exist(self):
         Functions.screenshot_function(self, "assert_exists")
@@ -227,7 +213,7 @@ class Functions(IDE.MenuTools):
         exist_path_information = QFileDialog.getSaveFileName(self, '判断是否存在文件', '.')
         if exist_path_information[0]:
             file = exist_path_information[0]
-            self.edit_tab.currentWidget().edit.insertPlainText("assert_file_exist(\"" + file + "\")")
+            self.edit_tab.currentWidget().edit.insertPlainText("\twith allure.step(\"assert_file_exist\"):\n" + "\t\tassert_file_exist(\"" + file + "\")\n" + "\t\tallure.attach('{}', '断言该文件是否存在', allure.attachment_type.TEXT)\n".format(file))
 
     def assert_word_exist(self):
         file_value = QFileDialog.getOpenFileName(self, '选择要对比的文件', '.')
@@ -243,9 +229,7 @@ class Functions(IDE.MenuTools):
                     else:
                         compare_v = compare_value[0]
                     self.edit_tab.currentWidget().edit.insertPlainText(
-                        "assert_word_exist(\"" + file_value[0] + "\"," + str(row_value[0]) + ",\"" + compare_v + "\")")
-                    self.edit_tab.currentWidget().edit.setFocus()
-                    pyautogui.press('enter')
+                        "\twith allure.step(\"assert_word_exist\"):\n" + "\t\tassert_word_exist(\"" + file_value[0] + "\"," + str(row_value[0]) + ",\"" + compare_v + "\")\n" + "\t\tallure.attach('断言:{}的最后{}行的内容是{}', '', allure.attachment_type.TEXT)\n".format(file_value[0], row_value[0], compare_v))
 
     def dialog_connect(self):
         self.connect_dialog = QDialog()
