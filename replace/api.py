@@ -813,6 +813,7 @@ def ocr(v):
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+sock.connect(('127.0.0.1', 9948))
 
 
 @logwrap
@@ -833,6 +834,7 @@ def new_device(file_name):
 def add_key(file_name):
     f = open(file_name, 'rb')
     str = f.read()
+    # 这块要修改
     sock.send(str)
     f.close()
 
@@ -859,6 +861,17 @@ def delete_key(file_name):
     str = f.read()
     sock.send(str)
     f.close()
+
+
+@logwrap
+def assert_client_exist(order):
+    data = sock.recv(1024)
+    message = data[12:18]
+    sock.send(message)
+    if message.decode() == "CCCCCC":
+        pass
+    else:
+        raise AssertionError(order)
 
 
 @logwrap
