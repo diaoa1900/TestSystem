@@ -33,13 +33,7 @@ class MyThread(QThread):
     def __init__(self, ide, path=None, paths=None):
         super().__init__()
         self.ide = ide
-        self.command = ''
-        if path:
-            self.command = "pytest " + path + " --alluredir=./result"
-        if paths:
-            for i in range(len(paths)):
-                self.command += " & python " + paths[i]
-            self.command = self.command[3:]
+        self.command = "pytest " + path + " --alluredir=./result"
 
     def run(self):
         self.ide.stop_action.setEnabled(True)
@@ -52,7 +46,7 @@ class MyThread(QThread):
                 break
         sbp.stdout.close()
         self.ide.stop_action.setEnabled(False)
-        self.ide.stop_run_list_button.setEnabled(False)
+        self.ide.stop_run_directory_button.setEnabled(False)
 
 
 device_message = {}
