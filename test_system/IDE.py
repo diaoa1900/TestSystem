@@ -177,6 +177,7 @@ class MenuTools(QMainWindow):
         self.assert_picture_exist_button = QPushButton("assert_picture_exist")
         self.assert_file_exist_button = QPushButton("assert_file_exist")
         self.assert_word_exist_button = QPushButton("assert_word_exist")
+        self.assert_client_exist_button = QPushButton("assert_client_exist")
         self.assert_picture_exist_button.setToolTip("断言该图像是否存在")
         self.assert_file_exist_button.setToolTip("断言该文件是否存在")
         self.assert_word_exist_button.setToolTip("断言该句日志是否在末尾")
@@ -186,9 +187,11 @@ class MenuTools(QMainWindow):
         self.assert_picture_exist_button.clicked.connect(lambda: funcs.Functions.assert_exist(self))
         self.assert_file_exist_button.clicked.connect(lambda: funcs.Functions.assert_file_exist(self))
         self.assert_word_exist_button.clicked.connect(lambda: funcs.Functions.assert_word_exist(self))
+        self.assert_client_exist_button.clicked.connect(lambda: funcs.Functions.assert_client_exist(self))
         layout.addWidget(self.assert_picture_exist_button)
         layout.addWidget(self.assert_file_exist_button)
         layout.addWidget(self.assert_word_exist_button)
+        layout.addWidget(self.assert_client_exist_button)
         self.groupbox_4.setLayout(layout)
 
         # 脚本区域
@@ -259,13 +262,13 @@ class MenuTools(QMainWindow):
 
         self.btn_connect.clicked.connect(lambda: funcs.Functions.dialog_connect(self))
         self.btn_disconnect.clicked.connect(lambda: funcs.Functions.disconnect_clicked(self))
-        self.btn_addDevice.clicked.connect(lambda: funcs.Functions.dialog_newDevice(self))
+        self.btn_addDevice.clicked.connect(lambda: funcs.Functions.dialog_new_device(self))
         self.btn_response.clicked.connect(lambda: funcs.Functions.dialog_response(self))
         self.btn_data.clicked.connect(lambda: funcs.Functions.dialog_data(self))
-        self.btn_deleteDevice.clicked.connect(lambda: funcs.Functions.dialog_deleteDevice(self))
-        self.btn_deleteCommand.clicked.connect(lambda: funcs.Functions.dialog_deleteKey(self))
+        self.btn_deleteDevice.clicked.connect(lambda: funcs.Functions.dialog_delete_device(self))
+        self.btn_deleteCommand.clicked.connect(lambda: funcs.Functions.dialog_delete_key(self))
         self.btn_open.clicked.connect(lambda: funcs.Functions.send_file(self))
-        self.btn_send.clicked.connect(lambda: funcs.Functions.on_btnSend_clicked(self))
+        self.btn_send.clicked.connect(lambda: funcs.Functions.on_btn_send_clicked(self))
         self.btn_close.clicked.connect(lambda: funcs.Functions.on_btn_clear_clicked(self))
 
         # 将各控件加入对于的局部布局中

@@ -866,9 +866,15 @@ def delete_key(file_name):
 @logwrap
 def assert_client_exist(order):
     data = sock.recv(1024)
-    message = data[12:18]
-    sock.send(message)
-    if message.decode() == "CCCCCC":
+    message = data.decode()
+    client_message = data
+    if len(message) == 18:
+        client_message = data[12:18]
+        sock.send(client_message)
+    else:
+        client_not_message = data
+        sock.send(client_not_message)
+    if client_message.decode() == "CCCCCC":
         pass
     else:
         raise AssertionError(order)
