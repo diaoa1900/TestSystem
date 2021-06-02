@@ -1,0 +1,13 @@
+INFO     airtest.core.api:cv.py:56 Try finding: Template(C:/screenshotFolder/20210519190045.jpg)
+DEBUG    airtest.core.api:cv.py:206 try match with SURFMatching
+DEBUG    airtest.aircv.keypoint_base:keypoint_base.py:24 find_best_result() run time is 1.10 s.
+DEBUG    airtest.core.api:cv.py:206 try match with TemplateMatching
+DEBUG    airtest.aircv.template_matching:template_matching.py:95 [Template] threshold=0.7, result={'result': (53, 57), 'rectangle': ((9, 9), (9, 105), (97, 105), (97, 9)), 'confidence': 0.3980751633644104}
+DEBUG    airtest.aircv.template_matching:template_matching.py:26 find_best_result() run time is 0.08 s.
+DEBUG    airtest.core.api:cv.py:206 try match with BRISKMatching
+DEBUG    airtest.aircv.keypoint_base:keypoint_base.py:24 find_best_result() run time is 0.46 s.
+DEBUG    airtest.core.api:cv.py:176 match result: None
+DEBUG    airtest.core.api:cv.py:206 try match with SURFMatching
+DEBUG    airtest.aircv.keypoint_base:keypoint_base.py:96 [SURF] threshold=0.7, result={'result': (44, 51), 'rectangle': [(0, 5), (0, 98), (91, 98), (91, 5)], 'confidence': 0.7454520761966705}
+DEBUG    airtest.aircv.keypoint_base:keypoint_base.py:24 find_best_result() run time is 0.54 s.
+DEBUG    airtest.core.api:cv.py:176 match result: {'result': (44, 51), 'rectangle': [(0, 5), (0, 98), (91, 98), (91, 5)], 'confidence': 0.7454520761966705}

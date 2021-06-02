@@ -1,0 +1,5 @@
+INFO     airtest.core.api:cv.py:56 Try finding: Template(C:/screenshotFolder/20210519190045.jpg)
+DEBUG    airtest.core.api:cv.py:206 try match with SURFMatching
+DEBUG    airtest.aircv.keypoint_base:keypoint_base.py:96 [SURF] threshold=0.7, result={'result': (51, 57), 'rectangle': [(0, 6), (0, 108), (102, 108), (102, 6)], 'confidence': 0.8980444073677063}
+DEBUG    airtest.aircv.keypoint_base:keypoint_base.py:24 find_best_result() run time is 0.52 s.
+DEBUG    airtest.core.api:cv.py:176 match result: {'result': (51, 57), 'rectangle': [(0, 6), (0, 108), (102, 108), (102, 6)], 'confidence': 0.8980444073677063}
