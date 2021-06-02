@@ -1,5 +1,0 @@
-[11:38:36][INFO]<airtest.core.api> Try finding: Template(C:/screenshotFolder/20210527113302.jpg)
-[11:38:36][DEBUG]<airtest.core.api> try match with SURFMatching
-[11:38:36][DEBUG]<airtest.aircv.keypoint_base> [SURF] threshold=0.7, result={'result': (44, 169), 'rectangle': [(6, 121), (6, 218), (83, 218), (83, 121)], 'confidence': 0.9739829003810883}
-[11:38:36][DEBUG]<airtest.aircv.keypoint_base> find_best_result() run time is 0.56 s.
-[11:38:36][DEBUG]<airtest.core.api> match result: {'result': (44, 169), 'rectangle': [(6, 121), (6, 218), (83, 218), (83, 121)], 'confidence': 0.9739829003810883}

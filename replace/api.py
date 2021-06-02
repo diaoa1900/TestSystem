@@ -705,7 +705,7 @@ def assert_exists(v, msg=""):
         pos = loop_find(v, timeout=ST.FIND_TIMEOUT, threshold=ST.THRESHOLD_STRICT or v.threshold)
         return pos
     except TargetNotFoundError:
-        raise AssertionError("%s does not exist in screen, message: %s" % (v, msg))
+        raise TargetNotFoundError("%s does not exist in screen, message: %s" % (v, msg))
 
 
 @logwrap
@@ -770,7 +770,7 @@ def assert_not_equal(first, second, msg=""):
 @logwrap
 def assert_file_exist(file):
     if not os.path.exists(file):
-        raise AssertionError("%s is not exist" % file)
+        raise TargetNotFoundError("%s is not exist" % file)
 
 
 @logwrap
@@ -805,7 +805,7 @@ def assert_word_exist(file, row, words_given):
         else:
             offset *= 2
     if assert_word_exist_flag is False:
-        raise AssertionError("{} is not on the last {} lines of {}".format(words_given, row, file))
+        raise TargetNotFoundError("{} is not on the last {} lines of {}".format(words_given, row, file))
 
 
 def ocr(v):
@@ -877,7 +877,7 @@ def assert_client_exist(order):
     if client_message.decode() == "CCCCCC":
         pass
     else:
-        raise AssertionError(order)
+        raise TargetNotFoundError(order)
 
 
 @logwrap
