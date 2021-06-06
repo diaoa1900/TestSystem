@@ -1876,7 +1876,11 @@ class Functions(IDE.MenuTools):
         deleteKey = QDialog()
         self.formlayout_data = QFormLayout(deleteKey)
         deleteKey.setWindowTitle("删除回令")
-        deleteKey.setFixedSize(300, 270)
+        deleteKey.setFixedSize(270, 230)
+
+        self.label_deleteName = QLabel("设备名字:")
+        self.combox_deleteKey_name = QComboBox()
+        self.combox_deleteKey_name.setEditable(True)
 
         self.label_deleteIp = QLabel("ip地址:")
         self.combox_deleteKey_ip = QComboBox()
@@ -1886,20 +1890,12 @@ class Functions(IDE.MenuTools):
         self.combox_deleteKey_port = QComboBox()
         self.combox_deleteKey_port.setEditable(True)
 
-        self.label_deleteType = QLabel("指令类型")
+        self.label_deleteType = QLabel("指令类型:")
         self.combox_deleteType = QComboBox(deleteKey)
         self.combox_deleteType.addItem("deleteCommand")
 
-        self.label_delete_Value = QLabel("回令:", deleteKey)
+        self.label_delete_Value = QLabel("命令值:", deleteKey)
         self.edit_delete_Value = QLineEdit(deleteKey)
-
-        self.label_deleteIndex = QLabel("起始节点:", deleteKey)
-        self.combox_deleteIndex = QComboBox(deleteKey)
-        self.combox_deleteIndex.addItem("0")
-        self.combox_deleteIndex.addItem("1")
-
-        self.label_deleteLength = QLabel("字节长度:", deleteKey)
-        self.spin_deleteLength = QSpinBox(deleteKey)
 
         self.delete_btn_true = QPushButton("确定", deleteKey)
         self.delete_btn_xml = QPushButton("加载文件")
@@ -1909,11 +1905,10 @@ class Functions(IDE.MenuTools):
         self.delete_btn_true.clicked.connect(deleteKey.close)
 
         self.formlayout_data.addRow(self.label_deleteType, self.combox_deleteType)
+        self.formlayout_data.addRow(self.label_deleteName, self.combox_deleteKey_name)
         self.formlayout_data.addRow(self.label_deleteIp, self.combox_deleteKey_ip)
         self.formlayout_data.addRow(self.label_deletePort, self.combox_deleteKey_port)
         self.formlayout_data.addRow(self.label_delete_Value, self.edit_delete_Value)
-        self.formlayout_data.addRow(self.label_deleteIndex, self.combox_deleteIndex)
-        self.formlayout_data.addRow(self.label_deleteLength, self.spin_deleteLength)
         self.formlayout_data.addRow(self.delete_btn_true)
         self.formlayout_data.addRow(self.delete_btn_xml)
         deleteKey.exec_()
@@ -1924,14 +1919,16 @@ class Functions(IDE.MenuTools):
         doc = QDomDocument()
         doc.setContent(file_new_device)
         com = doc.firstChildElement("command")
-        par = com.firstChildElement("parameters")
+        par = com.firstChildElement("device")
+        delete_key_name = par.attribute("name")
+        self.combox_deleteKey_name.addItem(delete_key_name)
         delete_key_ip = par.attribute("ip")
         self.combox_deleteKey_ip.addItem(delete_key_ip)
         delete_key_port = par.attribute("port")
         self.combox_deleteKey_port.addItem(delete_key_port)
         delete_key = par.firstChildElement("key")
-        delete_value = delete_key.attribute("value")
-        self.edit_delete_Value.setText(delete_value)
+        delete_value_name = delete_key.attribute("keyname")
+        self.edit_delete_Value.setText(delete_value_name)
 
     def new_device_xml(self):
         if not os.path.exists('./file_xml/newDevice'):
@@ -2220,7 +2217,12 @@ class Functions(IDE.MenuTools):
             root.setAttributeNode(deleteCommand)
             doc.appendChild(root)
 
-            response_para = doc.createElement("parameters")
+            response_para = doc.createElement("device")
+            response_paraIp = QDomAttr()
+            response_paraIp = doc.createAttribute("name")
+            response_paraIp.setNodeValue(self.combox_deleteKey_name.currentText())
+            response_para.setAttributeNode(response_paraIp)
+
             response_paraIp = QDomAttr()
             response_paraIp = doc.createAttribute("ip")
             response_paraIp.setNodeValue(self.combox_deleteKey_ip.currentText())
@@ -2234,19 +2236,9 @@ class Functions(IDE.MenuTools):
 
             respon_key = doc.createElement("key")
             respon_value = QDomAttr()
-            respon_value = doc.createAttribute("value")
+            respon_value = doc.createAttribute("keyname")
             respon_value.setNodeValue(self.edit_delete_Value.text())
             respon_key.setAttributeNode(respon_value)
-
-            respon_index = QDomAttr()
-            respon_index = doc.createAttribute("index")
-            respon_index.setNodeValue(self.combox_deleteIndex.currentText())
-            respon_key.setAttributeNode(respon_index)
-
-            respon_length = QDomAttr()
-            respon_length = doc.createAttribute("length")
-            respon_length.setNodeValue(self.spin_deleteLength.text())
-            respon_key.setAttributeNode(respon_length)
             response_para.appendChild(respon_key)
 
             stream = QTextStream(file_respon)
