@@ -30,7 +30,7 @@ elif sys.platform.startswith('linux'):
 
 
 class MyThread(QThread):
-    def __init__(self, ide, path=None, paths=None):
+    def __init__(self, ide, path=None):
         super().__init__()
         self.ide = ide
         self.command = "pytest " + path + " --alluredir=./result"
@@ -104,16 +104,7 @@ class Functions(IDE.MenuTools):
             if not self.edit_tab.currentWidget().edit.find('# script'):
                 self.edit_tab.currentWidget().edit.insertPlainText(script_head)
             f.close()
-            """if not self.edit_tab.currentWidget().edit.find('report_name'):
-                if self.edit_tab.tabText(self.edit_tab.currentIndex()).endswith('.py'):
-                    self.edit_tab.currentWidget().edit.insertPlainText(
-                        "report_name(\"" + self.edit_tab.tabText(self.edit_tab.currentIndex())[1:-3] + "\")\n")
-                else:
-                    self.edit_tab.currentWidget().edit.insertPlainText(
-                        "report_name(\"" + self.edit_tab.tabText(self.edit_tab.currentIndex())[1:] + "\")\n")
-            self.edit_tab.currentWidget().edit.moveCursor(QTextCursor.Start)
-            if not self.edit_tab.currentWidget().edit.find("run_end()"):
-                self.edit_tab.currentWidget().edit.appendPlainText("run_end()")"""
+
             if self.edit_tab.tabText(self.edit_tab.currentIndex())[0] == '*':
                 self.edit_tab.setTabText(self.edit_tab.currentIndex(),
                                          self.edit_tab.tabText(self.edit_tab.currentIndex())[1:])
@@ -139,11 +130,13 @@ class Functions(IDE.MenuTools):
         part_run_thread.start()
 
     def stop_run(self):
-        self.thread.setTerminationEnabled(True)
-        self.thread.terminate()
-        self.thread.wait()
-        self.thread.deleteLater()
+        os.system("taskkill /t /f /pid "+str(self.thread.sbp.pid))
         self.stop_action.setEnabled(False)
+        #  曾经的尝试
+        # os.killpg(os.getpgid(self.thread.sbp.pid),signal.SIGTERM)
+        # os.kill(self.thread.sbp.pid, signal.CTRL_C_EVENT)
+        # win32api.TerminateProcess(int(self.thread.sbp._handle),-1)
+        # self.thread.sbp.send_signal(signal.CTRL_C_EVENT)
 
     def wait(self):
         Functions.screenshot_function(self, "wait")
