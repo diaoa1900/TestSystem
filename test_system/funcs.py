@@ -37,14 +37,14 @@ class MyThread(QThread):
 
     def run(self):
         self.ide.stop_action.setEnabled(True)
-        sbp = subprocess.Popen(self.command, shell=True, stdout=subprocess.PIPE,
+        self.sbp = subprocess.Popen(self.command, shell=True, stdout=subprocess.PIPE,
                                stderr=subprocess.STDOUT)
-        for line in iter(sbp.stdout.readline, 'b'):
+        for line in iter(self.sbp.stdout.readline, 'b'):
             self.ide.console_text.insertPlainText(line.decode('gbk'))
             self.ide.console_text.moveCursor(QTextCursor.End)
-            if not subprocess.Popen.poll(sbp) is None:
+            if not subprocess.Popen.poll(self.sbp) is None:
                 break
-        sbp.stdout.close()
+        self.sbp.stdout.close()
         self.ide.stop_action.setEnabled(False)
         self.ide.stop_run_directory_button.setEnabled(False)
 
