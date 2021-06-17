@@ -218,6 +218,9 @@ class Functions(IDE.MenuTools):
                     self.edit_tab.currentWidget().edit.insertPlainText(
                         "\twith allure.step(\"assert_word_exist\"):\n" + "\t\tassert_word_exist(\"" + file_value[0] + "\"," + str(row_value[0]) + ",\"" + compare_v + "\")\n" + "\t\tallure.attach('断言:{}的最后{}行的内容是{}', '', allure.attachment_type.TEXT)\n".format(file_value[0], row_value[0], compare_v))
 
+    def assert_ocr_true(self):
+        Functions.screenshot_function(self, "assert_ocr_true")
+    
     def assert_client_exist(self):
         self.edit_tab.currentWidget().edit.insertPlainText("\twith allure.step(\"assert_file_exist\"):\n" + "\t\tassert_client_exist(\"client is exist\")")
 

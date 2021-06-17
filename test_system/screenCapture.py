@@ -83,6 +83,9 @@ class CaptureScreen(QWidget):
                     if self._method == 'assert_exists':
                         self._cx.edit_tab.currentWidget().edit.insertPlainText(
                             "\twith allure.step(\"assert_exists\"):\n" + "\t\tassert_exists(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"), \"请填写测试点\")\n" + "\t\tallure.attach.file('" + self._screenshot_dir + self._picture_name + ".jpg', attachment_type=allure.attachment_type.JPG)\n")
+                    elif self._method == 'assert_ocr_true':
+                        self._cx.edit_tab.currentWidget().edit.insertPlainText(
+                            "\twith allure.step(\"assert_ocr_true\"):\n" + "\t\tassert_ocr_true(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\"), \"请输入预期结果\")\n" + "\t\tallure.attach.file('" + self._screenshot_dir + self._picture_name + ".jpg', attachment_type=allure.attachment_type.JPG)\n")
                     elif self._method in ['click', 'double_click', 'right_click', 'hover']:
                         self._cx.edit_tab.currentWidget().edit.insertPlainText(
                             "\twith allure.step(\"" + self._method + "\"):\n" + "\t\t" + self._method + "(Template(r\"" + self._screenshot_dir + self._picture_name + ".jpg\", target_pos=5))\n" + "\t\tallure.attach.file('" + self._screenshot_dir + self._picture_name + ".jpg', attachment_type=allure.attachment_type.JPG)\n")

@@ -811,6 +811,10 @@ def assert_word_exist(file, row, words_given):
 def ocr(v):
     return pytesseract.image_to_string(cv2.imread(str(v)[9:-1]))
 
+def assert_ocr_true(v, pre):
+    real = pytesseract.image_to_string(cv2.imread(str(v)[9:-1]))
+    if real != pre:
+        raise TargetNotFoundError("The OCR result of {} is not {}".format(v, pre))
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
