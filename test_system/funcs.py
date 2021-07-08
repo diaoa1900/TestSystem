@@ -359,7 +359,6 @@ class Functions(IDE.MenuTools):
 
         self.tabWidget = QTabWidget()
         self.tabWidget.insertTab(0, self.tableWidget, "自定义帧")
-
         datetime = QDateTime(QDateTime.currentDateTime())
         date = datetime.toString("yyyy/MM/dd")
         date_time = datetime.toString("hh:mm")
@@ -528,72 +527,72 @@ class Functions(IDE.MenuTools):
 
         # setGeometry(左右， 上下， 宽， 高)
         label_head.setGeometry(10, 10, 20, 20)
-        self.table_widget_head = QTableWidget(5, 4)
-        self.table_widget_head.verticalHeader().setVisible(False)
-        self.table_widget_head.horizontalHeader().setVisible(False)
+        self.table_widget_head_response = QTableWidget(5, 4)
+        self.table_widget_head_response.verticalHeader().setVisible(False)
+        self.table_widget_head_response.horizontalHeader().setVisible(False)
         head_item1 = QTableWidgetItem("序号")
-        self.table_widget_head.setItem(0, 0, head_item1)
+        self.table_widget_head_response.setItem(0, 0, head_item1)
         head_item1.setTextAlignment(Qt.AlignCenter)
         head_item1_1 = QTableWidgetItem("字段名称")
-        self.table_widget_head.setItem(0, 1, head_item1_1)
+        self.table_widget_head_response.setItem(0, 1, head_item1_1)
         head_item1_1.setTextAlignment(Qt.AlignCenter)
         head_item1_2 = QTableWidgetItem("字节数")
-        self.table_widget_head.setItem(0, 2, head_item1_2)
+        self.table_widget_head_response.setItem(0, 2, head_item1_2)
         head_item1_2.setTextAlignment(Qt.AlignCenter)
         head_item1_3 = QTableWidgetItem("数值")
-        self.table_widget_head.setItem(0, 3, head_item1_3)
+        self.table_widget_head_response.setItem(0, 3, head_item1_3)
         head_item1_3.setTextAlignment(Qt.AlignCenter)
 
         head_item2 = QTableWidgetItem("1")
-        self.table_widget_head.setItem(1, 0, head_item2)
+        self.table_widget_head_response.setItem(1, 0, head_item2)
         head_item2.setTextAlignment(Qt.AlignCenter)
         head_item2_1 = QTableWidgetItem("传输ID")
-        self.table_widget_head.setItem(1, 1, head_item2_1)
+        self.table_widget_head_response.setItem(1, 1, head_item2_1)
         head_item2_1.setTextAlignment(Qt.AlignCenter)
         head_item2_2 = QTableWidgetItem("2")
-        self.table_widget_head.setItem(1, 2, head_item2_2)
+        self.table_widget_head_response.setItem(1, 2, head_item2_2)
         head_item2_2.setTextAlignment(Qt.AlignCenter)
         head_item2_3 = QTableWidgetItem("0")
-        self.table_widget_head.setItem(1, 3, head_item2_3)
+        self.table_widget_head_response.setItem(1, 3, head_item2_3)
         head_item2_3.setTextAlignment(Qt.AlignCenter)
 
         head_item3 = QTableWidgetItem("2")
-        self.table_widget_head.setItem(2, 0, head_item3)
+        self.table_widget_head_response.setItem(2, 0, head_item3)
         head_item3.setTextAlignment(Qt.AlignCenter)
         head_item3_1 = QTableWidgetItem("传输协议标识")
-        self.table_widget_head.setItem(2, 1, head_item3_1)
+        self.table_widget_head_response.setItem(2, 1, head_item3_1)
         head_item3_1.setTextAlignment(Qt.AlignCenter)
         head_item3_2 = QTableWidgetItem("2")
-        self.table_widget_head.setItem(2, 2, head_item3_2)
+        self.table_widget_head_response.setItem(2, 2, head_item3_2)
         head_item3_2.setTextAlignment(Qt.AlignCenter)
         head_item3_3 = QTableWidgetItem("0")
-        self.table_widget_head.setItem(2, 3, head_item3_3)
+        self.table_widget_head_response.setItem(2, 3, head_item3_3)
         head_item3_3.setTextAlignment(Qt.AlignCenter)
 
         head_item4 = QTableWidgetItem("3")
-        self.table_widget_head.setItem(3, 0, head_item4)
+        self.table_widget_head_response.setItem(3, 0, head_item4)
         head_item4.setTextAlignment(Qt.AlignCenter)
         head_item4_1 = QTableWidgetItem("命令长度")
-        self.table_widget_head.setItem(3, 1, head_item4_1)
+        self.table_widget_head_response.setItem(3, 1, head_item4_1)
         head_item4_1.setTextAlignment(Qt.AlignCenter)
         head_item4_2 = QTableWidgetItem("2")
-        self.table_widget_head.setItem(3, 2, head_item4_2)
+        self.table_widget_head_response.setItem(3, 2, head_item4_2)
         head_item4_2.setTextAlignment(Qt.AlignCenter)
         head_item4_3 = QTableWidgetItem("4")
-        self.table_widget_head.setItem(3, 3, head_item4_3)
+        self.table_widget_head_response.setItem(3, 3, head_item4_3)
         head_item4_3.setTextAlignment(Qt.AlignCenter)
 
         head_item5 = QTableWidgetItem("4")
-        self.table_widget_head.setItem(4, 0, head_item5)
+        self.table_widget_head_response.setItem(4, 0, head_item5)
         head_item5.setTextAlignment(Qt.AlignCenter)
         head_item5_1 = QTableWidgetItem("目标的UnitID")
-        self.table_widget_head.setItem(4, 1, head_item5_1)
+        self.table_widget_head_response.setItem(4, 1, head_item5_1)
         head_item5_1.setTextAlignment(Qt.AlignCenter)
         head_item5_2 = QTableWidgetItem("1")
-        self.table_widget_head.setItem(4, 2, head_item5_2)
+        self.table_widget_head_response.setItem(4, 2, head_item5_2)
         head_item5_2.setTextAlignment(Qt.AlignCenter)
         head_item5_3 = QTableWidgetItem("0")
-        self.table_widget_head.setItem(4, 3, head_item5_3)
+        self.table_widget_head_response.setItem(4, 3, head_item5_3)
         head_item5_3.setTextAlignment(Qt.AlignCenter)
 
         label_command = QLabel('<p style=line-height:150%>命令码：</p>')
@@ -636,6 +635,14 @@ class Functions(IDE.MenuTools):
         self.table_widget_message.setItem(0, 3, new_item1_3)
         new_item1_3.setTextAlignment(Qt.AlignCenter)
 
+        mosbus_list_item1 = ["1", "命令码", "1", "01"]
+        mosbus_list_item2 = ["2", "回令中的字节数", "1", "1"]
+        mosbus_list_item3 = ["3", "点位置", "1", "0"]
+        for index in range(len(mosbus_list_item1)):
+            self.table_widget_message.setItem(1, index, QTableWidgetItem(mosbus_list_item1[index]))
+            self.table_widget_message.setItem(2, index, QTableWidgetItem(mosbus_list_item2[index]))
+            self.table_widget_message.setItem(3, index, QTableWidgetItem(mosbus_list_item3[index]))
+
         self.combox_command.currentIndexChanged.connect(lambda: Functions.add_key_data(self))
         # combox_command.activated[str].connect(lambda: Functions.add_data(self))
 
@@ -644,7 +651,7 @@ class Functions(IDE.MenuTools):
         mosbus_layout.setVerticalSpacing(15)
         mosbus_layout.addRow(label_space)
         mosbus_layout.addRow(label_head)
-        mosbus_layout.addRow(self.table_widget_head)
+        mosbus_layout.addRow(self.table_widget_head_response)
         mosbus_layout.addRow(label_space1)
         mosbus_layout.addRow(label_space2)
         mosbus_layout.addRow(label_space3)
@@ -664,22 +671,18 @@ class Functions(IDE.MenuTools):
         label1 = QLabel()
         self.btn_add = QPushButton("+")
         self.btn_add.setFixedSize(30, 30)
-        self.btn_add.clicked.connect(lambda: Functions.add_tab(self))
         label2 = QLabel()
         self.btn_delete = QPushButton("-")
         self.btn_delete.setFixedSize(30, 30)
-        self.btn_delete.clicked.connect(lambda: Functions.delete_tab(self))
         label3 = QLabel()
         label4 = QLabel()
         label5 = QLabel()
         label6 = QLabel()
         self.btn_translate = QPushButton("<<")
         self.btn_translate.setFixedSize(110, 35)
-
-        self.btn_translate.clicked.connect(lambda: Functions.left_translate(self))
         self.btn_reverse_translate = QPushButton(">>")
         self.btn_reverse_translate.setFixedSize(110, 35)
-        self.btn_reverse_translate.clicked.connect(lambda: Functions.rigth_translate(self))
+
 
         gridlayout2 = QFormLayout()
         gridlayout2.setSpacing(65)
@@ -772,6 +775,7 @@ class Functions(IDE.MenuTools):
 
         self.btn_respons_xml.clicked.connect(lambda: Functions.respon_analysis(self))
         self.btn_true.clicked.connect(lambda: Functions.judge_command(self))
+        self.tabWidget.currentChanged.connect(lambda: Functions.tab_change(self))
 
         hbox.addLayout(gridlayout1)
         hbox2.addSpacing(3)
@@ -781,16 +785,17 @@ class Functions(IDE.MenuTools):
         self.response.setLayout(vbox)
         self.response.exec_()
 
-    def add_key_data(self):
-        if self.combox_command.currentIndex() == 0:
-            mosbus_list_item1 = ["1", "命令码", "1", "01"]
-            mosbus_list_item2 = ["2", "回令中的字节数", "1", "1"]
-            mosbus_list_item3 = ["3", "点位置", "1", "0"]
-            for index in range(len(mosbus_list_item1)):
-                self.table_widget_message.setItem(1, index, QTableWidgetItem(mosbus_list_item1[index]))
-                self.table_widget_message.setItem(2, index, QTableWidgetItem(mosbus_list_item2[index]))
-                self.table_widget_message.setItem(3, index, QTableWidgetItem(mosbus_list_item3[index]))
+    # mosbus帧数据转换
+    def tab_change(self):
+        if self.tabWidget.currentIndex() == 0:
+            self.btn_reverse_translate.clicked.connect(lambda: Functions.rigth_translate(self))
+            self.btn_translate.clicked.connect(lambda: Functions.left_translate(self))
 
+        if self.tabWidget.currentIndex() == 1:
+            self.btn_translate.clicked.connect(lambda: Functions.mosbus_left_translate(self))
+            self.btn_reverse_translate.clicked.connect(lambda: Functions.modbus_rigth_translate(self))
+
+    def add_key_data(self):
         if self.combox_command.currentIndex() == 1:
             mosbus_list_item1 = ["1", "命令码", "1", "02"]
             mosbus_list_item2 = ["2", "回令中的字节数", "1", "1"]
@@ -827,6 +832,152 @@ class Functions(IDE.MenuTools):
                 self.table_widget_message.setItem(2, index, QTableWidgetItem(mosbus_list_item2[index]))
                 self.table_widget_message.setItem(3, index, QTableWidgetItem(mosbus_list_item3[index]))
 
+    def mosbus_left_translate(self):
+        self.edit_respon_value.clear()
+        id = self.table_widget_head_response.item(1, 3).text()
+        if len(id) == 1:
+            id = "00" + " " + "0" + id + " "
+        if len(id) == 2:
+            id = "00" + " " + id + " "
+        if len(id) == 3:
+            stri1 = id[0:1]
+            stri2 = id[1:3]
+            stri1 = "0" + stri1
+            id = stri1 + " " + stri2 + " "
+        if len(id) == 4:
+            id1 = id[0:2]
+            id2 = id[2:4]
+            id = id1 + " " + id2 + " "
+
+        flag = self.table_widget_head_response.item(2, 3).text()
+        if len(flag) == 1:
+            flag = "00" + " " + "0" + flag + " "
+        if len(flag) == 2:
+            flag = "00" + " " + flag + " "
+        if len(flag) == 3:
+            stri1 = flag[0:1]
+            stri2 = flag[1:3]
+            stri1 = "0" + stri1
+            flag = stri1 + " " + stri2 + " "
+        if len(flag) == 4:
+            id1 = flag[0:2]
+            id2 = flag[2:4]
+            flag = id1 + " " + id2 + " "
+
+        length = self.table_widget_head_response.item(3, 3).text()
+        if len(length) == 1:
+            length = "00" + " " + "0" + length
+        if len(length) == 2:
+            length = "00" + " " + length
+        if len(length) == 3:
+            stri1 = length[0:1]
+            stri2 = length[1:3]
+            stri1 = "0" + stri1
+            length = stri1 + " " + stri2
+        if len(length) == 4:
+            id1 = length[0:2]
+            id2 = length[2:4]
+            length = id1 + " " + id2
+
+        UnitID = self.table_widget_head_response.item(4, 3).text()
+        if len(UnitID) == 1:
+            UnitID = " " + "0" + UnitID + " "
+        if len(UnitID) == 2:
+            UnitID = " " + UnitID + " "
+
+        self.edit_respon_value.insertPlainText(id)
+        self.edit_respon_value.insertPlainText(flag)
+        self.edit_respon_value.insertPlainText(length)
+        self.edit_respon_value.insertPlainText(UnitID)
+
+        text1 = self.table_widget_message.item(1, 3).text()
+        if len(text1) == 1:
+            text01 = "0" + text1 + " "
+        if len(text1) == 2:
+            text01 = text1 + " "
+
+        num_byte = self.table_widget_message.item(2, 2).text()
+        num_byte = int(num_byte)
+        text2 = self.table_widget_message.item(2, 3).text()
+        if num_byte == 1:
+            if len(text2) == 1:
+                text02 = "0" + text2 + " "
+            if len(text2) == 2:
+                text02 = text2 + " "
+        if num_byte == 2:
+            if len(text2) == 1:
+                text02 = "00" + " " + "0" + text2 + " "
+            if len(text2) == 2:
+                text02 = "00" + " " + text2 + " "
+            if len(text2) == 3:
+                stri1 = text2[0:1]
+                stri2 = text2[1:3]
+                stri1 = "0" + stri1
+                text02 = stri1 + " " + stri2 + " "
+                print("--->" + text02)
+            if len(text2) == 4:
+                id1 = text2[0:2]
+                id2 = text2[2:4]
+                text02 = id1 + " " + id2 + " "
+
+        num_bytes = self.table_widget_message.item(3, 2).text()
+        num_bytes = int(num_bytes)
+        text3 = self.table_widget_message.item(3, 3).text()
+        if num_bytes == 1:
+            if len(text3) == 1:
+                text03 = "0" + text3
+            if len(text3) == 2:
+                text03 = text3
+        if num_bytes == 2:
+            if len(text3) == 1:
+                text03 = "00" + " " + "0" + text3
+                print("====>" + text3)
+            if len(text3) == 2:
+                text03 = "00" + " " + text3
+            if len(text3) == 3:
+                stri1 = text3[0:1]
+                stri2 = text3[1:3]
+                stri1 = "0" + stri1
+                text03 = stri1 + " " + stri2
+            if len(text3) == 4:
+                id1 = text3[0:2]
+                id2 = text3[2:4]
+                text03 = id1 + " " + id2
+
+        self.edit_respon_value.insertPlainText(text01)
+        self.edit_respon_value.insertPlainText(text02)
+        self.edit_respon_value.insertPlainText(text03)
+
+    def modbus_rigth_translate(self):
+        str_data = self.edit_respon_value.toPlainText()
+        str_data = str_data.split(" ")
+        print(str_data)
+        str_data1 = str_data[0] + str_data[1]
+        new_item1_3 = QTableWidgetItem(str_data1)
+        self.table_widget_head_response.setItem(1, 3, new_item1_3)
+        new_item1_3.setTextAlignment(Qt.AlignCenter)
+
+        str_data2 = str_data[2] + str_data[3]
+        new_item2_3 = QTableWidgetItem(str_data2)
+        self.table_widget_head_response.setItem(2, 3, new_item2_3)
+        new_item2_3.setTextAlignment(Qt.AlignCenter)
+
+        str_data3 = str_data[4] + str_data[5]
+        new_item3_3 = QTableWidgetItem(str_data3)
+        self.table_widget_head_response.setItem(3, 3, new_item3_3)
+        new_item3_3.setTextAlignment(Qt.AlignCenter)
+
+        str_data4 = str_data[6]
+        new_item4_3 = QTableWidgetItem(str_data4)
+        self.table_widget_head_response.setItem(4, 3, new_item4_3)
+        new_item4_3.setTextAlignment(Qt.AlignCenter)
+
+        str_data5 = str_data[7]
+        new_item5_3 = QTableWidgetItem(str_data5)
+        self.table_widget_message.setItem(1, 3, new_item5_3)
+        new_item5_3.setTextAlignment(Qt.AlignCenter)
+
+    # 回令xml文件分析
     def respon_analysis(self):
         fileName = QFileDialog.getOpenFileName(self, '打开文件', './file_xml/response')
         file = QFile(fileName[0])
@@ -869,7 +1020,7 @@ class Functions(IDE.MenuTools):
         if len(stri) == 0:
             stri = "00" + " " + "00"
         if len(stri) == 1:
-            stri = "00" + " " + stri + "0"
+            stri = "00" + " " + "0" + stri
         if len(stri) == 2:
             stri = "00" + " " + stri
         if len(stri) == 3:
@@ -887,7 +1038,7 @@ class Functions(IDE.MenuTools):
         while k < 8:
             string = self.tableWidget.item(k, 3).text()
             if len(string) == 1:
-                string = string + "0"
+                string = "0" + string
 
             # string = string[::-1] #字符串反转
             if k == 7:
@@ -1125,9 +1276,9 @@ class Functions(IDE.MenuTools):
         self.data_tableWidget.setHorizontalHeaderLabels(['序号', '字段名称', '字节数', '数值'])
         self.data_tableWidget.verticalHeader().setVisible(False)
 
-        tabWidget = QTabWidget()
-        tabWidget.addTab(self.data_tableWidget, "自定义帧")
-
+        self.data_tabWidget = QTabWidget()
+        self.data_tabWidget.insertTab(0, self.data_tableWidget, "自定义帧")
+        # self.data_tabWidget.addTab(self.data_tableWidget, "自定义帧")
         datetime = QDateTime(QDateTime.currentDateTime())
         date = datetime.toString("yyyy/MM/dd")
         date_time = datetime.toString("hh:mm")
@@ -1403,8 +1554,8 @@ class Functions(IDE.MenuTools):
         label_message.setStyleSheet('font:20px;')
         label_message.setAlignment(Qt.AlignCenter)
         self.table_widget_message = QTableWidget(4, 4)
-        self.table_widget_message.verticalHeader().setVisible(False)
-        self.table_widget_message.horizontalHeader().setVisible(False)
+        # self.table_widget_message.verticalHeader().setVisible(False)
+        # self.table_widget_message.horizontalHeader().setVisible(False)
         new_item1 = QTableWidgetItem("序号")
         self.table_widget_message.setItem(0, 0, new_item1)
         new_item1.setTextAlignment(Qt.AlignCenter)
@@ -1417,6 +1568,13 @@ class Functions(IDE.MenuTools):
         new_item1_3 = QTableWidgetItem("数值")
         self.table_widget_message.setItem(0, 3, new_item1_3)
         new_item1_3.setTextAlignment(Qt.AlignCenter)
+        mosbus_list_item1 = ["1", "命令码", "1", "01"]
+        mosbus_list_item2 = ["2", "回令中的字节数", "1", "1"]
+        mosbus_list_item3 = ["3", "点位置", "1", "0"]
+        for index in range(len(mosbus_list_item1)):
+            self.table_widget_message.setItem(1, index, QTableWidgetItem(mosbus_list_item1[index]))
+            self.table_widget_message.setItem(2, index, QTableWidgetItem(mosbus_list_item2[index]))
+            self.table_widget_message.setItem(3, index, QTableWidgetItem(mosbus_list_item3[index]))
 
         mosbus_layout = QFormLayout()
         # 设置水平和垂直间隔
@@ -1431,7 +1589,11 @@ class Functions(IDE.MenuTools):
         mosbus_layout.addRow(label_space4)
         mosbus_layout.addRow(label_message)
         mosbus_layout.addRow(self.table_widget_message)
-        tabWidget.insertTab(1, widget_mosbus, "mosbus")
+        # self.data_tabWidget.addTab(widget_mosbus, "mosbus")
+        self.data_tabWidget.insertTab(1, widget_mosbus, "mosbus")
+        # self.data_tableWidget.i
+        # tabWidget.insertTab(1, widget_mosbus, "mosbus")
+        # tabWidget.setCurrentIndex(1)
         widget_mosbus.setLayout(mosbus_layout)
 
         hbox = QVBoxLayout()
@@ -1443,18 +1605,16 @@ class Functions(IDE.MenuTools):
         self.labal2 = QLabel()
         self.labal3 = QLabel()
         self.labal4 = QLabel()
-        self.btn_translate = QPushButton("<<")
-        self.btn_translate.clicked.connect(lambda: Functions.left_translate_data(self))
-        self.btn_reverse_translate = QPushButton(">>")
-        self.btn_reverse_translate.clicked.connect(lambda: Functions.right_translate_data(self))
+        self.data_translate = QPushButton("<<")
+        self.data_reverse_translate = QPushButton(">>")
 
         gridlayout2 = QFormLayout()
         gridlayout2.addRow(self.labal)
         gridlayout2.addRow(self.labal2)
         gridlayout2.addRow(self.labal3)
         gridlayout2.addRow(self.labal4)
-        gridlayout2.addRow(self.btn_translate)
-        gridlayout2.addRow(self.btn_reverse_translate)
+        gridlayout2.addRow(self.data_translate)
+        gridlayout2.addRow(self.data_reverse_translate)
         gridlayout2.setSpacing(55)
 
         hbox2.addLayout(gridlayout2)
@@ -1504,23 +1664,15 @@ class Functions(IDE.MenuTools):
         hbox2.addSpacing(3)
         vbox.addLayout(hbox, 3)
         vbox.addLayout(hbox2, 1)
-        vbox.addWidget(tabWidget, 8)
+        vbox.addWidget(self.data_tabWidget, 8)
         data.setLayout(vbox)
 
         self.data_btn_true.clicked.connect(lambda: Functions.data_xml(self))
+        self.data_tabWidget.currentChanged.connect(lambda: Functions.data_tab_change(self))
         self.data_btn_true.clicked.connect(data.close)
         data.exec_()
 
     def add_data_data(self):
-        if self.combox_data_command.currentIndex() == 0:
-            mosbus_list_item1 = ["1", "命令码", "1", "01"]
-            mosbus_list_item2 = ["2", "回令中的字节数", "1", "1"]
-            mosbus_list_item3 = ["3", "点位置", "1", "0"]
-            for index in range(len(mosbus_list_item1)):
-                self.table_widget_message.setItem(1, index, QTableWidgetItem(mosbus_list_item1[index]))
-                self.table_widget_message.setItem(2, index, QTableWidgetItem(mosbus_list_item2[index]))
-                self.table_widget_message.setItem(3, index, QTableWidgetItem(mosbus_list_item3[index]))
-
         if self.combox_data_command.currentIndex() == 1:
             mosbus_list_item1 = ["1", "命令码", "1", "02"]
             mosbus_list_item2 = ["2", "回令中的字节数", "1", "1"]
@@ -1551,11 +1703,143 @@ class Functions(IDE.MenuTools):
         if self.combox_data_command.currentIndex() == 4:
             mosbus_list_item1 = ["1", "命令码", "1", "0F"]
             mosbus_list_item2 = ["2", "地址", "2", "0"]
-            mosbus_list_item3 = ["3", "位数", "3", "0"]
+            mosbus_list_item3 = ["3", "位数", "2", "0"]
             for index in range(len(mosbus_list_item1)):
                 self.table_widget_message.setItem(1, index, QTableWidgetItem(mosbus_list_item1[index]))
                 self.table_widget_message.setItem(2, index, QTableWidgetItem(mosbus_list_item2[index]))
                 self.table_widget_message.setItem(3, index, QTableWidgetItem(mosbus_list_item3[index]))
+
+    def data_tab_change(self):
+        if self.tabWidget.currentIndex() == 0:
+            self.data_translate.clicked.connect(lambda: Functions.left_translate_data(self))
+        if self.data_tabWidget.currentIndex() == 1:
+            self.data_translate.clicked.connect(lambda: Functions.data_mosbus_left_translate(self))
+            self.data_reverse_translate.clicked.connect(lambda: Functions.data_mosbus_rigth_translate(self))
+
+    def data_mosbus_left_translate(self):
+        self.data_edit_respon_value.clear()
+        id = self.table_widget_head.item(1, 3).text()
+        if len(id) == 1:
+            id = "00" + " " + "0" + id + " "
+        if len(id) == 2:
+            id = "00" + " " + id + " "
+        if len(id) == 3:
+            stri1 = id[0:1]
+            stri2 = id[1:3]
+            stri1 = "0" + stri1
+            id =  stri1 + " " + stri2 + " "
+        if len(id) == 4:
+            id1 = id[0:2]
+            id2 = id[2:4]
+            id = id1 + " " + id2 + " "
+
+        flag = self.table_widget_head.item(2, 3).text()
+        if len(flag) == 1:
+            flag = "00" + " " + "0" + flag  + " "
+        if len(flag) == 2:
+            flag = "00" + " " + flag + " "
+        if len(flag) == 3:
+            stri1 = flag[0:1]
+            stri2 = flag[1:3]
+            stri1 = "0" + stri1
+            flag = " " + stri1 + " " + stri2 + " "
+        if len(flag) == 4:
+            id1 = flag[0:2]
+            id2 = flag[2:4]
+            flag = id1 + " " + id2 + " "
+
+        length = self.table_widget_head.item(3, 3).text()
+        if len(length) == 1:
+            length = "00" + " " + "0" + length
+        if len(length) == 2:
+            length = "00" + " " + length
+        if len(length) == 3:
+            stri1 = length[0:1]
+            stri2 = length[1:3]
+            stri1 = "0" + stri1
+            length = stri1 + " " + stri2
+        if len(length) == 4:
+            id1 = length[0:2]
+            id2 = length[2:4]
+            length = id1 + " " + id2
+
+        UnitID = self.table_widget_head.item(4, 3).text()
+        if len(UnitID) == 1:
+            UnitID =" " + "0" + UnitID + " "
+        if len(UnitID) == 2:
+            UnitID = " " + UnitID + " "
+
+        self.data_edit_respon_value.insertPlainText(id)
+        self.data_edit_respon_value.insertPlainText(flag)
+        self.data_edit_respon_value.insertPlainText(length)
+        self.data_edit_respon_value.insertPlainText(UnitID)
+
+        text1 = self.table_widget_message.item(1, 3).text()
+        if len(text1) == 1:
+            text01 = "0" + text1 + " "
+        if len(text1) == 2:
+            text01 = text1 + " "
+
+        text2 = self.table_widget_message.item(2, 3).text()
+        num_byte = self.table_widget_message.item(2, 2).text()
+        num_byte = int(num_byte)
+        if num_byte == 1:
+            if len(text2) == 1:
+                text02 = "0" + text2 + " "
+            if len(text2) == 2:
+                text02 = text2 + " "
+        if num_byte == 2:
+            if len(text2) == 1:
+                text02 = "00" + " " + "0" + text2 + " "
+            if len(text2) == 2:
+                text02 = "00" + " " + text2 + " "
+            if len(text2) == 3:
+                stri1 = text2[0:1]
+                stri2 = text2[1:3]
+                stri1 = "0" + stri1
+                text02 = stri1 + " " + stri2 + " "
+            if len(text2) == 4:
+                id1 = text2[0:2]
+                id2 = text2[2:4]
+                text02 = id1 + " " + id2
+
+        text3 = self.table_widget_message.item(3, 3).text()
+        num_bytes = self.table_widget_message.item(3, 2).text()
+        num_bytes = int(num_bytes)
+        if num_bytes == 1:
+            if len(text3) == 1:
+                text03 = "0" + text3
+            if len(text3) == 2:
+                text03 = text3
+        if num_bytes == 2:
+            if len(text3) == 1:
+                text03 = "00" + " " + "0" + text3
+            if len(text3) == 2:
+                text03 = "00" + " " + text3
+            if len(text3) == 3:
+                stri1 = text3[0:1]
+                stri2 = text3[1:3]
+                stri1 = "0" + stri1
+                text03 = stri1 + " " + stri2
+            if len(text3) == 4:
+                id1 = text3[0:2]
+                id2 = text3[2:4]
+                text03 = id1 + " " + id2
+
+        self.data_edit_respon_value.insertPlainText(text01)
+        self.data_edit_respon_value.insertPlainText(text02)
+        self.data_edit_respon_value.insertPlainText(text03)
+
+    def data_mosbus_rigth_translate(self):
+        if self.combox_command.currentIndex() == 1:
+            str_data = self.data_edit_respon_value.toPlainText()
+            str_data = str_data.split(" ")
+            str1 = str_data[1] + str_data[2]
+            print("??????????????????????????????????????")
+            print(str1)
+            new_item1_3 = QTableWidgetItem(str1)
+            self.table_widget_head.setItem(0, 3, new_item1_3)
+            new_item1_3.setTextAlignment(Qt.AlignCenter)
 
     def data_analysis(self):
         fileName = QFileDialog.getOpenFileName(self, "打开文件", "./file_xml/data")
@@ -1581,7 +1865,7 @@ class Functions(IDE.MenuTools):
         if len(stri) == 0:
             stri = "00" + " " + "00"
         if len(stri) == 1:
-            stri = "00" + " " + stri + "0"
+            stri = "00" + " "+ "0" + stri
         if len(stri) == 2:
             stri = "00" + " " + stri
         if len(stri) == 3:
@@ -1598,7 +1882,7 @@ class Functions(IDE.MenuTools):
         while k < 8:
             string = self.data_tableWidget.item(k, 3).text()
             if len(string) == 1:
-                string = string + "0"
+                string = "0" + string
             # string = string[::-1] #字符串反转
             if k == 7:
                 str_date = string

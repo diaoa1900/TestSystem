@@ -307,7 +307,7 @@ class MenuTools(QMainWindow):
     # 创建菜单栏
     def create_menu(self):
         bar = self.menuBar()
-
+        bar.setStyleSheet('''MenuBar{background-color:#ccc;}''')
         dir_menu = bar.addMenu("目录")
         # select_menu = QAction('选择目录')
         dir_menu.addAction('选择目录')
