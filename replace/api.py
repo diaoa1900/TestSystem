@@ -14,6 +14,8 @@ from airtest.core.settings import Settings as ST
 from airtest.utils.compat import script_log_dir
 from airtest.core.helper import (G, delay_after_operation, import_device_cls,
                                  logwrap, set_logdir)
+import Levenshtein
+from PIL import ImageGrab
 
 """
 Device Setup APIs
@@ -794,12 +796,12 @@ def assert_word_exist(file, row, words_given):
                 for j in range(len(words_in_file)):
                     words_in_file_co += str(words_in_file[j], encoding='gbk')
                 words_in_file_co = words_in_file_co.replace('\r\n', '')
-                if words_in_file_co == words_given:
+                if words_given in words_in_file_co:
                     assert_word_exist_flag = True
             else:
                 words_in_file = lines[-1]
                 words_in_file = str(words_in_file, encoding='gbk')
-                if words_in_file == words_given:
+                if words_given in words_in_file:
                     assert_word_exist_flag = True
             break
         else:
@@ -811,10 +813,18 @@ def assert_word_exist(file, row, words_given):
 def ocr(v):
     return pytesseract.image_to_string(cv2.imread(str(v)[9:-1]), lang='chi_sim').strip()
 
-def assert_ocr_true(v, pre):
-    real = pytesseract.image_to_string(cv2.imread(str(v)[9:-1]), lang='chi_sim').strip()
-    if real != pre:
-        raise TargetNotFoundError("The OCR result of {} is not {}".format(v, pre))
+
+def assert_ocr_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
+    img = ImageGrab.grab(bbox=(start_x, start_y, end_x, end_y))
+    real = pytesseract.image_to_string(img, lang='chi_sim').strip()
+    if real == pre:
+        return
+    elif real in pre and flag == 2:
+        return
+    elif Levenshtein.distance(pre, real) < val and flag == 3:
+        return
+    raise TargetNotFoundError("The OCR result of {} is not {}".format(rec, pre))
+
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
