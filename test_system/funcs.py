@@ -10,7 +10,7 @@ import screenCapture
 import os
 import get_point
 from PyQt5.QtCore import QThread, QFile, QIODevice, QTextStream, QDateTime, Qt
-from PyQt5.QtGui import QTextCursor
+from PyQt5.QtGui import QTextCursor, QTextCharFormat
 from PyQt5.QtWidgets import *
 from PyQt5.QtNetwork import QTcpSocket, QTcpServer
 from PyQt5.QtXml import QDomDocument, QDomProcessingInstruction, QDomAttr, QDomElement
@@ -44,6 +44,28 @@ class MyThread(QThread):
             self.ide.console_text.moveCursor(QTextCursor.End)
             if not subprocess.Popen.poll(self.sbp) is None:
                 break
+        error_fmt = QTextCharFormat()
+        error_fmt.setForeground(Qt.red)
+        pass_fmt = QTextCharFormat()
+        pass_fmt.setForeground(Qt.green)
+        fail_fmt = QTextCharFormat()
+        fail_fmt.setForeground(Qt.blue)
+        doucument = self.ide.console_text.document()
+        cursor = QTextCursor(doucument)
+        cursor = doucument.find('error', cursor)
+        while not cursor.isNull():
+            cursor.mergeCharFormat(error_fmt)
+            cursor = doucument.find('error', cursor)
+
+        cursor = doucument.find('passed', cursor)
+        while not cursor.isNull():
+            cursor.mergeCharFormat(pass_fmt)
+            cursor = doucument.find('passed', cursor)
+
+        cursor = doucument.find('failed', cursor)
+        while not cursor.isNull():
+            cursor.mergeCharFormat(fail_fmt)
+            cursor = doucument.find('failed', cursor)
         self.sbp.stdout.close()
         self.ide.stop_action.setEnabled(False)
         self.ide.stop_run_directory_button.setEnabled(False)
@@ -226,6 +248,9 @@ class Functions(IDE.MenuTools):
     
     def assert_client_exist(self):
         self.edit_tab.currentWidget().edit.insertPlainText("\twith allure.step(\"assert_file_exist\"):\n" + "\t\tassert_client_exist(\"client is exist\")")
+
+    def assert_lcd_true(self):
+        Functions.screenshot_function(self, "assert_lcd_true")
 
     def dialog_connect(self):
         self.connect_dialog = QDialog()

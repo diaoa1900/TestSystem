@@ -16,6 +16,9 @@ from airtest.core.helper import (G, delay_after_operation, import_device_cls,
                                  logwrap, set_logdir)
 import Levenshtein
 from PIL import ImageGrab
+import numpy as np
+from imutils import contours
+import imutils
 
 """
 Device Setup APIs
@@ -689,7 +692,7 @@ Assertions
 
 
 @logwrap
-def assert_exists(v, msg=""):
+def assert_exists(v, msg="", timeout=ST.FIND_TIMEOUT):
     """
     Assert target exists on device screen
 
@@ -704,7 +707,7 @@ def assert_exists(v, msg=""):
 
     """
     try:
-        pos = loop_find(v, timeout=ST.FIND_TIMEOUT, threshold=ST.THRESHOLD_STRICT or v.threshold)
+        pos = loop_find(v, timeout=timeout, threshold=ST.THRESHOLD_STRICT or v.threshold)
         return pos
     except TargetNotFoundError:
         raise TargetNotFoundError("%s does not exist in screen, message: %s" % (v, msg))
@@ -814,16 +817,111 @@ def ocr(v):
     return pytesseract.image_to_string(cv2.imread(str(v)[9:-1]), lang='chi_sim').strip()
 
 
+def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
+    img = ImageGrab.grab(bbox=(start_x, start_y, end_x, end_y))
+    # 定义每一个数字对应的字段
+    DIGITS_LOOKUP = {
+        (1, 1, 1, 0, 1, 1, 1): 0,
+        (0, 0, 1, 0, 0, 1, 0): 1,
+        (1, 0, 1, 1, 1, 0, 1): 2,
+        (1, 0, 1, 1, 0, 1, 1): 3,
+        (0, 1, 1, 1, 0, 1, 0): 4,
+        (1, 1, 0, 1, 0, 1, 1): 5,
+        (1, 1, 0, 1, 1, 1, 1): 6,
+        (1, 0, 1, 0, 0, 1, 0): 7,
+        (1, 1, 1, 1, 1, 1, 1): 8,
+        (1, 1, 1, 1, 0, 1, 1): 9
+    }
+    # 将输入转换为灰度图片
+    gray = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY)
+    # 使用阈值进行二值化
+    thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    close = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
+    # 在阈值图像中查找轮廓，然后初始化数字轮廓列表
+    cnts = cv2.findContours(close.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cnts = imutils.grab_contours(cnts)
+    digitCnts = []
+
+    w_sum = 0.
+    h_sum = 0.
+    # 循环遍历所有的候选区域
+    for c in cnts:
+        (x, y, w, h) = cv2.boundingRect(c)
+        w_sum += w
+        h_sum += h
+        digitCnts.append(c)
+    # 从左到右对这些轮廓进行排序
+    w_ave = w_sum / len(digitCnts)
+    h_ave = h_sum / len(digitCnts)
+    digitCnts = contours.sort_contours(digitCnts, method="left-to-right")[0]
+    digits = ""
+    dc = cv2.drawContours(np.array(img).copy(), digitCnts, -1, (0, 0, 255), 2)
+    # 循环处理每一个数字
+    i = 0
+    for c in digitCnts:
+        # 获取ROI区域
+        (x, y, w, h) = cv2.boundingRect(c)
+        roi = thresh[y:y + h, x:x + w]
+        if w > w_ave * 2 or h > h_ave * 1.2:
+            continue
+        if h / w > 3:
+            digits += '1'
+            continue
+        elif w > h:
+            digits += '-'
+            continue
+        elif w == h:
+            digits += '.'
+            continue
+        # 分别计算每一段的宽度和高度
+        (roiH, roiW) = roi.shape
+        (dW, dH) = (int(roiW * 0.25), int(roiH * 0.15))
+        dHC = int(roiH * 0.05)
+
+        # 定义一个7段数码管的集合
+        segments = [
+            ((0, 0), (w, dH)),  # 上
+            ((0, 0), (dW, h // 2)),  # 左上
+            ((w - dW, 0), (w, h // 2)),  # 右上
+            ((0, (h // 2) - dHC), (w, (h // 2) + dHC)),  # 中间
+            ((0, h // 2), (dW, h)),  # 左下
+            ((w - dW, h // 2), (w, h)),  # 右下
+            ((0, h - dH), (w, h))  # 下
+        ]
+        on = [0] * len(segments)
+
+        # 循环遍历数码管中的每一段
+        for (i, ((xA, yA), (xB, yB))) in enumerate(segments):  # 检测分割后的ROI区域，并统计分割图中的阈值像素点
+            segROI = roi[yA:yB, xA:xB]
+            total = cv2.countNonZero(segROI)
+            area = (xB - xA) * (yB - yA)
+
+            # 如果非零区域的个数大于整个区域的一半，则认为该段是亮的
+            if total / float(area) > 0.5:
+                on[i] = 1
+
+        # 进行数字查询并显示结果
+        digit = DIGITS_LOOKUP[tuple(on)]
+        digits += str(digit)
+    if digits == pre:
+        return
+    elif digits in pre and flag == 2:
+        return
+    elif Levenshtein.distance(pre, digits) < val and flag == 3:
+        return
+    raise TargetNotFoundError("The result of LCD recognization is{}, not {}".format(digits, pre))
+
+
 def assert_ocr_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
     img = ImageGrab.grab(bbox=(start_x, start_y, end_x, end_y))
-    real = pytesseract.image_to_string(img, lang='chi_sim').strip()
+    real = pytesseract.image_to_string(np.array(img), lang='chi_sim').strip()
     if real == pre:
         return
     elif real in pre and flag == 2:
         return
     elif Levenshtein.distance(pre, real) < val and flag == 3:
         return
-    raise TargetNotFoundError("The OCR result of {} is not {}".format(rec, pre))
+    raise TargetNotFoundError("The OCR result is{}, not {}".format(real, pre))
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
