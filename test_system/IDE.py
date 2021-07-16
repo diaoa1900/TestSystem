@@ -21,7 +21,6 @@ class MenuTools(QMainWindow):
         # 纵向分辨率
         h = QGuiApplication.primaryScreen().grabWindow(QApplication.desktop().winId()).height()
         a.destroy()
-        self.list = []
         self.setWindowTitle('半实物仿真自动化测试平台')
         self.setWindowIcon(QIcon("../icons/TestSystem.ico"))
         self.resize(int(0.8 * w), int(0.8 * h))
@@ -403,22 +402,26 @@ class MenuTools(QMainWindow):
         path = self.dir_model.filePath(tree_id)
         script_edit = QWidget()
         script_name_index = path.rindex('/')
-        """这里想实现已打开的选项卡就不会再打开了，但不知道怎么获得已打开的全部选项卡名字信息
-        if path[script_name_index + 1:] not in 所以选项卡信息:
-        """
-        self.edit_tab.addTab(script_edit, path[script_name_index + 1:])
-        script_edit.path = path
-        script_edit.edit = edit2.QCodeEditor()
-        script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
-        script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ') * 4)
-        script_edit.edit_layout = QHBoxLayout()
-        script_edit.edit_layout.addWidget(script_edit.edit)
-        script_edit.setLayout(script_edit.edit_layout)
-        with open(path, 'r', encoding='utf-8', errors='ignore') as f:  # 文件读操作
-            script_edit.edit.setPlainText(f.read())
-            f.close()
-        self.edit_tab.setCurrentWidget(script_edit)
-        script_edit.edit.textChanged.connect(self.text_changed)
+        tab_list = []
+        for i in range(self.edit_tab.count()):
+            tab_list.append(self.edit_tab.tabText(i))
+        if path[script_name_index + 1:] not in tab_list:
+            self.edit_tab.addTab(script_edit, path[script_name_index + 1:])
+            script_edit.path = path
+            script_edit.edit = edit2.QCodeEditor()
+            script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
+            script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ') * 4)
+            script_edit.edit_layout = QHBoxLayout()
+            script_edit.edit_layout.addWidget(script_edit.edit)
+            script_edit.setLayout(script_edit.edit_layout)
+            with open(path, 'r', encoding='utf-8', errors='ignore') as f:  # 文件读操作
+                script_edit.edit.setPlainText(f.read())
+                f.close()
+            self.edit_tab.setCurrentWidget(script_edit)
+            script_edit.edit.textChanged.connect(self.text_changed)
+        else:
+            self.edit_tab.setCurrentIndex(tab_list.index(path[script_name_index + 1:]))
+
 
     def delete_script(self):
         path = self.dir_model.filePath(self.file_tree.currentIndex())

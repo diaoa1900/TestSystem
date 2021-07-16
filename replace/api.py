@@ -773,9 +773,21 @@ def assert_not_equal(first, second, msg=""):
 
 
 @logwrap
-def assert_file_exist(file):
-    if not os.path.exists(file):
-        raise TargetNotFoundError("%s is not exist" % file)
+def assert_file_exist(file, flag=None):
+    if flag is None:
+        if not os.path.exists(file):
+            raise TargetNotFoundError("%s is not exist" % file)
+    else:
+        index = file.rindex('/')
+        start = file[:index]
+        end = file[index+1:]
+        for fi in os.listdir(start):
+            if end in fi:
+                index = -1
+        if index != -1:
+            raise TargetNotFoundError("%s is not exist" % file)
+
+
 
 
 @logwrap
@@ -813,8 +825,11 @@ def assert_word_exist(file, row, words_given):
         raise TargetNotFoundError("{} is not on the last {} lines of {}".format(words_given, row, file))
 
 
-def ocr(v):
-    return pytesseract.image_to_string(cv2.imread(str(v)[9:-1]), lang='chi_sim').strip()
+def ocr(v, language=None):
+    if language is None:
+        return pytesseract.image_to_string(cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 15, 255, cv2.THRESH_BINARY_INV)[1]).strip()
+    else:
+        return pytesseract.image_to_string(cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 15, 255, cv2.THRESH_BINARY_INV)[1], lang='chi_sim').strip()
 
 
 def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
@@ -830,13 +845,17 @@ def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
         (1, 1, 0, 1, 1, 1, 1): 6,
         (1, 0, 1, 0, 0, 1, 0): 7,
         (1, 1, 1, 1, 1, 1, 1): 8,
-        (1, 1, 1, 1, 0, 1, 1): 9
+        (1, 1, 1, 1, 0, 1, 1): 9,
+        (0, 0, 0, 0, 0, 0, 0): ''
     }
     # 将输入转换为灰度图片
     gray = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY)
     # 使用阈值进行二值化
-    thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-    close = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
+    thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY)[1]
+    kernel = (3, 3)
+    if end_x-start_x < 150:
+        kernel = (1, 1)
+    close = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, np.ones(kernel, np.uint8))
     # 在阈值图像中查找轮廓，然后初始化数字轮廓列表
     cnts = cv2.findContours(close.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
@@ -862,15 +881,13 @@ def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
         # 获取ROI区域
         (x, y, w, h) = cv2.boundingRect(c)
         roi = thresh[y:y + h, x:x + w]
-        if w > w_ave * 2 or h > h_ave * 1.2:
-            continue
         if h / w > 3:
             digits += '1'
             continue
-        elif w > h:
+        elif w - h > 1 and w - h < 10:
             digits += '-'
             continue
-        elif w == h:
+        elif abs(w - h) <= 1:
             digits += '.'
             continue
         # 分别计算每一段的宽度和高度
@@ -897,8 +914,12 @@ def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
             area = (xB - xA) * (yB - yA)
 
             # 如果非零区域的个数大于整个区域的一半，则认为该段是亮的
+            if  area == 0:
+                continue
             if total / float(area) > 0.5:
                 on[i] = 1
+            if total / float(area) == 1.0:
+                on[i] = 0
 
         # 进行数字查询并显示结果
         digit = DIGITS_LOOKUP[tuple(on)]
@@ -912,9 +933,13 @@ def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
     raise TargetNotFoundError("The result of LCD recognization is{}, not {}".format(digits, pre))
 
 
-def assert_ocr_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
+def assert_ocr_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1, language=None):
     img = ImageGrab.grab(bbox=(start_x, start_y, end_x, end_y))
-    real = pytesseract.image_to_string(np.array(img), lang='chi_sim').strip()
+    real = ""
+    if language is None:
+        real = pytesseract.image_to_string(cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 15, 255, cv2.THRESH_BINARY_INV)[1]).strip()
+    else:
+        real = pytesseract.image_to_string(cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 15, 255, cv2.THRESH_BINARY_INV)[1], lang='chi_sim').strip()
     if real == pre:
         return
     elif real in pre and flag == 2:

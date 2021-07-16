@@ -118,7 +118,7 @@ class Functions(IDE.MenuTools):
 
     def run(self):
         try:
-            self.setVisible(False)
+            self.showMinimized()
             self.console_text.clear()
             self.edit_tab.currentWidget().edit.moveCursor(QTextCursor.Start)
             f = open('./script_template.py', 'r', encoding='utf-8')
@@ -137,7 +137,7 @@ class Functions(IDE.MenuTools):
             self.thread.start()
             self.thread.wait()
             time.sleep(0.5)
-            self.setVisible(True)
+            self.showNormal()
 
         except Exception as e:
             print(e)
