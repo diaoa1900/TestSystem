@@ -827,9 +827,9 @@ def assert_word_exist(file, row, words_given):
 
 def ocr(v, language=None):
     if language is None:
-        return pytesseract.image_to_string(cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 15, 255, cv2.THRESH_BINARY_INV)[1]).strip()
+        return pytesseract.image_to_string(cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 140, 255, cv2.THRESH_BINARY_INV)[1]).strip()
     else:
-        return pytesseract.image_to_string(cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 15, 255, cv2.THRESH_BINARY_INV)[1], lang='chi_sim').strip()
+        return pytesseract.image_to_string(cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 140, 255, cv2.THRESH_BINARY_INV)[1], lang='chi_sim').strip()
 
 
 def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
@@ -884,7 +884,7 @@ def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
         if h / w > 3:
             digits += '1'
             continue
-        elif w - h > 1 and w - h < 10:
+        elif w - h > 1 and w - h < 40:
             digits += '-'
             continue
         elif abs(w - h) <= 1:
@@ -937,9 +937,9 @@ def assert_ocr_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1, language
     img = ImageGrab.grab(bbox=(start_x, start_y, end_x, end_y))
     real = ""
     if language is None:
-        real = pytesseract.image_to_string(cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 15, 255, cv2.THRESH_BINARY_INV)[1]).strip()
+        real = pytesseract.image_to_string(cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 140, 255, cv2.THRESH_BINARY_INV)[1]).strip()
     else:
-        real = pytesseract.image_to_string(cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 15, 255, cv2.THRESH_BINARY_INV)[1], lang='chi_sim').strip()
+        real = pytesseract.image_to_string(cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 140, 255, cv2.THRESH_BINARY_INV)[1], lang='chi_sim').strip()
     if real == pre:
         return
     elif real in pre and flag == 2:

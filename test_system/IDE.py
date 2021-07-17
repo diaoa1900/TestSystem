@@ -46,11 +46,12 @@ class MenuTools(QMainWindow):
         # #操作脚本文件的按钮们
         self.new_file_button = QPushButton()
         self.delete_file_button = QPushButton()
-        self.rename_file_button = QPushButton(QApplication.style().standardIcon(QStyle.StandardPixmap(46)), '')
+        self.rename_file_button = QPushButton()
         self.run_directory_button = QPushButton()
         self.stop_run_directory_button = QPushButton()
         self.new_file_button.setIcon(QIcon("../icons/add.ico"))
-        self.delete_file_button.setIcon(QApplication.style().standardIcon(QStyle.StandardPixmap(47)))
+        self.delete_file_button.setIcon(QIcon("../icons/delete.ico"))
+        self.rename_file_button.setIcon(QIcon("../icons/rename.ico"))
         self.run_directory_button.setIcon(QApplication.style().standardIcon(QStyle.StandardPixmap(66)))
         self.stop_run_directory_button.setIcon(QIcon("../icons/stop.ico"))
         self.new_file_button.setToolTip("新增脚本")
@@ -239,41 +240,49 @@ class MenuTools(QMainWindow):
         self.groupbox_6 = QGroupBox("通信管理", self)
         self.formlayout = QFormLayout()
 
-        self.btn_connect = QPushButton("建立连接")
+        self.btn_connect = QPushButton("       建立连接")
+        self.btn_disconnect = QPushButton("       断开连接")
+        self.btn_connect.setIcon(QIcon('../icons/connect.ico'))
+        self.btn_disconnect.setIcon(QIcon('../icons/disconnect.ico'))
+        self.btn_connect.setStyleSheet("QPushButton { text-align: left;}")
+        self.btn_disconnect.setStyleSheet("QPushButton { text-align: left;}")
 
-        self.btn_disconnect = QPushButton("断开连接")
-        self.btn_disconnect.setEnabled(False)
         self.formlayout.addRow(self.btn_connect)
         self.formlayout.addRow(self.btn_disconnect)
         self.groupbox_6.setLayout(self.formlayout)
 
         self.groupbox_7 = QGroupBox("数据日志", self)
         self.formlayout1 = QFormLayout()
-
         self.textEdit_send = QTextEdit()
 
-        self.btn_addDevice = QPushButton("NewDevice")
+        self.btn_addDevice = QPushButton("     NewDevice")
+        self.btn_response = QPushButton("       AddKey")
+        self.btn_data = QPushButton("      AddData")
+        self.btn_deleteDevice = QPushButton("    DeleteDevice")
+        self.btn_deleteCommand = QPushButton("      DeleteKey")
+        self.btn_open = QPushButton("      打开文件")
+        self.btn_send = QPushButton("      立即执行")
+        self.btn_close = QPushButton("        清除")
 
-        self.btn_response = QPushButton("AddKey")
+        self.btn_addDevice.setIcon(QIcon('../icons/add-connect.ico'))
+        self.btn_response.setIcon(QIcon('../icons/add-connect.ico'))
+        self.btn_data.setIcon(QIcon('../icons/add-connect.ico'))
+        self.btn_deleteDevice.setIcon(QIcon('../icons/delete-connect.ico'))
+        self.btn_deleteCommand.setIcon(QIcon('../icons/delete-connect.ico'))
+        self.btn_open.setIcon(QIcon('../icons/file-connect.ico'))
+        self.btn_send.setIcon(QIcon('../icons/carry-connect.ico'))
+        self.btn_close.setIcon(QIcon('../icons/clear-connect.ico'))
 
-        self.btn_data = QPushButton("AddData")
+        self.btn_addDevice.setStyleSheet("QPushButton { text-align: left;}")
+        self.btn_response.setStyleSheet("QPushButton { text-align: left;}")
+        self.btn_data.setStyleSheet("QPushButton { text-align: left;}")
+        self.btn_deleteDevice.setStyleSheet("QPushButton { text-align: left;}")
+        self.btn_deleteCommand.setStyleSheet("QPushButton { text-align: left;}")
+        self.btn_open.setStyleSheet("QPushButton { text-align: left;}")
+        self.btn_send.setStyleSheet("QPushButton { text-align: left;}")
+        self.btn_close.setStyleSheet("QPushButton { text-align: left;}")
 
-        self.btn_deleteDevice = QPushButton("DeleteDevice")
-
-        self.btn_deleteCommand = QPushButton("DeleteKey")
-
-        self.btn_open = QPushButton("打开文件")
-
-        self.btn_open.setEnabled(False)
-
-        # self.btn_open.setFixedSize(280,25)
-        self.btn_send = QPushButton("立即执行")
-
-        self.btn_send.setEnabled(False)
-        self.btn_close = QPushButton("清除")
-        # self.btn_close.setFixedSize(115,27)
         self.formlayout1.addRow(self.textEdit_send)
-
         self.formlayout1.addRow(self.btn_addDevice)
         self.formlayout1.addRow(self.btn_response)
         self.formlayout1.addRow(self.btn_data)

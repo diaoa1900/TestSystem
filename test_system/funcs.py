@@ -10,7 +10,7 @@ import screenCapture
 import os
 import get_point
 from PyQt5.QtCore import QThread, QFile, QIODevice, QTextStream, QDateTime, Qt
-from PyQt5.QtGui import QTextCursor, QTextCharFormat
+from PyQt5.QtGui import QTextCursor, QTextCharFormat, QIcon
 from PyQt5.QtWidgets import *
 from PyQt5.QtNetwork import QTcpSocket, QTcpServer
 from PyQt5.QtXml import QDomDocument, QDomProcessingInstruction, QDomAttr, QDomElement
@@ -136,7 +136,7 @@ class Functions(IDE.MenuTools):
             self.thread = MyThread(self, path=self.edit_tab.currentWidget().path)
             self.thread.start()
             self.thread.wait()
-            time.sleep(0.5)
+            time.sleep(1.0)
             self.showNormal()
 
         except Exception as e:
@@ -254,6 +254,7 @@ class Functions(IDE.MenuTools):
 
     def dialog_connect(self):
         self.connect_dialog = QDialog()
+        self.connect_dialog.setWindowIcon(QIcon("../icons/connect.ico"))
         connect_form = QFormLayout(self.connect_dialog)
         self.connect_dialog.setWindowTitle("连接设置")
         self.combox_ip = QComboBox()
@@ -317,6 +318,7 @@ class Functions(IDE.MenuTools):
 
     def dialog_new_device(self):
         new_device = QDialog()
+        new_device.setWindowIcon(QIcon("../icons/add-connect.ico"))
         self.formlayout2 = QFormLayout(new_device)
         new_device.setWindowTitle("新建设备")
         new_device.setFixedSize(300, 240)
@@ -376,6 +378,7 @@ class Functions(IDE.MenuTools):
 
     def dialog_response(self):
         self.response = QDialog()
+        self.response.setWindowIcon(QIcon("../icons/add-connect.ico"))
         self.response.setWindowTitle("添加回令")
         self.response.setFixedSize(855, 820)
 
@@ -1294,6 +1297,7 @@ class Functions(IDE.MenuTools):
 
     def dialog_data(self):
         data = QDialog()
+        data.setWindowIcon(QIcon("../icons/add-connect.ico"))
         data.setWindowTitle("添加数据")
         data.setFixedSize(855, 770)
         self.data_tableWidget = QTableWidget(18, 4)
@@ -2119,6 +2123,7 @@ class Functions(IDE.MenuTools):
 
     def dialog_delete_device(self):
         deleteDevice = QDialog()
+        deleteDevice.setWindowIcon(QIcon("../icons/delete-connect.ico"))
         self.formlayout_data = QFormLayout(deleteDevice)
         deleteDevice.setWindowTitle("删除设备")
         deleteDevice.setFixedSize(300, 240)
@@ -2182,6 +2187,7 @@ class Functions(IDE.MenuTools):
 
     def dialog_delete_key(self):
         deleteKey = QDialog()
+        deleteKey.setWindowIcon(QIcon("../icons/delete-connect.ico"))
         self.formlayout_data = QFormLayout(deleteKey)
         deleteKey.setWindowTitle("删除回令")
         deleteKey.setFixedSize(270, 230)
