@@ -563,6 +563,8 @@ class Functions(IDE.MenuTools):
         new_item12_2.setTextAlignment(Qt.AlignCenter)
         self.textEdit_buf = QTextEdit()
         self.tableWidget.setCellWidget(12, 1, self.textEdit_buf)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive | QHeaderView.Stretch)
+        self.tableWidget.verticalHeader().setSectionResizeMode(QHeaderView.Interactive | QHeaderView.Stretch)
 
         # mosbus界面
         widget_mosbus = QWidget()
@@ -570,7 +572,6 @@ class Functions(IDE.MenuTools):
         label_head.setStyleSheet('font:20px;')
         # 设置标签居中
         label_head.setAlignment(Qt.AlignCenter)
-
         # setGeometry(左右， 上下， 宽， 高)
         label_head.setGeometry(10, 10, 20, 20)
         self.table_widget_head_response = QTableWidget(5, 4)
@@ -640,27 +641,31 @@ class Functions(IDE.MenuTools):
         head_item5_3 = QTableWidgetItem("0")
         self.table_widget_head_response.setItem(4, 3, head_item5_3)
         head_item5_3.setTextAlignment(Qt.AlignCenter)
+        #使表格充满界面
+        self.table_widget_head_response.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive | QHeaderView.Stretch)
+        self.table_widget_head_response.verticalHeader().setSectionResizeMode(QHeaderView.Interactive | QHeaderView.Stretch)
 
+        #modbus中间部分
         label_command = QLabel('<p style=line-height:150%>命令码：</p>')
         label_command.setStyleSheet('font:20px;')
         label_command.setFixedSize(120, 50)
         # 设置对齐方式
         label_command.setAlignment(Qt.AlignCenter)
-
         self.combox_command = QComboBox()
         self.combox_command.setStyleSheet('font:20px;')
         self.combox_command.addItem("读输出位（01）")
-        self.combox_command.addItem("读输出位（02）")
+        self.combox_command.addItem("读输入位（02）")
         self.combox_command.addItem("读多个寄存器（03）")
         self.combox_command.addItem("写输出位（05）")
         self.combox_command.addItem("写多个输出位（0F）")
-
+        # 空白填充
         label_space = QLabel()
         label_space1 = QLabel()
         label_space2 = QLabel()
         label_space3 = QLabel()
         label_space4 = QLabel()
 
+        #modbus下面部分
         label_message = QLabel('<p style=line-height:150%>命令信息</p>')
         label_message.setStyleSheet('font:20px;')
         label_message.setAlignment(Qt.AlignCenter)
@@ -690,7 +695,10 @@ class Functions(IDE.MenuTools):
             self.table_widget_message.setItem(3, index, QTableWidgetItem(mosbus_list_item3[index]))
 
         self.combox_command.currentIndexChanged.connect(lambda: Functions.add_key_data(self))
-        # combox_command.activated[str].connect(lambda: Functions.add_data(self))
+        self.table_widget_message.horizontalHeader().setSectionResizeMode(
+            QHeaderView.Interactive | QHeaderView.Stretch)
+        self.table_widget_message.verticalHeader().setSectionResizeMode(
+            QHeaderView.Interactive | QHeaderView.Stretch)
 
         mosbus_layout = QFormLayout()
         # 设置水平和垂直间隔
@@ -742,6 +750,7 @@ class Functions(IDE.MenuTools):
         gridlayout2.addRow(self.btn_reverse_translate)
         hbox2.addLayout(gridlayout2)
 
+        #添加回令左边界面
         self.label_send_model = QLabel("指令类型:")
         self.label_send_model.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_send_model = QComboBox(self.response)
@@ -1520,6 +1529,8 @@ class Functions(IDE.MenuTools):
         new_item12_2.setTextAlignment(Qt.AlignCenter)
         self.textEdit_data_buf = QTextEdit()
         self.data_tableWidget.setCellWidget(12, 1, self.textEdit_data_buf)
+        self.data_tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Interactive | QHeaderView.Stretch)
+        self.data_tableWidget.verticalHeader().setSectionResizeMode(QHeaderView.Interactive | QHeaderView.Stretch)
 
         # mosbus界面
         widget_mosbus = QWidget()
@@ -1527,7 +1538,6 @@ class Functions(IDE.MenuTools):
         label_head.setStyleSheet('font:20px;')
         # 设置标签居中
         label_head.setAlignment(Qt.AlignCenter)
-
         # setGeometry(左右， 上下， 宽， 高)
         label_head.setGeometry(10, 10, 20, 20)
         self.table_widget_head = QTableWidget(5, 4)
@@ -1538,89 +1548,27 @@ class Functions(IDE.MenuTools):
         head_list_item3 = ["2", "传输协议标识", "2", "0"]
         head_list_item4 = ["3", "命令长度", "2", "4"]
         head_list_item5 = ["4", "目标的UnitID", "1", "0"]
-
         for index in range(len(head_list_item1)):
             self.table_widget_head.setItem(0, index, QTableWidgetItem(head_list_item1[index]))
             self.table_widget_head.setItem(1, index, QTableWidgetItem(head_list_item2[index]))
             self.table_widget_head.setItem(2, index, QTableWidgetItem(head_list_item3[index]))
             self.table_widget_head.setItem(3, index, QTableWidgetItem(head_list_item4[index]))
             self.table_widget_head.setItem(4, index, QTableWidgetItem(head_list_item5[index]))
+        self.table_widget_head.horizontalHeader().setSectionResizeMode(
+            QHeaderView.Interactive | QHeaderView.Stretch)
+        self.table_widget_head.verticalHeader().setSectionResizeMode(
+            QHeaderView.Interactive | QHeaderView.Stretch)
 
-        # head_item1 = QTableWidgetItem("序号")
-        # self.table_widget_head.setItem(0, 0, head_item1)
-        # head_item1.setTextAlignment(Qt.AlignCenter)
-        # head_item1_1 = QTableWidgetItem("字段名称")
-        # self.table_widget_head.setItem(0, 1, head_item1_1)
-        # head_item1_1.setTextAlignment(Qt.AlignCenter)
-        # head_item1_2 = QTableWidgetItem("字节数")
-        # self.table_widget_head.setItem(0, 2, head_item1_2)
-        # head_item1_2.setTextAlignment(Qt.AlignCenter)
-        # head_item1_3 = QTableWidgetItem("数值")
-        # self.table_widget_head.setItem(0, 3, head_item1_3)
-        # head_item1_3.setTextAlignment(Qt.AlignCenter)
-        #
-        # head_item2 = QTableWidgetItem("1")
-        # self.table_widget_head.setItem(1, 0, head_item2)
-        # head_item2.setTextAlignment(Qt.AlignCenter)
-        # head_item2_1 = QTableWidgetItem("传输ID")
-        # self.table_widget_head.setItem(1, 1, head_item2_1)
-        # head_item2_1.setTextAlignment(Qt.AlignCenter)
-        # head_item2_2 = QTableWidgetItem("2")
-        # self.table_widget_head.setItem(1, 2, head_item2_2)
-        # head_item2_2.setTextAlignment(Qt.AlignCenter)
-        # head_item2_3 = QTableWidgetItem("0")
-        # self.table_widget_head.setItem(1, 3, head_item2_3)
-        # head_item2_3.setTextAlignment(Qt.AlignCenter)
-        #
-        # head_item3 = QTableWidgetItem("2")
-        # self.table_widget_head.setItem(2, 0, head_item3)
-        # head_item3.setTextAlignment(Qt.AlignCenter)
-        # head_item3_1 = QTableWidgetItem("传输协议标识")
-        # self.table_widget_head.setItem(2, 1, head_item3_1)
-        # head_item3_1.setTextAlignment(Qt.AlignCenter)
-        # head_item3_2 = QTableWidgetItem("2")
-        # self.table_widget_head.setItem(2, 2, head_item3_2)
-        # head_item3_2.setTextAlignment(Qt.AlignCenter)
-        # head_item3_3 = QTableWidgetItem("0")
-        # self.table_widget_head.setItem(2, 3, head_item3_3)
-        # head_item3_3.setTextAlignment(Qt.AlignCenter)
-        #
-        # head_item4 = QTableWidgetItem("3")
-        # self.table_widget_head.setItem(3, 0, head_item4)
-        # head_item4.setTextAlignment(Qt.AlignCenter)
-        # head_item4_1 = QTableWidgetItem("命令长度")
-        # self.table_widget_head.setItem(3, 1, head_item4_1)
-        # head_item4_1.setTextAlignment(Qt.AlignCenter)
-        # head_item4_2 = QTableWidgetItem("2")
-        # self.table_widget_head.setItem(3, 2, head_item4_2)
-        # head_item4_2.setTextAlignment(Qt.AlignCenter)
-        # head_item4_3 = QTableWidgetItem("4")
-        # self.table_widget_head.setItem(3, 3, head_item4_3)
-        # head_item4_3.setTextAlignment(Qt.AlignCenter)
-        #
-        # head_item5 = QTableWidgetItem("4")
-        # self.table_widget_head.setItem(4, 0, head_item5)
-        # head_item5.setTextAlignment(Qt.AlignCenter)
-        # head_item5_1 = QTableWidgetItem("目标的UnitID")
-        # self.table_widget_head.setItem(4, 1, head_item5_1)
-        # head_item5_1.setTextAlignment(Qt.AlignCenter)
-        # head_item5_2 = QTableWidgetItem("1")
-        # self.table_widget_head.setItem(4, 2, head_item5_2)
-        # head_item5_2.setTextAlignment(Qt.AlignCenter)
-        # head_item5_3 = QTableWidgetItem("0")
-        # self.table_widget_head.setItem(4, 3, head_item5_3)
-        # head_item5_3.setTextAlignment(Qt.AlignCenter)
-
+        # modbus中间界面
         label_command = QLabel('<p style=line-height:150%>命令码：</p>')
         label_command.setStyleSheet('font:20px;')
         label_command.setFixedSize(120, 50)
         # 设置对齐方式
         label_command.setAlignment(Qt.AlignCenter)
-
         self.combox_data_command = QComboBox()
         self.combox_data_command.setStyleSheet('font:20px;')
         self.combox_data_command.addItem("读输出位（01）")
-        self.combox_data_command.addItem("读输出位（02）")
+        self.combox_data_command.addItem("读输入位（02）")
         self.combox_data_command.addItem("读多个寄存器（03）")
         self.combox_data_command.addItem("写输出位（05）")
         self.combox_data_command.addItem("写多个输出位（0F）")
@@ -1637,8 +1585,8 @@ class Functions(IDE.MenuTools):
         label_message.setStyleSheet('font:20px;')
         label_message.setAlignment(Qt.AlignCenter)
         self.table_widget_message = QTableWidget(4, 4)
-        # self.table_widget_message.verticalHeader().setVisible(False)
-        # self.table_widget_message.horizontalHeader().setVisible(False)
+        self.table_widget_message.verticalHeader().setVisible(False)
+        self.table_widget_message.horizontalHeader().setVisible(False)
         new_item1 = QTableWidgetItem("序号")
         self.table_widget_message.setItem(0, 0, new_item1)
         new_item1.setTextAlignment(Qt.AlignCenter)
@@ -1658,6 +1606,10 @@ class Functions(IDE.MenuTools):
             self.table_widget_message.setItem(1, index, QTableWidgetItem(mosbus_list_item1[index]))
             self.table_widget_message.setItem(2, index, QTableWidgetItem(mosbus_list_item2[index]))
             self.table_widget_message.setItem(3, index, QTableWidgetItem(mosbus_list_item3[index]))
+        self.table_widget_message.horizontalHeader().setSectionResizeMode(
+            QHeaderView.Interactive | QHeaderView.Stretch)
+        self.table_widget_message.verticalHeader().setSectionResizeMode(
+            QHeaderView.Interactive | QHeaderView.Stretch)
 
         mosbus_layout = QFormLayout()
         # 设置水平和垂直间隔
@@ -1938,8 +1890,6 @@ class Functions(IDE.MenuTools):
             str_data = self.data_edit_respon_value.toPlainText()
             str_data = str_data.split(" ")
             str1 = str_data[1] + str_data[2]
-            print("??????????????????????????????????????")
-            print(str1)
             new_item1_3 = QTableWidgetItem(str1)
             self.table_widget_head.setItem(0, 3, new_item1_3)
             new_item1_3.setTextAlignment(Qt.AlignCenter)
