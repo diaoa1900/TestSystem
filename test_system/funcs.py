@@ -732,10 +732,11 @@ class Functions(IDE.MenuTools):
         label4 = QLabel()
         label5 = QLabel()
         label6 = QLabel()
+        label7 = QLabel()
         self.btn_translate = QPushButton("<<")
-        self.btn_translate.setFixedSize(110, 35)
+        self.btn_translate.setFixedSize(110, 30)
         self.btn_reverse_translate = QPushButton(">>")
-        self.btn_reverse_translate.setFixedSize(110, 35)
+        self.btn_reverse_translate.setFixedSize(110, 30)
 
 
         gridlayout2 = QFormLayout()
@@ -746,6 +747,7 @@ class Functions(IDE.MenuTools):
         gridlayout2.addRow(label4)
         gridlayout2.addRow(label5)
         gridlayout2.addRow(label6)
+        gridlayout2.addRow(label7)
         gridlayout2.addRow(self.btn_translate)
         gridlayout2.addRow(self.btn_reverse_translate)
         hbox2.addLayout(gridlayout2)
@@ -1640,6 +1642,7 @@ class Functions(IDE.MenuTools):
         self.labal2 = QLabel()
         self.labal3 = QLabel()
         self.labal4 = QLabel()
+        self.labal5 = QLabel()
         self.data_translate = QPushButton("<<")
         self.data_reverse_translate = QPushButton(">>")
 
@@ -1648,6 +1651,7 @@ class Functions(IDE.MenuTools):
         gridlayout2.addRow(self.labal2)
         gridlayout2.addRow(self.labal3)
         gridlayout2.addRow(self.labal4)
+        gridlayout2.addRow(self.labal5)
         gridlayout2.addRow(self.data_translate)
         gridlayout2.addRow(self.data_reverse_translate)
         gridlayout2.setSpacing(55)
