@@ -321,28 +321,43 @@ class Functions(IDE.MenuTools):
         new_device.setWindowIcon(QIcon("../icons/add-connect.ico"))
         self.formlayout2 = QFormLayout(new_device)
         new_device.setWindowTitle("新建设备")
-        new_device.setFixedSize(300, 240)
+        new_device.setStyleSheet("QDialog{font-size:20px;font-weight:normal;font-family:Arial;}")
+        new_device.setFixedSize(350, 260)
         self.label_send_model = QLabel("指令类型:")
+        self.label_send_model.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
+        self.label_send_model.resize(200, 30)
         self.combox_send_model = QComboBox(new_device)
+        self.combox_send_model.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_send_model.addItem("newdevice")
+
         self.label_name = QLabel("设备名字:")
+        self.label_name.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_newDevice_name = QComboBox()
+        self.combox_newDevice_name.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_newDevice_name.setEditable(True)
 
         self.label_type = QLabel("设备类型:")
+        self.label_type.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_type = QComboBox(new_device)
+        self.combox_type.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_type.addItem("TcpServer")
 
         self.label_ip = QLabel("Ip地址:")
+        self.label_ip.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_newDevice_ip = QComboBox()
+        self.combox_newDevice_ip.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_newDevice_ip.setEditable(True)
 
         self.label_port = QLabel("端口号:")
+        self.label_port.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_newDevice_port = QComboBox()
+        self.combox_newDevice_port.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_newDevice_port.setEditable(True)
 
         self.btn_true = QPushButton("确定", new_device)
+        self.btn_true.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.btn_xml_newDevice = QPushButton("加载文件")
+        self.btn_xml_newDevice.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
 
         for k, v in device_message.items():
             self.combox_newDevice_name.addItem(k)
@@ -380,7 +395,7 @@ class Functions(IDE.MenuTools):
         self.response = QDialog()
         self.response.setWindowIcon(QIcon("../icons/add-connect.ico"))
         self.response.setWindowTitle("添加回令")
-        self.response.setFixedSize(855, 820)
+        self.response.setFixedSize(855, 930)
 
         self.tableWidget = QTableWidget(19, 4)
         self.tableWidget.setHorizontalHeaderLabels(['序号', '字段名称', '字节数', '数值'])
@@ -728,71 +743,102 @@ class Functions(IDE.MenuTools):
         hbox2.addLayout(gridlayout2)
 
         self.label_send_model = QLabel("指令类型:")
-
+        self.label_send_model.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_send_model = QComboBox(self.response)
+        self.combox_send_model.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_send_model.addItem("response")
         gridlayout1.addRow(self.label_send_model, self.combox_send_model)
+
         self.label_name = QLabel("设备名字:")
+        self.label_name.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_response_name = QComboBox()
+        self.combox_response_name.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_response_name.setEditable(True)
 
         gridlayout1.addRow(self.label_name, self.combox_response_name)
         self.label_type = QLabel("设备类型:")
-
+        self.label_type.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_type = QComboBox(self.response)
+        self.combox_type.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_type.addItem("TcpServer")
         gridlayout1.addRow(self.label_type, self.combox_type)
 
         self.label_ip = QLabel(" Ip地址:")
+        self.label_ip.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_response_ip = QComboBox()
+        self.combox_response_ip.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_response_ip.setEditable(True)
-
         gridlayout1.addRow(self.label_ip, self.combox_response_ip)
+
         self.label_port = QLabel(" 端口号:")
-
+        self.label_port.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_response_port = QComboBox()
+        self.combox_response_port.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_response_port.setEditable(True)
-
         gridlayout1.addRow(self.label_port, self.combox_response_port)
+
         self.label_key_value = QLabel(" 命令字:")
-
+        self.label_key_value.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.edit_key_value = QLineEdit(self.response)
+        self.edit_key_value.setStyleSheet("QLineEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
         gridlayout1.addRow(self.label_key_value, self.edit_key_value)
-        self.label_index = QLabel("起始节点:")
 
+        self.label_index = QLabel("起始节点:")
+        self.label_index.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_index = QSpinBox(self.response)
+        self.combox_index.setStyleSheet("QSpinBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         gridlayout1.addRow(self.label_index, self.combox_index)
 
         self.label_length = QLabel("字节长度:")
+        self.label_length.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.spin_length = QSpinBox(self.response)
+        self.spin_length.setStyleSheet("QSpinBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         gridlayout1.addRow(self.label_length, self.spin_length)
+
         self.label_keyName = QLabel("命令名称:")
+        self.label_keyName.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.edit_keyName = QLineEdit(self.response)
+        self.edit_keyName.setStyleSheet("QLineEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.edit_keyName.setText("命令")
         gridlayout1.addRow(self.label_keyName, self.edit_keyName)
+
         self.label_model = QLabel("回令模式:")
+        self.label_model.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_model = QComboBox(self.response)
+        self.combox_model.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_model.addItem("正常发送")
         self.combox_model.addItem("循环发送")
         self.combox_model.addItem("延迟发送")
         gridlayout1.addRow(self.label_model, self.combox_model)
+
         self.label_responName = QLabel("回令名称:")
+        self.label_responName.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.edit_responName = QLineEdit(self.response)
+        self.edit_responName.setStyleSheet("QLineEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.edit_responName.setText("回令")
         gridlayout1.addRow(self.label_responName, self.edit_responName)
+
         self.label_respon_value = QLabel("回令数据:")
+        self.label_respon_value.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         # self.edit_plainText = QPlainTextEdit()
         self.edit_respon_value = QPlainTextEdit()
+        self.edit_respon_value.setStyleSheet("QPlainTextEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
 
         self.label_loop = QLabel("循环次数:")
+        self.label_loop.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.spin_loop = QSpinBox(self.response)
+        self.spin_loop.setStyleSheet("QSpinBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         gridlayout1.addRow(self.label_loop, self.spin_loop)
+
         self.label_delayed = QLabel("延迟时间:")
+        self.label_delayed.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.edit_delayed = QLineEdit(self.response)
+        self.edit_delayed.setStyleSheet("QLineEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
         gridlayout1.addRow(self.label_delayed, self.edit_delayed)
         self.btn_true = QPushButton("确定", self.response)
-
+        self.btn_true.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.btn_respons_xml = QPushButton("加载文件")
+        self.btn_respons_xml.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
 
         for k, v in device_message.items():
             self.combox_response_name.addItem(k)
@@ -1026,9 +1072,15 @@ class Functions(IDE.MenuTools):
         rep_key = par.firstChildElement("key")
         respon_value = rep_key.attribute("value")
         self.edit_key_value.setText(respon_value)
+        respon_index = rep_key.attribute("index")
+        self.combox_index.setValue(int(respon_index))
+        respon_length = rep_key.attribute("length")
+        self.spin_length.setValue(int(respon_length))
         respon = rep_key.firstChildElement("response")
         response_value = respon.attribute("value")
         self.edit_respon_value.appendPlainText(response_value)
+        respon_loop = respon.attribute("loop")
+        self.spin_loop.setValue(int(respon_loop))
         response_delayed = respon.attribute("delayed")
         self.edit_delayed.setText(response_delayed)
         response_loop = respon.attribute("loop")
@@ -1302,7 +1354,6 @@ class Functions(IDE.MenuTools):
         data.setFixedSize(855, 770)
         self.data_tableWidget = QTableWidget(18, 4)
         # 设置列宽
-
         self.data_tableWidget.setSpan(11, 0, 10, 1)
         self.data_tableWidget.setSpan(12, 1, 9, 3)
         self.data_tableWidget.setHorizontalHeaderLabels(['序号', '字段名称', '字节数', '数值'])
@@ -1651,45 +1702,65 @@ class Functions(IDE.MenuTools):
 
         hbox2.addLayout(gridlayout2)
         self.label_data_model = QLabel(" 指令类型:")
+        self.label_data_model.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_data_model = QComboBox()
+        self.combox_data_model.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_data_model.addItem("data")
         gridlayout1.addRow(self.label_data_model, self.combox_data_model)
         self.data_label_name = QLabel(" 设备名字:")
+        self.data_label_name.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_data_name = QComboBox()
+        self.combox_data_name.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_data_name.setEditable(True)
         gridlayout1.addRow(self.data_label_name, self.combox_data_name)
+
         self.data_label_type = QLabel(" 设备类型:")
+        self.data_label_type.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.data_combox_type = QComboBox(data)
+        self.data_combox_type.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.data_combox_type.addItem("TcpServer")
         gridlayout1.addRow(self.data_label_type, self.data_combox_type)
+
         self.data_label_ip = QLabel(" Ip 地址:")
+        self.data_label_ip.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_data_ip = QComboBox()
+        self.combox_data_ip.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_data_ip.setEditable(True)
         gridlayout1.addRow(self.data_label_ip, self.combox_data_ip)
+
         self.data_label_port = QLabel(" 端口号:")
+        self.data_label_port.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_data_port = QComboBox()
+        self.combox_data_port.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_data_port.setEditable(True)
+        gridlayout1.addRow(self.data_label_port, self.combox_data_port)
+
+        self.data_label_value = QLabel(" 命令名称:", data)
+        self.data_label_value.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
+        self.data_edit_key_value = QLineEdit("命令")
+        self.data_edit_key_value.setStyleSheet("QLineEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
+        gridlayout1.addRow(self.data_label_value, self.data_edit_key_value)
+
+        self.data_label_re_value = QLabel(" 回令数据:", data)
+        self.data_label_re_value.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
+        self.data_edit_respon_value = QPlainTextEdit()
+        self.data_edit_respon_value.setStyleSheet("QPlainTextEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
+        gridlayout1.addRow(self.data_label_re_value)
+        gridlayout1.addRow(self.data_edit_respon_value)
+
+        self.data_btn_true = QPushButton("确定", data)
+        self.data_btn_true.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
+        gridlayout1.addRow(self.data_btn_true)
+
+        self.data_btn_data_xml = QPushButton("加载文件")
+        self.data_btn_data_xml.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
+        gridlayout1.addRow(self.data_btn_data_xml)
+        self.data_btn_data_xml.clicked.connect(lambda: Functions.data_analysis(self))
 
         for k, v in device_message.items():
             self.combox_data_name.addItem(k)
             self.combox_data_ip.addItem(v[0])
             self.combox_data_port.addItem(v[1])
-
-        gridlayout1.addRow(self.data_label_port, self.combox_data_port)
-        self.data_label_value = QLabel(" 命令名称:", data)
-        self.data_edit_key_value = QLineEdit("命令")
-        gridlayout1.addRow(self.data_label_value, self.data_edit_key_value)
-        self.data_label_re_value = QLabel(" 回令数据:", data)
-        self.data_edit_respon_value = QPlainTextEdit()
-
-        gridlayout1.addRow(self.data_label_re_value)
-        gridlayout1.addRow(self.data_edit_respon_value)
-
-        self.data_btn_true = QPushButton("确定", data)
-        self.data_btn_data_xml = QPushButton("加载文件")
-        self.data_btn_data_xml.clicked.connect(lambda: Functions.data_analysis(self))
-        gridlayout1.addRow(self.data_btn_true)
-        gridlayout1.addRow(self.data_btn_data_xml)
 
         hbox.addLayout(gridlayout1)
         gridlayout1.setSpacing(16)
@@ -2126,26 +2197,36 @@ class Functions(IDE.MenuTools):
         deleteDevice.setWindowIcon(QIcon("../icons/delete-connect.ico"))
         self.formlayout_data = QFormLayout(deleteDevice)
         deleteDevice.setWindowTitle("删除设备")
-        deleteDevice.setFixedSize(300, 240)
+        deleteDevice.setFixedSize(300, 270)
 
         self.label_deleteType = QLabel("指令类型")
+        self.label_deleteType.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_deleteDeviceType = QComboBox(deleteDevice)
+        self.combox_deleteDeviceType.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_deleteDeviceType.addItem("stopdevice")
 
         self.data_label_name = QLabel("设备名字:")
+        self.data_label_name.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_delete_name = QComboBox()
+        self.combox_delete_name.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_delete_name.setEditable(True)
 
         self.data_label_type = QLabel("设备类型:")
+        self.data_label_type.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.data_combox_type = QComboBox(deleteDevice)
+        self.data_combox_type.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.data_combox_type.addItem("TcpServer")
 
         self.data_label_ip = QLabel("ip地址:")
+        self.data_label_ip.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_delete_ip = QComboBox()
+        self.combox_delete_ip.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_delete_ip.setEditable(True)
 
         self.data_label_port = QLabel("端口号:")
+        self.data_label_port.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_delete_port = QComboBox()
+        self.combox_delete_port.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_delete_port.setEditable(True)
 
         for k, v in device_message.items():
@@ -2154,7 +2235,9 @@ class Functions(IDE.MenuTools):
             self.combox_delete_port.addItem(v[1])
 
         self.data_btn_true = QPushButton("确定", deleteDevice)
+        self.data_btn_true.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.data_btn_xml_deleteDevice = QPushButton("加载文件")
+        self.data_btn_xml_deleteDevice.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
 
         self.data_btn_xml_deleteDevice.clicked.connect(lambda: Functions.delete_device_analysis(self))
         self.data_btn_true.clicked.connect(lambda: Functions.delete_device_xml(self))
@@ -2190,29 +2273,42 @@ class Functions(IDE.MenuTools):
         deleteKey.setWindowIcon(QIcon("../icons/delete-connect.ico"))
         self.formlayout_data = QFormLayout(deleteKey)
         deleteKey.setWindowTitle("删除回令")
-        deleteKey.setFixedSize(270, 230)
+        deleteKey.setFixedSize(300, 280)
 
         self.label_deleteName = QLabel("设备名字:")
+        self.label_deleteName.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
+        self.label_deleteName.resize(50, 100)
         self.combox_deleteKey_name = QComboBox()
+        self.combox_deleteKey_name.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_deleteKey_name.setEditable(True)
 
         self.label_deleteIp = QLabel("ip地址:")
+        self.label_deleteIp.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_deleteKey_ip = QComboBox()
+        self.combox_deleteKey_ip.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_deleteKey_ip.setEditable(True)
 
         self.label_deletePort = QLabel("端口号:")
+        self.label_deletePort.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_deleteKey_port = QComboBox()
+        self.combox_deleteKey_port.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_deleteKey_port.setEditable(True)
 
         self.label_deleteType = QLabel("指令类型:")
+        self.label_deleteType.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_deleteType = QComboBox(deleteKey)
+        self.combox_deleteType.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.combox_deleteType.addItem("deleteCommand")
 
         self.label_delete_Value = QLabel("命令值:", deleteKey)
+        self.label_delete_Value.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.edit_delete_Value = QLineEdit(deleteKey)
+        self.edit_delete_Value.setStyleSheet("QLineEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
 
         self.delete_btn_true = QPushButton("确定", deleteKey)
+        self.delete_btn_true.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.delete_btn_xml = QPushButton("加载文件")
+        self.delete_btn_xml.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
 
         self.delete_btn_xml.clicked.connect(lambda: Functions.delete_key_analysis(self))
         self.delete_btn_true.clicked.connect(lambda: Functions.delete_command_xml(self))
