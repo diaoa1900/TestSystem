@@ -829,7 +829,9 @@ def ocr(v, language=None):
     if language is None:
         return pytesseract.image_to_string(cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 140, 255, cv2.THRESH_BINARY_INV)[1]).strip()
     else:
-        return pytesseract.image_to_string(cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 140, 255, cv2.THRESH_BINARY_INV)[1], lang='chi_sim').strip()
+        img = cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 140, 255, cv2.THRESH_BINARY_INV)[1]
+        img = cv2.resize(img, None, fx=8, fy=8)
+        return pytesseract.image_to_string(img, lang='chi_sim').strip()
 
 
 def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
@@ -939,10 +941,12 @@ def assert_ocr_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1, language
     if language is None:
         real = pytesseract.image_to_string(cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 140, 255, cv2.THRESH_BINARY_INV)[1]).strip()
     else:
-        real = pytesseract.image_to_string(cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 140, 255, cv2.THRESH_BINARY_INV)[1], lang='chi_sim').strip()
+        img = cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 140, 255, cv2.THRESH_BINARY_INV)[1]
+        img = cv2.resize(img, None, fx=8, fy=8)
+        real = pytesseract.image_to_string(img, lang='chi_sim').strip()
     if real == pre:
         return
-    elif real in pre and flag == 2:
+    elif pre in real and flag == 2:
         return
     elif Levenshtein.distance(pre, real) < val and flag == 3:
         return
