@@ -9,11 +9,12 @@ import IDE
 import screenCapture
 import os
 import get_point
-from PyQt5.QtCore import QThread, QFile, QIODevice, QTextStream, QDateTime, Qt
+from PyQt5.QtCore import QThread, QFile, QIODevice, QTextStream, QDateTime, Qt, pyqtSignal
 from PyQt5.QtGui import QTextCursor, QTextCharFormat, QIcon
 from PyQt5.QtWidgets import *
 from PyQt5.QtNetwork import QTcpSocket, QTcpServer
 from PyQt5.QtXml import QDomDocument, QDomProcessingInstruction, QDomAttr, QDomElement
+import re
 
 if sys.platform.startswith('win32'):
     father_dir = os.path.dirname(os.path.abspath(__file__))
@@ -30,13 +31,16 @@ elif sys.platform.startswith('linux'):
 
 
 class MyThread(QThread):
+    finished_sign = pyqtSignal()
+
     def __init__(self, ide, path=None):
         super().__init__()
+        self.path = path
         self.ide = ide
         self.command = "pytest " + path + " --alluredir=./result"
+        self.finished_sign.connect(lambda: IDE.MenuTools.show_normal(ide))
 
     def run(self):
-        self.ide.stop_action.setEnabled(True)
         self.sbp = subprocess.Popen(self.command, shell=True, stdout=subprocess.PIPE,
                                stderr=subprocess.STDOUT)
         for line in iter(self.sbp.stdout.readline, 'b'):
@@ -66,9 +70,24 @@ class MyThread(QThread):
         while not cursor.isNull():
             cursor.mergeCharFormat(fail_fmt)
             cursor = doucument.find('failed', cursor)
+        for i in re.findall(r"est_\d+.py \.", self.ide.console_text.toPlainText()):
+            success_name = 't'+i[:-2]
+            if os.path.isfile(self.path):
+                file_index = self.ide.dir_model.index(self.path, 0)
+            else:
+                file_index = self.ide.dir_model.index(os.path.join(self.path, success_name), 0)
+            self.ide.dir_model.run_success_list.append(file_index)
+        for j in re.findall(r"est_\d+.py F", self.ide.console_text.toPlainText()):
+            fail_name = 't'+j[:-2]
+            if os.path.isfile(self.path):
+                fail_file_index = self.ide.dir_model.index(self.path, 0)
+            else:
+                fail_file_index = self.ide.dir_model.index(os.path.join(self.path, fail_name), 0)
+            self.ide.dir_model.run_fail_list.append(fail_file_index)
         self.sbp.stdout.close()
         self.ide.stop_action.setEnabled(False)
         self.ide.stop_run_directory_button.setEnabled(False)
+        self.finished_sign.emit()
 
 
 device_message = {}
@@ -133,11 +152,9 @@ class Functions(IDE.MenuTools):
             f = open(self.edit_tab.currentWidget().path, 'w', encoding='utf-8')
             f.write(self.edit_tab.currentWidget().edit.toPlainText())
             f.close()
+            self.stop_action.setEnabled(True)
             self.thread = MyThread(self, path=self.edit_tab.currentWidget().path)
             self.thread.start()
-            self.thread.wait()
-            time.sleep(1.0)
-            self.showNormal()
 
         except Exception as e:
             print(e)

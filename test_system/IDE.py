@@ -1,13 +1,30 @@
 import os
 import subprocess
 import sys
-from PyQt5.QtCore import pyqtSignal, Qt, QSize
-from PyQt5.QtGui import QGuiApplication, QIcon
+from PyQt5.QtCore import pyqtSignal, Qt, QSize, QModelIndex, QVariant
+from PyQt5.QtGui import QGuiApplication, QIcon, QColor
 from PyQt5.QtWidgets import *
 from system_hotkey import SystemHotkey
 
 import edit2
 import funcs
+import time
+
+
+class MySystemModel(QFileSystemModel):
+    def __init__(self):
+        super(MySystemModel, self).__init__()
+        self.run_success_list = []
+        self.run_fail_list = []
+
+    def data(self, index: QModelIndex, role: int = ...):
+        if role == Qt.TextColorRole and not self.hasChildren(index):
+            if index in self.run_success_list:
+                return QVariant(QColor("#00FF00"))
+            if index in self.run_fail_list:
+                return QVariant(QColor("#FF0000"))
+        else:
+            return super().data(index, role)
 
 
 class MenuTools(QMainWindow):
@@ -75,7 +92,7 @@ class MenuTools(QMainWindow):
         self.file_btn_window.setLayout(layout)
         # #文件目录树
         self.file_tree = QTreeView()
-        self.dir_model = QFileSystemModel()
+        self.dir_model = MySystemModel()
         self.dir_model.setRootPath("/")
         self.dir_model.setReadOnly(True)
         self.dir_model.setNameFilterDisables(False)
@@ -478,9 +495,11 @@ class MenuTools(QMainWindow):
             f.close()
 
     def run_directory(self):
+        self.showMinimized()
         self.stop_run_directory_button.setEnabled(True)
         self.run_directory_thread = funcs.MyThread(self, path=self.dir_model.filePath(self.file_tree.currentIndex()))
         self.run_directory_thread.start()
+
     def stop_run_directory(self):
         self.run_directory_thread.setTerminationEnabled(True)
         self.run_directory_thread.terminate()
@@ -524,6 +543,9 @@ class MenuTools(QMainWindow):
         if not self.edit_tab.tabText(self.edit_tab.currentIndex())[0] == '*':
             self.edit_tab.setTabText(self.edit_tab.currentIndex(),
                                      '*' + self.edit_tab.tabText(self.edit_tab.currentIndex()))
+
+    def show_normal(self):
+        self.showNormal()
 
 
 if __name__ == '__main__':
