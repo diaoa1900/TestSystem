@@ -2,13 +2,12 @@ import os
 import subprocess
 import sys
 from PyQt5.QtCore import pyqtSignal, Qt, QSize, QModelIndex, QVariant
-from PyQt5.QtGui import QGuiApplication, QIcon, QColor
+from PyQt5.QtGui import QGuiApplication, QIcon, QColor, QCursor
 from PyQt5.QtWidgets import *
 from system_hotkey import SystemHotkey
 
 import edit2
 import funcs
-import time
 
 
 class MySystemModel(QFileSystemModel):
@@ -446,6 +445,8 @@ class MenuTools(QMainWindow):
                 with open(path, 'r', encoding='utf-8', errors='ignore') as f:  # 文件读操作
                     script_edit.edit.setPlainText(f.read())
                     f.close()
+                script_edit.edit.setContextMenuPolicy(Qt.CustomContextMenu)
+                script_edit.edit.customContextMenuRequested.connect(self.edit_right)
                 self.edit_tab.setCurrentWidget(script_edit)
                 script_edit.edit.textChanged.connect(self.text_changed)
             else:
@@ -499,6 +500,7 @@ class MenuTools(QMainWindow):
         self.stop_run_directory_button.setEnabled(True)
         self.run_directory_thread = funcs.MyThread(self, path=self.dir_model.filePath(self.file_tree.currentIndex()))
         self.run_directory_thread.start()
+        self.run_directory_thread.wait()
 
     def stop_run_directory(self):
         self.run_directory_thread.setTerminationEnabled(True)
@@ -518,16 +520,19 @@ class MenuTools(QMainWindow):
     self.edit_tab.setCurrentWidget(script_edit)
     script_edit.edit.textChanged.connect(self.text_changed)
     # 右键新增结束"""
-    '''def edit_right(self):
+    def edit_right(self):
         pop_menu = QMenu(self)
         # qp = pop_menu.addAction(u'全屏')
-        gb = pop_menu.addAction(u'关闭')
+        gb = pop_menu.addAction(u'跳转到该文件所在位置')
         # qp.triggered.connect(self.edit_screen)
-        gb.triggered.connect(self.edit_close)
+        gb.triggered.connect(self.edit_jump)
         pop_menu.exec_(QCursor.pos())
 
-    def edit_close(self):
-        self.edit_tab.removeTab(self.edit_tab.currentIndex())'''
+    def edit_jump(self):
+        file_path = self.edit_tab.currentWidget().edit.textCursor().selectedText()
+        if os.path.exists(file_path):
+            os.startfile(file_path)
+
     # 一些需要用的函数
     def tab_close(self, index):
         self.edit_tab.removeTab(index)
@@ -552,5 +557,4 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     form = MenuTools()
     form.show()
-    # form.new_file()
     sys.exit(app.exec_())

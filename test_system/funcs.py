@@ -155,6 +155,7 @@ class Functions(IDE.MenuTools):
             self.stop_action.setEnabled(True)
             self.thread = MyThread(self, path=self.edit_tab.currentWidget().path)
             self.thread.start()
+            self.thread.wait()
 
         except Exception as e:
             print(e)
@@ -166,7 +167,7 @@ class Functions(IDE.MenuTools):
             f = open('./script_template.py', 'r', encoding='utf-8')
             script_head = f.read()
             cursor = self.edit_tab.currentWidget().edit.textCursor()
-            exec(script_head + "\n" + cursor.selectedText() + "\nrun_end()")
+            exec(script_head + "\n" + cursor.selectedText())
 
         part_run_thread = Thread(target=part)
         part_run_thread.start()
