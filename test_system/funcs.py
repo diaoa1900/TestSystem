@@ -70,20 +70,20 @@ class MyThread(QThread):
         while not cursor.isNull():
             cursor.mergeCharFormat(fail_fmt)
             cursor = doucument.find('failed', cursor)
-        for i in re.findall(r"est_\d+.py \.", self.ide.console_text.toPlainText()):
+        for i in re.findall(r"est_\S+\.py \.", self.ide.console_text.toPlainText()):
             success_name = 't'+i[:-2]
             if os.path.isfile(self.path):
                 file_index = self.ide.dir_model.index(self.path, 0)
             else:
                 file_index = self.ide.dir_model.index(os.path.join(self.path, success_name), 0)
-            self.ide.dir_model.run_success_list.append(file_index)
-        for j in re.findall(r"est_\d+.py F", self.ide.console_text.toPlainText()):
+            self.ide.dir_model.run_list[file_index] = 1
+        for j in re.findall(r"est_\S+\.py F", self.ide.console_text.toPlainText()):
             fail_name = 't'+j[:-2]
             if os.path.isfile(self.path):
                 fail_file_index = self.ide.dir_model.index(self.path, 0)
             else:
                 fail_file_index = self.ide.dir_model.index(os.path.join(self.path, fail_name), 0)
-            self.ide.dir_model.run_fail_list.append(fail_file_index)
+            self.ide.dir_model.run_list[fail_file_index] = 0
         self.sbp.stdout.close()
         self.ide.stop_action.setEnabled(False)
         self.ide.stop_run_directory_button.setEnabled(False)

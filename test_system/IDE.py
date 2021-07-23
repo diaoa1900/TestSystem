@@ -13,15 +13,17 @@ import funcs
 class MySystemModel(QFileSystemModel):
     def __init__(self):
         super(MySystemModel, self).__init__()
-        self.run_success_list = []
-        self.run_fail_list = []
+        self.run_list = {}
 
     def data(self, index: QModelIndex, role: int = ...):
         if role == Qt.TextColorRole and not self.hasChildren(index):
-            if index in self.run_success_list:
-                return QVariant(QColor("#00FF00"))
-            if index in self.run_fail_list:
-                return QVariant(QColor("#FF0000"))
+            if index in self.run_list:
+                if self.run_list[index] == 1:
+                    return QVariant(QColor("#00FF00"))
+                elif self.run_list[index] == 0:
+                    return QVariant(QColor("#FF0000"))
+            else:
+                return super().data(index, role)
         else:
             return super().data(index, role)
 
