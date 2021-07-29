@@ -16,19 +16,6 @@ from PyQt5.QtNetwork import QTcpSocket, QTcpServer
 from PyQt5.QtXml import QDomDocument, QDomProcessingInstruction, QDomAttr, QDomElement
 import re
 
-if sys.platform.startswith('win32'):
-    father_dir = os.path.dirname(os.path.abspath(__file__))
-    grandfather_dir = os.path.dirname(father_dir)
-    while not father_dir == grandfather_dir:
-        father_dir = grandfather_dir
-        grandfather_dir = os.path.dirname(grandfather_dir)
-    temporary_screenshot_dir = grandfather_dir[0] + ":/screenshotFolder"
-    if not os.path.exists(temporary_screenshot_dir):
-        os.makedirs(temporary_screenshot_dir)
-    screenshot_dir = temporary_screenshot_dir + '/'
-elif sys.platform.startswith('linux'):
-    pass
-
 
 class MyThread(QThread):
     finished_sign = pyqtSignal()
@@ -100,7 +87,7 @@ class Functions(IDE.MenuTools):
         time.sleep(1)
         i = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time()))
         if sys.platform.startswith('win32'):
-            self.cs = screenCapture.CaptureScreen(self, screenshot_dir, i, method)
+            self.cs = screenCapture.CaptureScreen(self, i, method)
         elif sys.platform.startswith('linux'):
             clib = QApplication.clipboard()
             clib.clear()
@@ -109,18 +96,18 @@ class Functions(IDE.MenuTools):
             while True:
                 end_time = time.time()
                 if clib.mimeData().hasImage():
-                    clib.image().save(screenshot_dir + i + ".jpg", "jpg")
+                    clib.image().save(self.edit_tab.currentWidget().pic_path + i + ".jpg", "jpg")
                     if method:
                         if method == 'assert_equal':
                             self.edit_tab.currentWidget().edit.insertPlainText(
-                                "assert_equal(Template(r\"" + screenshot_dir + i + ".jpg\"), \"预测值\", \"请填写测试点\")")
+                                "assert_equal(Template(r\"" + self.edit_tab.currentWidget().pic_path + i + ".jpg\"), \"预测值\", \"请填写测试点\")")
                         elif method == 'assert_exists':
                             self.edit_tab.currentWidget().edit.insertPlainText(
-                                "assert_exists(Template(r\"" + screenshot_dir + i + ".jpg\"), \"请填写测试点\")\n")
+                                "assert_exists(Template(r\"" + self.edit_tab.currentWidget().pic_path + i + ".jpg\"), \"请填写测试点\")\n")
                         self.setVisible(True)
                     else:
                         self.edit_tab.currentWidget().edit.insertPlainText(
-                            "(Template(r\"" + screenshot_dir + i + ".jpg\")")
+                            "(Template(r\"" + self.edit_tab.currentWidget().pic_path + i + ".jpg\")")
                         self.setVisible(True)
                     break
                 if end_time - start_time > 10:

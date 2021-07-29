@@ -17,10 +17,10 @@ class CaptureScreen(QWidget):
     capture_pixmap = None
     painter = QPainter()
 
-    def __init__(self, cx, screenshot_dir, picture_name, method):
+    def __init__(self, cx, picture_name, method):
         QWidget.__init__(self)
         self._cx = cx
-        self._screenshot_dir = screenshot_dir
+        self._screenshot_dir = self._cx.edit_tab.currentWidget().pic_path
         self._picture_name = picture_name
         self._method = method
         self.init_window()

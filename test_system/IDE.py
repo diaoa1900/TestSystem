@@ -5,7 +5,7 @@ from PyQt5.QtCore import pyqtSignal, Qt, QSize, QModelIndex, QVariant
 from PyQt5.QtGui import QGuiApplication, QIcon, QColor, QCursor
 from PyQt5.QtWidgets import *
 from system_hotkey import SystemHotkey
-
+import shutil
 import edit2
 import funcs
 
@@ -47,6 +47,7 @@ class MenuTools(QMainWindow):
         self.create_statusbar()
         self.sig_hotkey.connect(self.process)
         SystemHotkey().register(('control', 'q'), callback=lambda x: self.send_event("开始截图"))
+        self.tab_list = []
 
         # 设置各个区域的布局
         # 文件树布局
@@ -63,21 +64,25 @@ class MenuTools(QMainWindow):
         self.dir_url = QLabel('')
         # #操作脚本文件的按钮们
         self.new_file_button = QPushButton()
+        self.new_folder_button = QPushButton()
         self.delete_file_button = QPushButton()
         self.rename_file_button = QPushButton()
         self.run_directory_button = QPushButton()
         self.stop_run_directory_button = QPushButton()
         self.new_file_button.setIcon(QIcon("../icons/add.ico"))
+        self.new_folder_button.setIcon(QApplication.style().standardIcon(QStyle.StandardPixmap(32)))
         self.delete_file_button.setIcon(QIcon("../icons/delete.ico"))
         self.rename_file_button.setIcon(QIcon("../icons/rename.ico"))
         self.run_directory_button.setIcon(QApplication.style().standardIcon(QStyle.StandardPixmap(66)))
         self.stop_run_directory_button.setIcon(QIcon("../icons/stop.ico"))
         self.new_file_button.setToolTip("新增脚本")
+        self.new_folder_button.setToolTip("新建文件夹")
         self.delete_file_button.setToolTip("删除脚本")
         self.rename_file_button.setToolTip("修改脚本名")
         self.run_directory_button.setToolTip("运行目录中的脚本")
         self.stop_run_directory_button.setToolTip("停止运行目录中的脚本")
         self.new_file_button.clicked.connect(self.new_script)
+        self.new_folder_button.clicked.connect(self.new_folder)
         self.delete_file_button.clicked.connect(self.delete_script)
         self.rename_file_button.clicked.connect(self.rename_script)
         self.run_directory_button.clicked.connect(self.run_directory)
@@ -86,6 +91,7 @@ class MenuTools(QMainWindow):
         self.file_btn_window = QWidget()
         layout = QHBoxLayout()
         layout.addWidget(self.new_file_button)
+        layout.addWidget(self.new_folder_button)
         layout.addWidget(self.delete_file_button)
         layout.addWidget(self.rename_file_button)
         layout.addWidget(self.run_directory_button)
@@ -97,7 +103,7 @@ class MenuTools(QMainWindow):
         self.dir_model.setRootPath("/")
         self.dir_model.setReadOnly(True)
         self.dir_model.setNameFilterDisables(False)
-        self.dir_model.setNameFilters(['*.py', '*.txt'])
+        self.dir_model.setNameFilters(['*.py', '*.txt', '*.jpg'])
         self.file_tree.setModel(self.dir_model)
         self.file_tree.setColumnHidden(1, True)
         self.file_tree.setColumnHidden(2, True)
@@ -423,21 +429,31 @@ class MenuTools(QMainWindow):
         if os.path.isdir(path):
             f = open(path + "/新脚本.py", 'w')
             f.close()
+            os.makedirs(os.path.join(path, "新脚本"))
         else:
             f = open(path[:path.rindex('/')] + "/新脚本.py", 'w')
             f.close()
+            os.makedirs(os.path.join(path[:path.rindex('/')], "新脚本"))
+
+    def new_folder(self):
+        path = self.dir_model.filePath(self.file_tree.currentIndex())
+        if os.path.isdir(path):
+            os.makedirs(os.path.join(path, "新文件夹"))
+        else:
+            os.makedirs(os.path.join(path[:path.rindex('/')], "新文件夹"))
 
     def open_script(self, tree_id):
         path = self.dir_model.filePath(tree_id)
         if os.path.isfile(path):
             script_edit = QWidget()
             script_name_index = path.rindex('/')
-            tab_list = []
+            self.tab_list.clear()
             for i in range(self.edit_tab.count()):
-                tab_list.append(self.edit_tab.tabText(i))
-            if path[script_name_index + 1:] not in tab_list:
+                self.tab_list.append(self.edit_tab.tabText(i))
+            if path[script_name_index + 1:] not in self.tab_list:
                 self.edit_tab.addTab(script_edit, path[script_name_index + 1:])
                 script_edit.path = path
+                script_edit.pic_path = path.replace('.py', '/')
                 script_edit.edit = edit2.QCodeEditor()
                 script_edit.edit.setLineWrapMode(QPlainTextEdit.NoWrap)
                 script_edit.edit.setTabStopWidth(self.fontMetrics().width(' ') * 4)
@@ -452,21 +468,27 @@ class MenuTools(QMainWindow):
                 self.edit_tab.setCurrentWidget(script_edit)
                 script_edit.edit.textChanged.connect(self.text_changed)
             else:
-                self.edit_tab.setCurrentIndex(tab_list.index(path[script_name_index + 1:]))
+                self.edit_tab.setCurrentIndex(self.tab_list.index(path[script_name_index + 1:]))
 
     def delete_script(self):
         path = self.dir_model.filePath(self.file_tree.currentIndex())
         if os.path.isfile(path):
             os.remove(path)
         else:
-            os.rmdir(path)
+            shutil.rmtree(path, ignore_errors=True)
 
     def rename_script(self):
         path = self.dir_model.filePath(self.file_tree.currentIndex())
         new_name = QInputDialog.getText(self, '脚本改名', '输入想要改为的名字')
         if new_name[1] is True:
-            name = os.path.join(os.path.split(path)[0], new_name[0]+'.py')
-            os.rename(path, name)
+            if os.path.isfile(path):
+                name = os.path.join(os.path.split(path)[0], new_name[0]+'.py')
+                os.rename(path, name)
+                pic_name = os.path.join(os.path.split(path)[0], new_name[0])
+                os.rename(path[:-3], pic_name)
+            else:
+                new_folder_name = os.path.join(os.path.split(path)[0], new_name[0])
+                os.rename(path, new_folder_name)
         """如果该文件已经打开，则tabText也会相应改变
         if os.path.split(path)[1] in 所有tabText:
             self.edit_tab.setTabText()
