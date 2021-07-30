@@ -6,6 +6,7 @@ from PyQt5.QtGui import QGuiApplication, QIcon, QColor, QCursor
 from PyQt5.QtWidgets import *
 from system_hotkey import SystemHotkey
 import shutil
+import qdarkgraystyle
 import edit2
 import funcs
 
@@ -117,10 +118,10 @@ class MenuTools(QMainWindow):
         # 编写脚本需要用到的按钮区域
         self.groupbox_1 = QGroupBox("查找", self)
         layout = QVBoxLayout()
-        self.wait_button = QPushButton("        wait")
-        self.waitVanish_button = QPushButton("     wait_vanish")
-        self.exists_button = QPushButton("       exists")
-        self.ocr_button = QPushButton("        ocr")
+        self.wait_button = QPushButton("  Wait")
+        self.waitVanish_button = QPushButton("  Wait_vanish")
+        self.exists_button = QPushButton("  Exists")
+        self.ocr_button = QPushButton("  Ocr")
         self.wait_button.setToolTip("等待该图像出现")
         self.waitVanish_button.setToolTip("等待该图像消失")
         self.exists_button.setToolTip("页面是否存在该图像")
@@ -146,11 +147,11 @@ class MenuTools(QMainWindow):
 
         self.groupbox_2 = QGroupBox("鼠标动作", self)
         layout = QVBoxLayout()
-        self.click_button = QPushButton("       click")
-        self.doubleClick_button = QPushButton("    double_click")
-        self.rightClick_button = QPushButton("    right_click")
-        self.swipe_button = QPushButton("       swipe")
-        self.hover_button = QPushButton("       hover")
+        self.click_button = QPushButton("  Click")
+        self.doubleClick_button = QPushButton("  Double Click")
+        self.rightClick_button = QPushButton("  Right Click")
+        self.swipe_button = QPushButton("  Swipe")
+        self.hover_button = QPushButton("  Hover")
         self.click_button.setToolTip("鼠标左键单击该图像")
         self.doubleClick_button.setToolTip("鼠标左键双击该图像")
         self.rightClick_button.setToolTip("鼠标右键单击该图像")
@@ -180,10 +181,10 @@ class MenuTools(QMainWindow):
 
         self.groupbox_3 = QGroupBox("键盘动作", self)
         layout = QVBoxLayout()
-        self.text_button = QPushButton("       text")
-        self.keyevent_button = QPushButton("     keyevent")
-        self.snapshot_button = QPushButton("     snapshot")
-        self.sleep_button = QPushButton("       sleep")
+        self.text_button = QPushButton("  Text")
+        self.keyevent_button = QPushButton("  Keyevent")
+        self.snapshot_button = QPushButton("  Snapshot")
+        self.sleep_button = QPushButton("  Sleep")
         self.text_button.setToolTip("键盘输入该段文字")
         self.keyevent_button.setToolTip("键盘按下该键码所对应的键")
         self.snapshot_button.setToolTip("截取全屏图像")
@@ -208,12 +209,12 @@ class MenuTools(QMainWindow):
 
         self.groupbox_4 = QGroupBox("断言", self)
         layout = QVBoxLayout()
-        self.assert_picture_exist_button = QPushButton("assert_picture_exist")
-        self.assert_file_exist_button = QPushButton("  assert_file_exist")
-        self.assert_word_exist_button = QPushButton("  assert_word_exist")
-        self.assert_client_exist_button = QPushButton("assert_client_exist")
-        self.assert_ocr_true_button = QPushButton("  assert_ocr_true")
-        self.assert_recognize_lcd_button = QPushButton("  assert_lcd_true")
+        self.assert_picture_exist_button = QPushButton("  Assert Img")
+        self.assert_file_exist_button = QPushButton("  Assert File")
+        self.assert_word_exist_button = QPushButton("  Assert Word")
+        self.assert_client_exist_button = QPushButton("  Assert Client")
+        self.assert_ocr_true_button = QPushButton("  Assert Ocr")
+        self.assert_recognize_lcd_button = QPushButton("  Assert Lcd")
         self.assert_picture_exist_button.setToolTip("断言该图像是否存在")
         self.assert_file_exist_button.setToolTip("断言该文件是否存在")
         self.assert_word_exist_button.setToolTip("断言该句日志是否在末尾")
@@ -266,8 +267,8 @@ class MenuTools(QMainWindow):
         self.groupbox_6 = QGroupBox("通信管理", self)
         self.formlayout = QFormLayout()
 
-        self.btn_connect = QPushButton("    建立连接")
-        self.btn_disconnect = QPushButton("    断开连接")
+        self.btn_connect = QPushButton("  建立连接")
+        self.btn_disconnect = QPushButton("  断开连接")
         self.btn_connect.setIcon(QIcon('../icons/connect.ico'))
         self.btn_disconnect.setIcon(QIcon('../icons/disconnect.ico'))
         self.btn_connect.setStyleSheet("QPushButton { text-align: left;font-size:20px}")
@@ -281,14 +282,14 @@ class MenuTools(QMainWindow):
         self.formlayout1 = QFormLayout()
         self.textEdit_send = QTextEdit()
 
-        self.btn_addDevice = QPushButton("   new_device")
-        self.btn_response = QPushButton("    add_key")
-        self.btn_data = QPushButton("    add_data")
-        self.btn_deleteDevice = QPushButton(" delete_device")
-        self.btn_deleteCommand = QPushButton("   delete_key")
-        self.btn_open = QPushButton("   打开文件")
-        self.btn_send = QPushButton("   立即执行")
-        self.btn_close = QPushButton("     清除")
+        self.btn_addDevice = QPushButton("  New Device")
+        self.btn_response = QPushButton("  Add Key")
+        self.btn_data = QPushButton("  Add Data")
+        self.btn_deleteDevice = QPushButton("  Del Device")
+        self.btn_deleteCommand = QPushButton("  Del Key")
+        self.btn_open = QPushButton("  打开文件")
+        self.btn_send = QPushButton("  立即执行")
+        self.btn_close = QPushButton("  清除")
 
         self.btn_addDevice.setIcon(QIcon('../icons/add-connect.ico'))
         self.btn_response.setIcon(QIcon('../icons/add-connect.ico'))
@@ -357,10 +358,10 @@ class MenuTools(QMainWindow):
         widget.addWidget(left_widget)
         widget.addWidget(mid_widget)
         widget.addWidget(right_widget)
-        widget.setStretchFactor(0, 2)
+        widget.setStretchFactor(0, 1)
         widget.setStretchFactor(1, 1)
-        widget.setStretchFactor(2, 7)
-        widget.setStretchFactor(3, 2)
+        widget.setStretchFactor(2, 6)
+        widget.setStretchFactor(3, 1)
         self.setCentralWidget(widget)
 
     # 创建菜单栏
@@ -389,9 +390,6 @@ class MenuTools(QMainWindow):
         tb.addAction(insert_photo)
         insert_photo.triggered.connect(lambda: funcs.Functions.insert_picture(self))
 
-        ins = QAction(self)
-        tb.addAction(ins)
-
         save_file_action = QAction(QApplication.style().standardIcon(QStyle.StandardPixmap(43)), "保存文件", self)
         save_file_action.setShortcut('Ctrl+S')
         tb.addAction(save_file_action)
@@ -411,6 +409,7 @@ class MenuTools(QMainWindow):
         tb.setStyleSheet("QToolBar{spacing:6px;height:10px;}")
         tb.setIconSize(QSize(36, 36))
         tb.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
+        tb.setStyleSheet("background:#404244;color:white")
 
     # 状态栏
     def create_statusbar(self):
@@ -548,14 +547,23 @@ class MenuTools(QMainWindow):
         pop_menu = QMenu(self)
         # qp = pop_menu.addAction(u'全屏')
         gb = pop_menu.addAction(u'跳转到该文件所在位置')
+        replace = pop_menu.addAction(u'替换')
         # qp.triggered.connect(self.edit_screen)
         gb.triggered.connect(self.edit_jump)
+        replace.triggered.connect(self.edit_replace)
         pop_menu.exec_(QCursor.pos())
 
     def edit_jump(self):
         file_path = self.edit_tab.currentWidget().edit.textCursor().selectedText()
         if os.path.exists(file_path):
             os.startfile(file_path)
+
+    def edit_replace(self):
+        replace_value = QInputDialog.getText(self, '要替换为的内容', '')
+        if replace_value[1] is True:
+            be_replaced = self.edit_tab.currentWidget().edit.textCursor().selectedText()
+            after_replace = self.edit_tab.currentWidget().edit.toPlainText().replace(be_replaced, replace_value[0])
+            self.edit_tab.currentWidget().edit.setPlainText(after_replace)
 
     # 一些需要用的函数
     def tab_close(self, index):
@@ -580,5 +588,8 @@ class MenuTools(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     form = MenuTools()
+    with open('./style.qss') as f:
+        style = f.read()
+    form.setStyleSheet(style)
     form.show()
     sys.exit(app.exec_())
