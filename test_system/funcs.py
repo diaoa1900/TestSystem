@@ -265,12 +265,19 @@ class Functions(IDE.MenuTools):
         self.combox_ip = QComboBox()
         self.combox_ip.setEditable(True)
         self.combox_ip.addItem("Tcp 客户端")
+        self.combox_ip.setStyleSheet("QComboBox{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.label_ip_style = QLabel("协议类型")
+        self.label_ip_style.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.label_ip = QLabel("ip地址:")
+        self.label_ip.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.lineedit_ip = QLineEdit("127.0.0.1")
+        self.lineedit_ip.setStyleSheet("QLineEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.label_port = QLabel("端口号:")
+        self.label_port.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.lineedit_port = QLineEdit("9948")
+        self.lineedit_port.setStyleSheet("QLineEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.btn_con = QPushButton("确定")
+        self.btn_con.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
 
         connect_form.addRow(self.label_ip_style, self.combox_ip)
         connect_form.addRow(self.label_ip, self.lineedit_ip)
@@ -836,7 +843,8 @@ class Functions(IDE.MenuTools):
 
         self.label_respon_value = QLabel("回令数据:")
         self.label_respon_value.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
-        # self.edit_plainText = QPlainTextEdit()
+        self.file_path = QPushButton("打开文件")
+        self.file_path.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.edit_respon_value = QPlainTextEdit()
         self.edit_respon_value.setStyleSheet("QPlainTextEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
 
@@ -861,11 +869,12 @@ class Functions(IDE.MenuTools):
             self.combox_response_ip.addItem(v[0])
             self.combox_response_port.addItem(v[1])
 
-        gridlayout1.addRow(self.label_respon_value)
+        gridlayout1.addRow(self.label_respon_value, self.file_path)
         gridlayout1.addRow(self.edit_respon_value)
         gridlayout1.addRow(self.btn_true)
         gridlayout1.addRow(self.btn_respons_xml)
 
+        self.file_path.clicked.connect(lambda: Functions.load_file_path(self))
         self.btn_respons_xml.clicked.connect(lambda: Functions.respon_analysis(self))
         self.btn_true.clicked.connect(lambda: Functions.judge_command(self))
         self.tabWidget.currentChanged.connect(lambda: Functions.tab_change(self))
@@ -877,6 +886,10 @@ class Functions(IDE.MenuTools):
         vbox.addWidget(self.tabWidget, 8)
         self.response.setLayout(vbox)
         self.response.exec_()
+
+    def load_file_path(self):
+        fileName = QFileDialog.getOpenFileName(self, "打开文件", "./")
+        self.edit_respon_value.appendPlainText(fileName[0])
 
     # mosbus帧数据转换
     def tab_change(self):
@@ -1704,9 +1717,11 @@ class Functions(IDE.MenuTools):
 
         self.data_label_re_value = QLabel(" 回令数据:", data)
         self.data_label_re_value.setStyleSheet("QLabel{font-size:20px;font-weight:normal;font-family:Arial;}")
+        self.file_path_data = QPushButton("打开文件")
+        self.file_path_data.setStyleSheet("QPushButton{font-size:20px;font-weight:normal;font-family:Arial;}")
         self.data_edit_respon_value = QPlainTextEdit()
         self.data_edit_respon_value.setStyleSheet("QPlainTextEdit{font-size:20px;font-weight:normal;font-family:Arial;}")
-        gridlayout1.addRow(self.data_label_re_value)
+        gridlayout1.addRow(self.data_label_re_value, self.file_path_data)
         gridlayout1.addRow(self.data_edit_respon_value)
 
         self.data_btn_true = QPushButton("确定", data)
@@ -1731,10 +1746,15 @@ class Functions(IDE.MenuTools):
         vbox.addWidget(self.data_tabWidget, 8)
         data.setLayout(vbox)
 
+        self.file_path_data.clicked.connect(lambda: Functions.load_file_path_data(self))
         self.data_btn_true.clicked.connect(lambda: Functions.data_xml(self))
         self.data_tabWidget.currentChanged.connect(lambda: Functions.data_tab_change(self))
         self.data_btn_true.clicked.connect(data.close)
         data.exec_()
+
+    def load_file_path_data(self):
+        fileName = QFileDialog.getOpenFileName(self, "打开文件", "./")
+        self.data_edit_respon_value.appendPlainText(fileName[0])
 
     def add_data_data(self):
         if self.combox_data_command.currentIndex() == 1:
