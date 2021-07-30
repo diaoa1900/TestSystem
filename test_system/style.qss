@@ -471,6 +471,8 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical
 QTextEdit
 {
     background-color: #1e1e1e;
+    selection-background-color: #D1DBCB;
+    selection-color: black;
     color: #eff0f1;
     border: 1px solid #76797C;
     font-size: 20px;
@@ -479,6 +481,8 @@ QTextEdit
 QPlainTextEdit
 {
     background-color: #1e1e1e;;
+    selection-background-color: #ffff00;
+    selection-color: red;
     color: #eff0f1;
     border-radius: 2px;
     border: 1px solid #76797C;
