@@ -19,6 +19,7 @@ from PIL import ImageGrab
 import numpy as np
 from imutils import contours
 import imutils
+import sys
 
 """
 Device Setup APIs

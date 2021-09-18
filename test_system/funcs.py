@@ -210,7 +210,8 @@ class Functions(IDE.MenuTools):
 
     def snapshot(self):
         # 截取当前屏幕全图
-        self.edit_tab.currentWidget().edit.insertPlainText("\twith allure.step(\"snapshot\"):\n" + "\t\tsnapshot(msg=\"请填写测试点\")\n")
+        snap_time = time.strftime('%Y%m%d%H%M%S', time.localtime(time.time())) + '.png'
+        self.edit_tab.currentWidget().edit.insertPlainText("\twith allure.step(\"snapshot\"):\n" +"\t\tfilepath = sys._getframe().f_code.co_filename\n" + "\t\tfilepath = filepath[:-3]\n" + "\t\tfilepath = os.path.join(filepath, \"" + snap_time + "\")\n" + "\t\tsnapshot(filename=filepath, msg=\"请填写测试点\")\n")
 
     def text(self):
         # 输入文本，文本框需要处于激活状态
