@@ -828,9 +828,9 @@ def assert_word_exist(file, row, words_given):
 
 def ocr(v, language=None):
     if language is None:
-        return pytesseract.image_to_string(cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 140, 255, cv2.THRESH_BINARY_INV)[1]).strip()
+        return pytesseract.image_to_string(cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 0, 255, cv2.THRESH_OTSU)[1]).strip()
     else:
-        img = cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 140, 255, cv2.THRESH_BINARY_INV)[1]
+        img = cv2.threshold(cv2.imread(str(v)[9:-1], cv2.IMREAD_GRAYSCALE), 0, 255, cv2.THRESH_OTSU)[1]
         img = cv2.resize(img, None, fx=8, fy=8)
         return pytesseract.image_to_string(img, lang='chi_sim').strip()
 
@@ -839,6 +839,8 @@ def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
     img = ImageGrab.grab(bbox=(start_x, start_y, end_x, end_y))
     # 定义每一个数字对应的字段
     DIGITS_LOOKUP = {
+        (0, 1, 1, 0, 1, 1, 0): '0凹',
+        (1, 1, 1, 0, 1, 1, 0): '0反凹',
         (1, 1, 1, 0, 1, 1, 1): 0,
         (0, 0, 1, 0, 0, 1, 0): 1,
         (1, 0, 1, 1, 1, 0, 1): 2,
@@ -849,16 +851,25 @@ def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
         (1, 0, 1, 0, 0, 1, 0): 7,
         (1, 1, 1, 1, 1, 1, 1): 8,
         (1, 1, 1, 1, 0, 1, 1): 9,
-        (0, 0, 0, 0, 0, 0, 0): ''
+        (0, 0, 0, 0, 0, 0, 0): '',
+        (1, 1, 1, 1, 0, 0, 0): '0之横',
+        (1, 1, 1, 0, 0, 0, 0): '0之横'
     }
     # 将输入转换为灰度图片
     gray = cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY)
     # 使用阈值进行二值化
-    thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_OTSU)[1]
+    non_zero = cv2.countNonZero(thresh)
+    # 如果不是黑底白字就转为黑底白字
+    if non_zero > img.size*0.5:
+        for i in range(img.shape[0]):
+            for j in range(img.shape[1]):
+                thresh[i, j] = 255 - thresh[i, j]
     kernel = (3, 3)
     if end_x-start_x < 150:
         kernel = (1, 1)
-    close = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, np.ones(kernel, np.uint8))
+    median = cv2.medianBlur(thresh, 7)
+    close = cv2.dilate(median, kernel, iterations=7)
     # 在阈值图像中查找轮廓，然后初始化数字轮廓列表
     cnts = cv2.findContours(close.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
@@ -880,17 +891,19 @@ def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
     dc = cv2.drawContours(np.array(img).copy(), digitCnts, -1, (0, 0, 255), 2)
     # 循环处理每一个数字
     i = 0
-    for c in digitCnts:
+    for index, c in enumerate(digitCnts):
         # 获取ROI区域
         (x, y, w, h) = cv2.boundingRect(c)
         roi = thresh[y:y + h, x:x + w]
-        if h / w > 3:
+        if index is 0 and w > h * 2:
+            digits += '-'
+        if h / w > 6:
             digits += '1'
             continue
-        elif w - h > 1 and w - h < 40:
-            digits += '-'
+        elif 3 < h / w < 5 and h > (h_ave * 3 / 4):
+            digits += '半1'
             continue
-        elif abs(w - h) <= 1:
+        elif w <= (w_ave / 2) and h < (h_ave / 2):
             digits += '.'
             continue
         # 分别计算每一段的宽度和高度
@@ -927,6 +940,9 @@ def assert_lcd_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1):
         # 进行数字查询并显示结果
         digit = DIGITS_LOOKUP[tuple(on)]
         digits += str(digit)
+    digits = digits.replace('0凹0反凹', '0').replace('半1半10之横0之横半1半1', '0').replace('半1半1', '1').replace('0凹',
+                                                                                                      '0').replace(
+        '0反凹', '0').replace('半1', '')
     if digits == pre:
         return
     elif digits in pre and flag == 2:
@@ -940,9 +956,9 @@ def assert_ocr_true(start_x, start_y, end_x, end_y, pre, flag=1, val=1, language
     img = ImageGrab.grab(bbox=(start_x, start_y, end_x, end_y))
     real = ""
     if language is None:
-        real = pytesseract.image_to_string(cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 140, 255, cv2.THRESH_BINARY_INV)[1]).strip()
+        real = pytesseract.image_to_string(cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 0, 255, cv2.THRESH_OTSU)[1]).strip()
     else:
-        img = cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 140, 255, cv2.THRESH_BINARY_INV)[1]
+        img = cv2.threshold(cv2.cvtColor(np.array(img), cv2.COLOR_BGR2GRAY), 0, 255, cv2.THRESH_OTSU)[1]
         img = cv2.resize(img, None, fx=8, fy=8)
         real = pytesseract.image_to_string(img, lang='chi_sim').strip()
     if real == pre:
